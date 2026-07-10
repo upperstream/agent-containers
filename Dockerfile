@@ -1,0 +1,388 @@
+ARG CONTAINER_USER=user         # 'user'
+ARG ENVIRONMENT=production      # 'development' or 'production'
+ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
+ARG NODE_VERSION=v24.18.0
+ARG NPM_VERSION="12.0.0"
+ARG CLAUDE_VERSION              # 'latest', 'stable', or '2.1.89'
+ARG CODEX_RELEASE               # 'latest' or '0.142.5'
+ARG COPILOT_VERSION             # 'latest', 'prerelease', or 'v0.0.369'
+ARG CRUSH_VERSION               # 'latest' or 'v0.81.0'
+ARG GEMINI_RELEASE              # 'latest', 'preview', or 'nightly'
+ARG GROK_CHANNEL
+ARG GROK_VERSION
+ARG KILO_VERSION                # '7.4.1'
+ARG KIRO_CHANNEL
+ARG KIRO_FORCE                  # '--force', defaults to unset
+ARG OPENCLAW_VERSION            # 'latest' or '2026.6.11'
+ARG OPENCODE_VERSION            # '1.17.13'
+ARG PROVIDER=all                # 'pi' or 'all'
+
+FROM debian:trixie-slim AS builder_base
+RUN apt-get update
+RUN apt-get install -y ca-certificates curl
+
+FROM builder_base AS node_base
+ARG NODE_VERSION    # global default
+ARG NPM_VERSION     # global default
+RUN apt-get install -y xz-utils && \
+    case "$(uname -s)" in \
+    Linux) kernel=linux; machine="$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')"; format=xz;; \
+    Darwin) kernel=darwin; machine="$(uname -m | sed 's/x86_64/x64/')"; format=gz;; \
+    esac && \
+    file="$(printf "node-%s-%s-%s.tar.%s" "$NODE_VERSION" "$kernel" "$machine" "$format")" && \
+    url="$(printf "https://nodejs.org/dist/%s/%s" "$NODE_VERSION" "$file")" && \
+    echo "Node.js package: \"$file\"" && \
+    echo "Node.js url:     \"$url\"" && \
+    curl -fsSL "$url" > "$file"
+RUN echo "TARGETARCH=\"$TARGETARCH\""
+RUN tar --xz -C /usr/local -xf "$(echo node-${NODE_VERSION}-*-*.tar.* | tail -n1)"
+RUN mv "$(echo /usr/local/node-${NODE_VERSION}-*-* | tail -n1)" /usr/local/node-${NODE_VERSION}
+RUN printf 'PATH=$PATH:%s\n' "/usr/local/node-${NODE_VERSION}/bin" >> /root/.bashrc
+RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "npm${NPM_VERSION:+@"${NPM_VERSION}"}"
+
+FROM builder_base AS bin_stripper
+RUN apt-get install -y binutils
+
+FROM debian:trixie-slim AS container_base
+ARG CONTAINER_USER              # global default
+ARG NANO_CLASSIC_KEYBINDINGS    # global default
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends emacs-nox fd-find git mg micro nano ripgrep vim-nox && \
+    apt-get clean && \
+    useradd -m "${CONTAINER_USER}"
+RUN <<EOT /bin/sh
+    if [ "${NANO_CLASSIC_KEYBINDINGS:-no}" = "yes" ]; then \
+        cat <<EOF >"/home/${CONTAINER_USER}/.nanorc"
+        bind ^F forward main
+        bind ^B back main
+        bind M-F formatter main
+        bind M-B linter main
+EOF
+    fi
+EOT
+
+FROM builder_base AS aider_builder
+ARG CONTAINER_USER
+
+RUN curl -LsSf https://aider.chat/install.sh | HOME="/home/${CONTAINER_USER}" sh
+
+FROM container_base AS aider
+ARG CONTAINER_USER  # global default
+
+COPY --from=aider_builder "/home/${CONTAINER_USER}/.local/share/uv" "/home/${CONTAINER_USER}/.local/share/uv"
+
+RUN ln -s "/home/${CONTAINER_USER}/.local/share/uv/tools/aider-chat/bin/aider" /usr/local/bin/aider
+
+FROM builder_base AS agy_builder
+RUN curl -fsSL https://antigravity.google/cli/install.sh > antigravity_installer.sh
+RUN bash antigravity_installer.sh
+
+FROM container_base AS antigravity
+ARG CONTAINER_USER  # global default
+
+COPY --from=agy_builder /root/.local/bin/agy /usr/local/bin/agy
+
+FROM bin_stripper AS claude_builder
+ARG CLAUDE_VERSION  # global_default
+
+RUN curl -fsSL https://claude.ai/install.sh > claude_installer.sh
+RUN bash claude_installer.sh "${CLAUDE_VERSION:+"$CLAUDE_VERSION"}"
+RUN strip `readlink /root/.local/bin/claude`
+
+FROM container_base AS claude
+ARG CONTAINER_USER  # global default
+
+COPY --from=claude_builder /root/.local/bin/claude /usr/local/bin/claude
+
+FROM node_base AS cline_builder
+ARG CLINE_RELEASE   # 'nightly' or '3.0.37'
+ARG NODE_VERSION    # global default
+
+RUN PATH=$PATH:/usr/local/node-${NODE_VERSION}/bin npm install -g cline${CLINE_RELEASE:+@"$CLINE_RELEASE"}
+
+FROM container_base AS cline
+ARG CONTAINER_USER  # global default
+ARG NODE_VERSION    # global default
+
+COPY --from=node_base /usr/local/node-${NODE_VERSION} /usr/local/node-${NODE_VERSION}
+COPY --from=cline_builder /usr/local/node-${NODE_VERSION}/lib/node_modules/cline /usr/local/node-${NODE_VERSION}/lib/node_modules/cline
+
+RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline/bin/cline" /usr/local/bin/cline && \
+    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/
+
+FROM builder_base AS codex_builder
+ARG CODEX_RELEASE   # global default
+
+RUN echo "CODEX_RELEASE=\"$CODEX_RELEASE\""
+RUN curl -fsSL https://chatgpt.com/codex/install.sh > codex_installer.sh
+RUN CODEX_NON_INTERACTIVE=1 sh codex_installer.sh
+
+FROM container_base AS codex
+
+COPY --from=codex_builder /root/.local/bin/codex /usr/local/bin/codex
+
+FROM builder_base AS copilot_builder
+ARG COPILOT_VERSION # global default
+
+RUN curl -fsSL https://gh.io/copilot-install > copilot_installer.sh
+RUN VERSION="${COPILOT_VERSION:-latest}" bash copilot_installer.sh
+
+FROM container_base AS copilot
+ARG CONTAINER_USER  # global default
+
+COPY --from=copilot_builder /usr/local/bin/copilot /usr/local/bin/copilot
+
+FROM golang:1.26-trixie AS crush_builder
+ARG CRUSH_VERSION   # global default
+
+RUN apt-get update
+RUN apt-get install -y binutils
+RUN go install "github.com/charmbracelet/crush@${CRUSH_VERSION:-latest}"
+RUN strip /go/bin/crush
+
+FROM container_base AS crush
+ARG CONTAINER_USER  # global default
+
+COPY --from=crush_builder /go/bin/crush /usr/local/bin/crush
+
+FROM builder_base AS cursor_builder
+RUN curl https://cursor.com/install -fsS > cursor_installer.sh
+RUN bash cursor_installer.sh
+
+FROM container_base AS cursor
+ARG CONTAINER_USER  # global default
+
+COPY --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CONTAINER_USER}/.local/share/cursor-agent/versions"
+
+RUN ln -s "$(echo /home/${CONTAINER_USER}/.local/share/cursor-agent/versions/*-*/cursor-agent)" /usr/local/bin/cursor-agent
+
+FROM bin_stripper AS droid_builder
+RUN curl -fsSL https://app.factory.ai/cli > droid_installer.sh
+RUN sh droid_installer.sh
+RUN strip /root/.local/bin/droid
+
+FROM container_base AS droid
+ARG CONTAINER_USER  # global default
+
+COPY --from=droid_builder /root/.local/bin/droid /usr/local/bin/droid
+
+FROM node_base AS gemini_builder
+ARG GEMINI_RELEASE  # global default
+ARG NODE_VERSION    # global default
+
+RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "@google/gemini-cli@${GEMINI_RELEASE:-latest}"
+
+FROM container_base AS gemini
+ARG CONTAINER_USER  # global default
+ARG NODE_VERSION    # global default
+
+COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
+
+RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google/gemini-cli/bundle/gemini.js" /usr/local/bin/gemini && \
+    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/
+
+FROM builder_base AS grok_builder
+ARG GROK_CHANNEL    # global default
+ARG GROK_VERSION    # global default
+
+RUN curl -fsSL https://x.ai/cli/install.sh > grok_installer.sh
+RUN bash grok_installer.sh "${GROK_VERSION:+"$GROK_VERSION"}"
+RUN case "$(uname -s)" in \
+    Linux) kernel=linux; machine="$(uname -m)";; \
+    Darwin) kernel=darwin; machine="$(uname -m)";; \
+    esac && \
+    ln -s "/root/.grok/downloads/grok-$kernel-$machine" /root/.grok/downloads/grok
+
+FROM container_base AS grok
+ARG CONTAINER_USER  # global default
+
+COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.grok"
+
+RUN ln -s "/home/${CONTAINER_USER}/.grok/bin/grok" /usr/local/bin/grok
+
+FROM bin_stripper AS herdr_builder
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends ca-certificates curl
+RUN curl -fsSL https://herdr.dev/install.sh > herdr_installer.sh
+RUN sh herdr_installer.sh
+RUN strip /root/.local/bin/herdr
+
+FROM container_base AS herdr
+ARG CONTAINER_USER  # global default
+
+COPY --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
+
+FROM bin_stripper AS kilo_builder
+ARG KILO_VERSION    # global default
+
+RUN curl -fsSL https://kilo.ai/cli/install > kilo_installer.sh
+RUN bash kilo_installer.sh ${KILO_VERSION:+--version "$KILO_VERSION"}
+RUN strip /root/.kilo/bin/kilo
+
+FROM container_base AS kilo
+ARG CONTAINER_USER  # global default
+
+COPY --from=kilo_builder /root/.kilo "/home/${CONTAINER_USER}/.kilo"
+RUN ln -s "/home/${CONTAINER_USER}/.kilo/bin/kilo" /usr/local/bin/kilo
+
+FROM bin_stripper AS kiro_builder
+ARG KIRO_CHANNEL    # global default
+ARG KIRO_FORCE      # global default
+
+RUN apt-get install -y unzip
+RUN curl -fsSL https://cli.kiro.dev/install > kiro_installer.sh
+RUN bash kiro_installer.sh ${KIRO_FORCE:+--force} ${KIRO_CHANNEL:+--channel "$KIRO_CHANNEL"}
+RUN strip /root/.local/bin/kiro-cli
+
+FROM container_base AS kiro
+
+COPY --from=kiro_builder /root/.local/bin/kiro-cli /usr/local/bin/kiro-cli
+
+FROM node_base AS openclaw_builder
+ARG NODE_VERSION        # global default
+ARG OPENCLAW_VERSION    # global default
+
+RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "openclaw@${OPENCLAW_VERSION:-latest}"
+
+FROM container_base AS openclaw
+ARG CONTAINER_USER  # global default
+ARG NODE_VERSION    # global default
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git && \
+    apt-get clean && \
+    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/ && \
+    ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
+    useradd -m "${CONTAINER_USER}"
+
+COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
+
+FROM bin_stripper AS opencode_builder
+ARG OPENCODE_VERSION    # global default
+
+RUN curl -fsSL https://opencode.ai/install > opencode_installer.sh
+RUN bash opencode_installer.sh --no-modify-path ${OPENCODE_VERSION:+--version "$OPENCODE_VERSION"}
+RUN strip /root/.opencode/bin/opencode
+
+FROM container_base AS opencode
+
+COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
+
+FROM node_base AS openwiki_builder
+ARG NODE_VERSION
+ARG OPENWIKI_VERSION
+
+RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g openwiki@${OPENWIKI_VERSION:-latest}
+
+FROM container_base AS openwiki
+ARG CONTAINER_USER  # global default
+ARG NODE_VERSION
+
+COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki"
+
+RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki/dist/cli.js" "/usr/local/bin/openwiki" && \
+    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/
+
+FROM node_base AS pi_builder
+ARG CONTAINER_USER
+ARG NODE_VERSION
+ARG PI_VERSION
+
+RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g --ignore-scripts @earendil-works/pi-coding-agent@${PI_VERSION:-latest}
+RUN apt-get update
+
+FROM container_base AS pi
+ARG CONTAINER_USER  # global default
+ARG NODE_VERSION
+
+COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends fd-find ripgrep && \
+    apt-get clean && \
+    ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js" /usr/local/bin/pi && \
+    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/
+
+FROM container_base AS all
+ARG CONTAINER_USER  # global default
+ARG NODE_VERSION    # global default
+
+COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+
+COPY --from=aider_builder "/home/${CONTAINER_USER}/.local/share/uv" "/home/${CONTAINER_USER}/.local/share/uv"
+
+COPY --from=agy_builder /root/.local/bin/agy /usr/local/bin/agy
+
+COPY --from=claude_builder /root/.local/bin/claude /usr/local/bin/claude
+
+COPY --from=cline_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline" "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline"
+
+COPY --from=codex_builder /root/.local/bin/codex /usr/local/bin/codex
+
+COPY --from=copilot_builder /usr/local/bin/copilot /usr/local/bin/copilot
+
+COPY --from=crush_builder /go/bin/crush /usr/local/bin/crush
+
+COPY --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CONTAINER_USER}/.local/share/cursor-agent/versions"
+
+COPY --from=droid_builder /root/.local/bin/droid /usr/local/bin/droid
+
+COPY --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
+
+COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.grok"
+
+COPY --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
+
+COPY --from=kilo_builder /root/.kilo "/home/${CONTAINER_USER}/.kilo"
+
+COPY --from=kiro_builder /root/.local/bin/kiro-cli /usr/local/bin/kiro-cli
+
+COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
+
+COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
+
+COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki"
+
+COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
+
+RUN ln -s "/home/${CONTAINER_USER}/.local/share/uv/tools/aider-chat/bin/aider" /usr/local/bin/aider && \
+    ln -s /usr/local/node-${NODE_VERSION}/bin/* /usr/local/bin/ && \
+    ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline/bin/cline" /usr/local/bin/cline && \
+    ln -s "$(echo /home/${CONTAINER_USER}/.local/share/cursor-agent/versions/*-*/cursor-agent)" /usr/local/bin/cursor-agent && \
+    ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google/gemini-cli/bundle/gemini.js" /usr/local/bin/gemini && \
+    ln -s "/home/${CONTAINER_USER}/.grok/bin/grok" /usr/local/bin/grok && \
+    ln -s "/home/${CONTAINER_USER}/.kilo/bin/kilo" /usr/local/bin/kilo && \
+    ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
+    ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki/dist/cli.js" /usr/local/bin/openwiki && \
+    ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js" /usr/local/bin/pi && \
+    echo 'PATH=$PATH:$HOME/.local/bin' >> "/home/${CONTAINER_USER}/.bashrc"
+
+FROM "${PROVIDER}" AS production
+ARG CONTAINER_USER  # global default
+
+RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
+
+FROM production AS development
+ARG CONTAINER_USER  # global default
+
+RUN usermod -a -G sudo "${CONTAINER_USER}"
+RUN rm -f /etc/dpkg/dpkg.cfg.d/docker && \
+    rm -f /etc/dpkg/dpkg.cfg.d/01_nodo
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends binutils file opendoas tree
+RUN echo "permit nopass :sudo" > /etc/doas.conf
+RUN doas -C /etc/doas.conf
+
+FROM "${ENVIRONMENT}"
+ARG CONTAINER_USER  # global default
+ENV EDITOR="${EDITOR}"
+ENV GIT_EDITOR="${GIT_EDITOR}"
+ENV TERM="${TERM}"
+
+USER "${CONTAINER_USER}"
+
+WORKDIR /workspaces
