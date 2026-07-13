@@ -17,7 +17,7 @@ docker build -t openwiki .
 From the repository root:
 
 ```bash
-docker build -t openwiki -f openwiki/Dockerfile openwiki
+docker build -t openwiki -f openwiki-agent/Dockerfile openwiki-agent
 ```
 
 ### Build arguments

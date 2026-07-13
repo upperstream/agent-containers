@@ -1,21 +1,22 @@
-ARG CONTAINER_USER=user         # 'user'
-ARG ENVIRONMENT=production      # 'development' or 'production'
-ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
+ARG CONTAINER_USER=user             # 'user'
+ARG ENVIRONMENT=production          # 'development' or 'production'
+ARG NANO_CLASSIC_KEYBINDINGS        # 'yes', default to 'no'
 ARG NODE_VERSION=v24.18.0
 ARG NPM_VERSION="12.0.0"
-ARG CLAUDE_VERSION              # 'latest', 'stable', or '2.1.89'
-ARG CODEX_RELEASE               # 'latest' or '0.142.5'
-ARG COPILOT_VERSION             # 'latest', 'prerelease', or 'v0.0.369'
-ARG CRUSH_VERSION               # 'latest' or 'v0.81.0'
-ARG GEMINI_RELEASE              # 'latest', 'preview', or 'nightly'
+ARG CLAUDE_VERSION                  # 'latest', 'stable', or '2.1.89'
+ARG CODEX_RELEASE                   # 'latest' or '0.142.5'
+ARG COPILOT_VERSION                 # 'latest', 'prerelease', or 'v0.0.369'
+ARG CRUSH_VERSION                   # 'latest' or 'v0.81.0'
+ARG GEMINI_RELEASE                  # 'latest', 'preview', or 'nightly'
 ARG GROK_CHANNEL
 ARG GROK_VERSION
-ARG KILO_VERSION                # '7.4.1'
+ARG KILO_VERSION                    # '7.4.1'
 ARG KIRO_CHANNEL
-ARG KIRO_FORCE                  # '--force', defaults to unset
-ARG OPENCLAW_VERSION            # 'latest' or '2026.6.11'
-ARG OPENCODE_VERSION            # '1.17.13'
-ARG PROVIDER=all                # 'pi' or 'all'
+ARG KIRO_FORCE                      # '--force', defaults to unset
+ARG OPENCLAW_VERSION                # 'latest' or '2026.6.11'
+ARG OPENWIKI_NODE_VERSION=v22.14.0  # for better-sqlite3 installation
+ARG OPENCODE_VERSION                # '1.17.13'
+ARG PROVIDER=all                    # 'pi' or 'all'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
@@ -270,21 +271,34 @@ FROM container_base AS opencode
 
 COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
 
-FROM node_base AS openwiki_builder
-ARG NODE_VERSION
+FROM builder_base AS openwiki_builder
+ARG OPENWIKI_NODE_VERSION   # global default
 ARG OPENWIKI_VERSION
 
-RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g openwiki@${OPENWIKI_VERSION:-latest}
+RUN apt-get install -y xz-utils && \
+    case "$(uname -s)" in \
+    Linux) kernel=linux; machine="$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')"; format=xz;; \
+    Darwin) kernel=darwin; machine="$(uname -m | sed 's/x86_64/x64/')"; format=gz;; \
+    esac && \
+    file="$(printf "node-%s-%s-%s.tar.%s" "$OPENWIKI_NODE_VERSION" "$kernel" "$machine" "$format")" && \
+    url="$(printf "https://nodejs.org/dist/%s/%s" "$OPENWIKI_NODE_VERSION" "$file")" && \
+    echo "Node.js package: \"$file\"" && \
+    echo "Node.js url:     \"$url\"" && \
+    curl -fsSL "$url" > "$file"
+RUN echo "TARGETARCH=\"$TARGETARCH\""
+RUN tar --xz -C /usr/local -xf "$(echo node-${OPENWIKI_NODE_VERSION}-*-*.tar.* | tail -n1)"
+RUN mv "$(echo /usr/local/node-${OPENWIKI_NODE_VERSION}-*-* | tail -n1)" /usr/local/node-${OPENWIKI_NODE_VERSION}
+RUN printf 'PATH=$PATH:%s\n' "/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" >> /root/.bashrc
+
+RUN PATH="$PATH:/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" npm install -g openwiki@${OPENWIKI_VERSION:-latest}
 
 FROM container_base AS openwiki
-ARG CONTAINER_USER  # global default
-ARG NODE_VERSION
+ARG CONTAINER_USER          # global default
+ARG OPENWIKI_NODE_VERSION   # global default
 
-COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
-COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki"
+COPY --from=openwiki_builder "/usr/local/node-${OPENWIKI_NODE_VERSION}" "/usr/local/node-${OPENWIKI_NODE_VERSION}"
 
-RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki/dist/cli.js" "/usr/local/bin/openwiki" && \
-    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
+RUN ln -s /usr/local/"node-${OPENWIKI_NODE_VERSION}"/bin/* /usr/local/bin/
 
 FROM node_base AS pi_builder
 ARG CONTAINER_USER
@@ -308,8 +322,9 @@ RUN apt-get update && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 
 FROM container_base AS all
-ARG CONTAINER_USER  # global default
-ARG NODE_VERSION    # global default
+ARG CONTAINER_USER          # global default
+ARG NODE_VERSION            # global default
+ARG OPENWIKI_NODE_VERSION   # global default
 
 COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
 
@@ -345,7 +360,7 @@ COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/o
 
 COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
 
-COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki"
+COPY --from=openwiki_builder "/usr/local/node-${OPENWIKI_NODE_VERSION}" "/usr/local/node-${OPENWIKI_NODE_VERSION}"
 
 COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
 
@@ -357,9 +372,8 @@ RUN ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     ln -s "/home/${CONTAINER_USER}/.grok/bin/grok" /usr/local/bin/grok && \
     ln -s "/home/${CONTAINER_USER}/.kilo/bin/kilo" /usr/local/bin/kilo && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
-    ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki/dist/cli.js" /usr/local/bin/openwiki && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js" /usr/local/bin/pi && \
-    echo 'PATH=$PATH:$HOME/.local/bin' >> "/home/${CONTAINER_USER}/.bashrc"
+    printf 'PATH=$PATH:%s\n' "/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" >> "/home/${CONTAINER_USER}/.bashrc"
 
 FROM "${PROVIDER}" AS production
 ARG CONTAINER_USER  # global default

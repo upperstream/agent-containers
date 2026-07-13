@@ -1,8 +1,8 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG NODE_VERSION=v24.18.0
-ARG NPM_VERSION="12.0.0"
+ARG NODE_VERSION=v22.14.0       # for better-sqlite3 installation
+ARG NPM_VERSION=                # npm version with node distribution
 ARG OPENWIKI_VERSION
 
 FROM debian:trixie-slim AS builder_base
@@ -12,6 +12,7 @@ RUN apt-get install -y ca-certificates curl
 FROM builder_base AS node_base
 ARG NODE_VERSION    # global default
 ARG NPM_VERSION     # global default
+
 RUN apt-get install -y xz-utils && \
     case "$(uname -s)" in \
     Linux) kernel=linux; machine="$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')"; format=xz;; \
@@ -48,20 +49,16 @@ EOF
 EOT
 
 FROM node_base AS openwiki_builder
-ARG NODE_VERSION
-ARG OPENWIKI_VERSION
+ARG NODE_VERSION    # global default
 
 RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g openwiki@${OPENWIKI_VERSION:-latest}
 
 FROM container_base AS production
-ARG CONTAINER_USER  # global default
-ARG NODE_VERSION
+ARG NODE_VERSION    # global default
 
-COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
-COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki"
+COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
 
-RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki/dist/cli.js" "/usr/local/bin/openwiki" && \
-    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
+RUN ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
 FROM production AS development

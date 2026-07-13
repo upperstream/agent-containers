@@ -20,27 +20,27 @@ the shared layout and how to build.
 
 ## Agents
 
-| Agent              | Standalone dir                 | Root `PROVIDER` | Entrypoint          | Docs                            |
-|--------------------|--------------------------------|-----------------|---------------------|---------------------------------|
-| Aider              | [`aider/`](aider/)             | `aider`         | `aider`             | [README](aider/README.md)       |
-| Antigravity        | [`antigravity/`](antigravity/) | `antigravity`   | `agy`               | [README](antigravity/README.md) |
-| Claude Code        | [`claude/`](claude/)           | `claude`        | `claude`            | [README](claude/README.md)      |
-| Cline              | [`cline/`](cline/)             | `cline`         | `cline`             | [README](cline/README.md)       |
-| Codex              | [`codex/`](codex/)             | `codex`         | `codex`             | [README](codex/README.md)       |
-| GitHub Copilot CLI | [`copilot/`](copilot/)         | `copilot`       | `copilot`           | [README](copilot/README.md)     |
-| Crush              | [`crush/`](crush/)             | `crush`         | `crush`             | [README](crush/README.md)       |
-| Cursor Agent       | [`cursor/`](cursor/)           | `cursor`        | `cursor-agent`      | [README](cursor/README.md)      |
-| Droid (Factory)    | [`droid/`](droid/)             | `droid`         | `droid`             | [README](droid/README.md)       |
-| Gemini CLI         | [`gemini/`](gemini/)           | `gemini`        | `gemini`            | [README](gemini/README.md)      |
-| Grok Build         | [`grok/`](grok/)               | `grok`          | `grok`              | [README](grok/README.md)        |
-| Herdr              | [`herdr/`](herdr/)             | `herdr`         | `herdr`             | [README](herdr/README.md)       |
-| Kilo               | [`kilo/`](kilo/)               | `kilo`          | `kilo`              | [README](kilo/README.md)        |
-| Kiro CLI           | [`kiro/`](kiro/)               | `kiro`          | `kiro-cli`          | [README](kiro/README.md)        |
-| OpenClaw           | [`openclaw/`](openclaw/)       | `openclaw`      | `openclaw`          | [README](openclaw/README.md)    |
-| OpenCode           | [`opencode/`](opencode/)       | `opencode`      | `opencode`          | [README](opencode/README.md)    |
-| OpenWiki           | [`openwiki/`](openwiki/)       | `openwiki`      | `openwiki`          | [README](openwiki/README.md)    |
-| Pi coding agent    | [`pi/`](pi/)                   | `pi`            | `pi`                | [README](pi/README.md)          |
-| All of the above   | —                              | `all` (default) | *(each entrypoint)* | This file                       |
+| Agent              | Standalone dir                       | Root `PROVIDER` | Entrypoint          | Docs                               |
+|--------------------|--------------------------------------|-----------------|---------------------|------------------------------------|
+| Aider              | [`aider/`](aider/)                   | `aider`         | `aider`             | [README](aider/README.md)          |
+| Antigravity        | [`antigravity/`](antigravity/)       | `antigravity`   | `agy`               | [README](antigravity/README.md)    |
+| Claude Code        | [`claude/`](claude/)                 | `claude`        | `claude`            | [README](claude/README.md)         |
+| Cline              | [`cline/`](cline/)                   | `cline`         | `cline`             | [README](cline/README.md)          |
+| Codex              | [`codex/`](codex/)                   | `codex`         | `codex`             | [README](codex/README.md)          |
+| GitHub Copilot CLI | [`copilot/`](copilot/)               | `copilot`       | `copilot`           | [README](copilot/README.md)        |
+| Crush              | [`crush/`](crush/)                   | `crush`         | `crush`             | [README](crush/README.md)          |
+| Cursor Agent       | [`cursor/`](cursor/)                 | `cursor`        | `cursor-agent`      | [README](cursor/README.md)         |
+| Droid (Factory)    | [`droid/`](droid/)                   | `droid`         | `droid`             | [README](droid/README.md)          |
+| Gemini CLI         | [`gemini/`](gemini/)                 | `gemini`        | `gemini`            | [README](gemini/README.md)         |
+| Grok Build         | [`grok/`](grok/)                     | `grok`          | `grok`              | [README](grok/README.md)           |
+| Herdr              | [`herdr/`](herdr/)                   | `herdr`         | `herdr`             | [README](herdr/README.md)          |
+| Kilo               | [`kilo/`](kilo/)                     | `kilo`          | `kilo`              | [README](kilo/README.md)           |
+| Kiro CLI           | [`kiro/`](kiro/)                     | `kiro`          | `kiro-cli`          | [README](kiro/README.md)           |
+| OpenClaw           | [`openclaw/`](openclaw/)             | `openclaw`      | `openclaw`          | [README](openclaw/README.md)       |
+| OpenCode           | [`opencode/`](opencode/)             | `opencode`      | `opencode`          | [README](opencode/README.md)       |
+| OpenWiki           | [`openwiki-agent/`](openwiki-agent/) | `openwiki`      | `openwiki`          | [README](openwiki-agent/README.md) |
+| Pi coding agent    | [`pi/`](pi/)                         | `pi`            | `pi`                | [README](pi/README.md)             |
+| All of the above   |                                      | `all` (default) | *(each entrypoint)* | This file                          |
 
 ## Shared conventions
 
@@ -154,6 +154,7 @@ Declared at the top of the root `Dockerfile` (with current defaults/comments):
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                    |
 | `OPENCLAW_VERSION`         | defaults to `latest`                                 |
 | `OPENCODE_VERSION`         | installer default when unset                         |
+| `OPENWIKI_NODE_VERSION`    | `v22.14.0`; Node.js version to install for OpenWiki  |
 
 Also used by named stages (pass with `--build-arg`; declared on those
 stages, not only at file top):
@@ -261,7 +262,7 @@ Detailed mount recipes for tools that install into a home directory
 ├── kiro/
 ├── openclaw/
 ├── opencode/
-├── openwiki/
+├── openwiki-agent/
 └── pi/
 ```
 
