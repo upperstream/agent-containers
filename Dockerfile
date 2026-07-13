@@ -109,7 +109,7 @@ COPY --from=node_base /usr/local/node-${NODE_VERSION} /usr/local/node-${NODE_VER
 COPY --from=cline_builder /usr/local/node-${NODE_VERSION}/lib/node_modules/cline /usr/local/node-${NODE_VERSION}/lib/node_modules/cline
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline/bin/cline" /usr/local/bin/cline && \
-    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 
 FROM builder_base AS codex_builder
 ARG CODEX_RELEASE   # global default
@@ -181,7 +181,7 @@ COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_
 COPY --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google/gemini-cli/bundle/gemini.js" /usr/local/bin/gemini && \
-    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 
 FROM builder_base AS grok_builder
 ARG GROK_CHANNEL    # global default
@@ -253,8 +253,8 @@ ARG NODE_VERSION    # global default
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git && \
     apt-get clean && \
-    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/ && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     useradd -m "${CONTAINER_USER}"
 
 COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
@@ -284,7 +284,7 @@ COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_
 COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki"
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki/dist/cli.js" "/usr/local/bin/openwiki" && \
-    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 
 FROM node_base AS pi_builder
 ARG CONTAINER_USER
@@ -305,7 +305,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends fd-find ripgrep && \
     apt-get clean && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js" /usr/local/bin/pi && \
-    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 
 FROM container_base AS all
 ARG CONTAINER_USER  # global default
@@ -349,8 +349,8 @@ COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/o
 
 COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
 
-RUN ln -s "/home/${CONTAINER_USER}/.local/share/uv/tools/aider-chat/bin/aider" /usr/local/bin/aider && \
-    ln -s /usr/local/node-${NODE_VERSION}/bin/* /usr/local/bin/ && \
+RUN ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
+    ln -s "/home/${CONTAINER_USER}/.local/share/uv/tools/aider-chat/bin/aider" /usr/local/bin/aider && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline/bin/cline" /usr/local/bin/cline && \
     ln -s "$(echo /home/${CONTAINER_USER}/.local/share/cursor-agent/versions/*-*/cursor-agent)" /usr/local/bin/cursor-agent && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google/gemini-cli/bundle/gemini.js" /usr/local/bin/gemini && \

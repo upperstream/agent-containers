@@ -61,7 +61,7 @@ COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_
 COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
-    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/ && \
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
 FROM production AS development

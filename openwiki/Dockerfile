@@ -61,7 +61,7 @@ COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_
 COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki"
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki/dist/cli.js" "/usr/local/bin/openwiki" && \
-    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/ && \
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
 FROM production AS development

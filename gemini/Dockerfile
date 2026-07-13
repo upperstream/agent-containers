@@ -61,7 +61,7 @@ COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_
 COPY --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google/gemini-cli/bundle/gemini.js" /usr/local/bin/gemini && \
-    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/ && \
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
 FROM production AS development

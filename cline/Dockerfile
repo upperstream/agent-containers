@@ -61,7 +61,7 @@ COPY --from=node_base /usr/local/node-${NODE_VERSION} /usr/local/node-${NODE_VER
 COPY --from=cline_builder /usr/local/node-${NODE_VERSION}/lib/node_modules/cline /usr/local/node-${NODE_VERSION}/lib/node_modules/cline
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline/bin/cline" /usr/local/bin/cline && \
-    ln -s "/usr/local/node-${NODE_VERSION}/bin/*" /usr/local/bin/ && \
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
 FROM production AS development
