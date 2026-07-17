@@ -27,13 +27,12 @@ docker build -t claude -f claude/Dockerfile claude
 | `CONTAINER_USER`           | `user`                | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production`          | `production` or `development` (adds `doas`/sudo tooling) |
 | `NANO_CLASSIC_KEYBINDINGS` | *(unset)*             | Set to `yes` for classic nano keybindings                |
-| `CLAUDE_VERSION`           | *(installer default)* | Pin version: `latest`, `stable`, or a version like `2.1.89` |
 
 Examples:
 
 ```bash
 docker build -t claude:dev --build-arg ENVIRONMENT=development .
-docker build -t claude:stable --build-arg CLAUDE_VERSION=stable .
+docker build -t claude:latest .
 ```
 
 ---

@@ -3,7 +3,6 @@ ARG ENVIRONMENT=production          # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS        # 'yes', default to 'no'
 ARG NODE_VERSION=v24.18.0
 ARG NPM_VERSION="12.0.0"
-ARG CLAUDE_VERSION                  # 'latest', 'stable', or '2.1.89'
 ARG CODEX_RELEASE                   # 'latest' or '0.142.5'
 ARG COPILOT_VERSION                 # 'latest', 'prerelease', or 'v0.0.369'
 ARG CRUSH_VERSION                   # 'latest' or 'v0.81.0'
@@ -84,17 +83,17 @@ ARG CONTAINER_USER  # global default
 
 COPY --from=agy_builder /root/.local/bin/agy /usr/local/bin/agy
 
-FROM bin_stripper AS claude_builder
-ARG CLAUDE_VERSION  # global_default
+FROM builder_base AS claude_builder
 
-RUN curl -fsSL https://claude.ai/install.sh > claude_installer.sh
-RUN bash claude_installer.sh "${CLAUDE_VERSION:+"$CLAUDE_VERSION"}"
-RUN strip `readlink /root/.local/bin/claude`
+RUN install -d -m 0755 /etc/apt/keyrings
+RUN curl -fsSL https://downloads.claude.ai/keys/claude-code.asc -o /etc/apt/keyrings/claude-code.asc
+RUN echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/stable stable main" > /etc/apt/sources.list.d/claude-code.list
+RUN apt-get update
+RUN apt-get install -y claude-code
 
 FROM container_base AS claude
-ARG CONTAINER_USER  # global default
 
-COPY --from=claude_builder /root/.local/bin/claude /usr/local/bin/claude
+COPY --from=claude_builder /usr/bin/claude /usr/local/bin/claude
 
 FROM node_base AS cline_builder
 ARG CLINE_RELEASE   # 'nightly' or '3.0.37'
@@ -332,7 +331,7 @@ COPY --from=aider_builder "/home/${CONTAINER_USER}/.local/share/uv" "/home/${CON
 
 COPY --from=agy_builder /root/.local/bin/agy /usr/local/bin/agy
 
-COPY --from=claude_builder /root/.local/bin/claude /usr/local/bin/claude
+COPY --from=claude_builder /usr/bin/claude /usr/local/bin/claude
 
 COPY --from=cline_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline" "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline"
 
@@ -387,7 +386,7 @@ RUN usermod -a -G sudo "${CONTAINER_USER}"
 RUN rm -f /etc/dpkg/dpkg.cfg.d/docker && \
     rm -f /etc/dpkg/dpkg.cfg.d/01_nodo
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends binutils file opendoas tree
+RUN apt-get install -y --no-install-recommends binutils ca-certificates curl file opendoas tree
 RUN echo "permit nopass :sudo" > /etc/doas.conf
 RUN doas -C /etc/doas.conf
 

@@ -1,14 +1,10 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG CLAUDE_VERSION              # 'latest', 'stable', or '2.1.89'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
 RUN apt-get install -y ca-certificates curl
-
-FROM builder_base AS bin_stripper
-RUN apt-get install -y binutils
 
 FROM debian:trixie-slim AS container_base
 ARG CONTAINER_USER              # global default
@@ -29,19 +25,17 @@ EOF
     fi
 EOT
 
-FROM bin_stripper AS claude_builder
-ARG CLAUDE_VERSION              # global default
+FROM builder_base AS claude_builder
 
-RUN curl -fsSL https://claude.ai/install.sh > claude_installer.sh
-RUN bash claude_installer.sh "${CLAUDE_VERSION:+"$CLAUDE_VERSION"}"
-RUN strip `readlink /root/.local/bin/claude`
+RUN install -d -m 0755 /etc/apt/keyrings
+RUN curl -fsSL https://downloads.claude.ai/keys/claude-code.asc -o /etc/apt/keyrings/claude-code.asc
+RUN echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/stable stable main" > /etc/apt/sources.list.d/claude-code.list
+RUN apt-get update
+RUN apt-get install -y claude-code
 
 FROM container_base AS production
-ARG CONTAINER_USER              # global default
 
-COPY --from=claude_builder /root/.local/bin/claude /usr/local/bin/claude
-
-RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
+COPY --from=claude_builder /usr/bin/claude /usr/local/bin/claude
 
 FROM production AS development
 ARG CONTAINER_USER              # global default

@@ -84,9 +84,9 @@ Version pins and agent-specific build args are documented in each
 [agent README](#agents).
 
 ```bash
-docker build -t claude:stable -f claude/Dockerfile \
-  --build-arg CLAUDE_VERSION=stable \
-  claude
+docker build -t copilot:stable -f copilot/Dockerfile \
+  --build-arg COPILOT_VERSION=stable \
+  copilot
 
 docker build -t grok:dev -f grok/Dockerfile \
   --build-arg ENVIRONMENT=development \
@@ -142,7 +142,6 @@ Declared at the top of the root `Dockerfile` (with current defaults/comments):
 | `PROVIDER`                 | `all`                                                |
 | `NODE_VERSION`             | `v24.18.0`                                           |
 | `NPM_VERSION`              | `12.0.0`                                             |
-| `CLAUDE_VERSION`           | installer default (`latest`, `stable`, or a version) |
 | `CODEX_RELEASE`            | installer default (`latest` or a version)            |
 | `COPILOT_VERSION`          | defaults to `latest` in the builder                  |
 | `CRUSH_VERSION`            | defaults to `latest` in the Go install               |
