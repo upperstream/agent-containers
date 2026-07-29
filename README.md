@@ -34,6 +34,7 @@ the shared layout and how to build.
 | Gemini CLI         | [`gemini/`](gemini/)                 | `gemini`        | `gemini`            | [README](gemini/README.md)         |
 | Grok Build         | [`grok/`](grok/)                     | `grok`          | `grok`              | [README](grok/README.md)           |
 | Herdr              | [`herdr/`](herdr/)                   | `herdr`         | `herdr`             | [README](herdr/README.md)          |
+| Hermes Agent       | [`hermes/`](hermes/)                 | `hermes`        | `hermes`            | [README](hermes/README.md)         |
 | Kilo               | [`kilo/`](kilo/)                     | `kilo`          | `kilo`              | [README](kilo/README.md)           |
 | Kiro CLI           | [`kiro/`](kiro/)                     | `kiro`          | `kiro-cli`          | [README](kiro/README.md)           |
 | OpenClaw           | [`openclaw/`](openclaw/)             | `openclaw`      | `openclaw`          | [README](openclaw/README.md)       |
@@ -257,6 +258,7 @@ Detailed mount recipes for tools that install into a home directory
 ├── gemini/
 ├── grok/
 ├── herdr/
+├── hermes/
 ├── kilo/
 ├── kiro/
 ├── openclaw/
