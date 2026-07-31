@@ -141,7 +141,7 @@ Declared at the top of the root `Dockerfile` (with current defaults/comments):
 | `ENVIRONMENT`              | `production` (`development` adds doas tooling)       |
 | `NANO_CLASSIC_KEYBINDINGS` | unset; set to `yes` for classic nano bindings        |
 | `PROVIDER`                 | `all`                                                |
-| `NODE_VERSION`             | `v24.18.0`                                           |
+| `NODE_VERSION`             | `v24.18.1`                                           |
 | `NPM_VERSION`              | `12.0.0`                                             |
 | `CODEX_RELEASE`            | installer default (`latest` or a version)            |
 | `COPILOT_VERSION`          | defaults to `latest` in the builder                  |
