@@ -1,7 +1,7 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG NODE_VERSION=v22.14.0       # for better-sqlite3 installation
+ARG NODE_VERSION=v24.18.1
 ARG NPM_VERSION=                # npm version with node distribution
 ARG OPENWIKI_VERSION
 

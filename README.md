@@ -154,7 +154,7 @@ Declared at the top of the root `Dockerfile` (with current defaults/comments):
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                    |
 | `OPENCLAW_VERSION`         | defaults to `latest`                                 |
 | `OPENCODE_VERSION`         | installer default when unset                         |
-| `OPENWIKI_NODE_VERSION`    | `v22.14.0`; Node.js version to install for OpenWiki  |
+| `OPENWIKI_NODE_VERSION`    | `v24.18.1`; Node.js version to install for OpenWiki  |
 
 Also used by named stages (pass with `--build-arg`; declared on those
 stages, not only at file top):

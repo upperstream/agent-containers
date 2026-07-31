@@ -1,14 +1,19 @@
 # Changelog
 
+## [20260801][]
+
+* Changed
+  * Upgrade [Node.js][] for [OpenWiki][] to v24.18.1.
+
 ## [20260731][]
 
 * Added
   * Add [Hermes Agent][].
 * Changed
-  * Upgrade [Node.js][] to v24.18.1 mitigating vulnerabilities.  See
+  * Upgrade Node.js to v24.18.1 mitigating vulnerabilities.  See
     [Node.js v24.18.1 release notes](https://nodejs.org/en/blog/release/v24.18.1)
     for details.
-  * Change directory name for [OpenWiki][] from `openwiki` to
+  * Change directory name for OpenWiki from `openwiki` to
     `openwiki-agent` because OpenWiki Repository Mode creates files in
     `openwiki` directory by default.
   * Use Node.js v22.14.0 for OpenWiki in order to properly install
@@ -24,5 +29,6 @@
 
 * Initial release.
 
+[20260801]: https://github.com/upperstream/agent-containers/compare/20260731...20260801
 [20260731]: https://github.com/upperstream/agent-containers/compare/20260711...20260731
 [20260711]: https://github.com/upperstream/agent-containers/releases/tag/20260711

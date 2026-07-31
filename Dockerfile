@@ -13,7 +13,7 @@ ARG KILO_VERSION                    # '7.4.1'
 ARG KIRO_CHANNEL
 ARG KIRO_FORCE                      # '--force', defaults to unset
 ARG OPENCLAW_VERSION                # 'latest' or '2026.6.11'
-ARG OPENWIKI_NODE_VERSION=v22.14.0  # for better-sqlite3 installation
+ARG OPENWIKI_NODE_VERSION=v24.18.1
 ARG OPENCODE_VERSION                # '1.17.13'
 ARG PROVIDER=all                    # 'pi' or 'all'
 
