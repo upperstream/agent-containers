@@ -1,8 +1,9 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
+ARG HERMES_COMMIT=3c27eb6
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG NODE_VERSION=v24.18.1
-ARG NPM_VERSION="12.0.0"
+ARG NODE_VERSION=v22.23.2
+ARG NPM_VERSION="10.9.8"
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
@@ -47,15 +48,18 @@ EOF
 EOT
 
 FROM container_base AS production
-ARG NODE_VERSION    # global default
+ARG HERMES_COMMIT	# global default
+ARG NODE_VERSION	# global default
 
 COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
 
-RUN apt-get install -y --no-install-recommends ca-certificates curl ffmpeg git ripgrep && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates curl ffmpeg git ripgrep xz-utils && \
     apt-get clean
 RUN ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 RUN curl -fsSL https://hermes-agent.nousresearch.com/install.sh > hermes_installer.sh
-RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" bash hermes_installer.sh --skip-setup --skip-browser --non-interactive
+RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" \
+        bash hermes_installer.sh --skip-setup --skip-browser --non-interactive ${HERMES_COMMIT:+--commit $HERMES_COMMIT}
 RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
 FROM production AS development

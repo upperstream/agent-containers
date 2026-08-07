@@ -32,8 +32,9 @@ docker build -t hermes -f hermes/Dockerfile hermes
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas` tools) |
 | `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings         |
-| `NODE_VERSION`             | `v24.18.1`   | Node.js runtime version                           |
-| `NPM_VERSION`              | `12.0.0`     | npm version installed in the image                |
+| `HERMES_COMMIT`            | `3c27eb6`    | Specific Hermes git commit to install             |
+| `NODE_VERSION`             | `v22.23.2`   | Node.js runtime version                           |
+| `NPM_VERSION`              | `10.9.8`     | npm version installed in the image                |
 
 Examples:
 

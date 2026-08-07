@@ -135,26 +135,28 @@ docker build -t agents:all-dev \
 
 Declared at the top of the root `Dockerfile` (with current defaults/comments):
 
-| Argument                   | Default / notes                                      |
-|----------------------------|------------------------------------------------------|
-| `CONTAINER_USER`           | `user`                                               |
-| `ENVIRONMENT`              | `production` (`development` adds doas tooling)       |
-| `NANO_CLASSIC_KEYBINDINGS` | unset; set to `yes` for classic nano bindings        |
-| `PROVIDER`                 | `all`                                                |
-| `NODE_VERSION`             | `v24.18.1`                                           |
-| `NPM_VERSION`              | `12.0.0`                                             |
-| `CODEX_RELEASE`            | installer default (`latest` or a version)            |
-| `COPILOT_VERSION`          | defaults to `latest` in the builder                  |
-| `CRUSH_VERSION`            | defaults to `latest` in the Go install               |
-| `GEMINI_RELEASE`           | defaults to `latest` for `@google/gemini-cli`        |
-| `GROK_CHANNEL`             | unset                                                |
-| `GROK_VERSION`             | installer default when unset                         |
-| `KILO_VERSION`             | installer default when unset                         |
-| `KIRO_CHANNEL`             | unset                                                |
-| `KIRO_FORCE`               | unset; non-empty passes `--force`                    |
-| `OPENCLAW_VERSION`         | defaults to `latest`                                 |
-| `OPENCODE_VERSION`         | installer default when unset                         |
-| `OPENWIKI_NODE_VERSION`    | `v24.18.1`; Node.js version to install for OpenWiki  |
+| Argument                   | Default / notes                                     |
+|----------------------------|-----------------------------------------------------|
+| `CONTAINER_USER`           | `user`                                              |
+| `ENVIRONMENT`              | `production` (`development` adds doas tooling)      |
+| `HERMES_COMMIT`            | `3c27eb6`; specific Hermes git commit to install    |
+| `HERMES_NODE_VERSION`      | `v22.23.2`; Node.js version for Hermes              |
+| `NANO_CLASSIC_KEYBINDINGS` | unset; set to `yes` for classic nano bindings       |
+| `PROVIDER`                 | `all`                                               |
+| `NODE_VERSION`             | `v24.18.1`                                          |
+| `NPM_VERSION`              | `12.0.0`                                            |
+| `CODEX_RELEASE`            | installer default (`latest` or a version)           |
+| `COPILOT_VERSION`          | defaults to `latest` in the builder                 |
+| `CRUSH_VERSION`            | defaults to `latest` in the Go install              |
+| `GEMINI_RELEASE`           | defaults to `latest` for `@google/gemini-cli`       |
+| `GROK_CHANNEL`             | unset                                               |
+| `GROK_VERSION`             | installer default when unset                        |
+| `KILO_VERSION`             | installer default when unset                        |
+| `KIRO_CHANNEL`             | unset                                               |
+| `KIRO_FORCE`               | unset; non-empty passes `--force`                   |
+| `OPENCLAW_VERSION`         | defaults to `latest`                                |
+| `OPENCODE_VERSION`         | installer default when unset                        |
+| `OPENWIKI_NODE_VERSION`    | `v24.18.1`; Node.js version to install for OpenWiki |
 
 Also used by named stages (pass with `--build-arg`; declared on those
 stages, not only at file top):
@@ -172,12 +174,13 @@ graph.
 
 ### What `PROVIDER=all` installs
 
-The `all` stage copies builders into `/usr/local/bin` (or home trees) and
-adds symlinks for Node-based CLIs and tools that live under home:
+The `all` stage copies builders into `/usr/local/bin` (or home trees)
+and adds symlinks for Node-based CLIs and tools that live under home:
 
 `aider`, `agy`, `claude`, `cline`, `codex`, `copilot`, `crush`,
-`cursor-agent`, `droid`, `gemini`, `grok`, `herdr`, `kilo`, `kiro-cli`,
-`openclaw`, `opencode`, `openwiki`, `pi`, plus Node/npm on `PATH`.
+`cursor-agent`, `droid`, `gemini`, `grok`, `herdr`, `hermes`, `kilo`,
+`kiro-cli`, `openclaw`, `opencode`, `openwiki`, `pi`, plus Node/npm on
+`PATH`.
 
 It also appends `$HOME/.local/bin` to the container user's `.bashrc`.
 
@@ -279,8 +282,6 @@ Each standalone directory contains:
 This project's Dockerfiles, documentation, and other repository content
 are licensed under the _2-Clause BSD License_.  See
 [`LICENSE.txt`](LICENSE.txt) for the full text.
-
-Copyright is held by **Upperstream** (see `LICENSE.txt`).
 
 ### Third-party agents
 

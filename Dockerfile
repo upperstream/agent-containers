@@ -9,6 +9,8 @@ ARG CRUSH_VERSION                   # 'latest' or 'v0.81.0'
 ARG GEMINI_RELEASE                  # 'latest', 'preview', or 'nightly'
 ARG GROK_CHANNEL
 ARG GROK_VERSION
+ARG HERMES_COMMIT=3c27eb6
+ARG HERMES_NODE_VERSION=v22.23.2
 ARG KILO_VERSION                    # '7.4.1'
 ARG KIRO_CHANNEL
 ARG KIRO_FORCE                      # '--force', defaults to unset
@@ -215,14 +217,18 @@ ARG CONTAINER_USER  # global default
 COPY --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
 
 FROM container_base AS hermes
-ARG NODE_VERSION    # global default
+ARG HERMES_COMMIT       # global default
+ARG HERMES_NODE_VERSION # global default
 
-COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --from=node_base "/usr/local/node-${HERMES_NODE_VERSION}" "/usr/local/node-${HERMES_NODE_VERSION}"
 
-RUN apt-get install -y --no-install-recommends ca-certificates curl ffmpeg git ripgrep && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates curl ffmpeg git ripgrep xz-utils && \
     apt-get clean
 RUN ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
-RUN curl -fsSL https://hermes-agent.nousresearch.com/install.sh | PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" bash -s -- --skip-setup --skip-browser --non-interactive
+RUN curl -fsSL https://hermes-agent.nousresearch.com/install.sh | \
+    PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" \
+        bash -s -- --skip-setup --skip-browser --non-interactive ${HERMES_COMMIT:+--commit $HERMES_COMMIT}
 
 FROM bin_stripper AS kilo_builder
 ARG KILO_VERSION    # global default
@@ -382,9 +388,12 @@ RUN ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     ln -s "/home/${CONTAINER_USER}/.kilo/bin/kilo" /usr/local/bin/kilo && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js" /usr/local/bin/pi && \
-    apt-get install -y --no-install-recommends curl ffmpeg git && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends curl ffmpeg git xz-utils && \
     apt-get clean && \
-    curl -fsSL https://hermes-agent.nousresearch.com/install.sh | PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" bash -s -- --skip-setup --skip-browser --non-interactive && \
+    curl -fsSL https://hermes-agent.nousresearch.com/install.sh | \
+    PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" \
+        bash -s -- --skip-setup --skip-browser --non-interactive ${HERMES_COMMIT:+--commit $HERMES_COMMIT} && \
     printf 'PATH=$PATH:%s\n' "/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" >> "/home/${CONTAINER_USER}/.bashrc"
 
 FROM "${PROVIDER}" AS production
