@@ -32,9 +32,7 @@ docker build -t hermes -f hermes/Dockerfile hermes
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas` tools) |
 | `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings         |
-| `HERMES_COMMIT`            | `3c27eb6`    | Specific Hermes git commit to install             |
-| `NODE_VERSION`             | `v22.23.2`   | Node.js runtime version                           |
-| `NPM_VERSION`              | `10.9.8`     | npm version installed in the image                |
+| `HERMES_VERSION`           | `v2026.8.13` | Specific Hermes git tag to install                |
 
 Examples:
 
@@ -81,16 +79,6 @@ For example, replace `OPENAI_API_KEY` with `ANTHROPIC_API_KEY`,
 `OPENROUTER_API_KEY`, `GEMINI_API_KEY`, or another provider-specific
 credential supported by Hermes.
 
-For a first-time setup with persistent state, run:
-
-```bash
-docker run --rm -it \
-  -v "$HOME/.hermes-docker:/home/user/.hermes" \
-  -v "$PWD:/workspaces/project" \
-  -w /workspaces/project \
-  hermes hermes setup
-```
-
 ---
 
 ## What lives in `~/.hermes`
@@ -100,14 +88,14 @@ runtime data under `HERMES_HOME` (default `~/.hermes`).  When the image
 runs as its default user, this is `/home/user/.hermes`; set `HERMES_HOME`
 to use a different location.
 
-| Kind               | Paths                                                            | Purpose                                      |
-|--------------------|------------------------------------------------------------------|----------------------------------------------|
-| **Configuration**  | `config.yaml`, `.env`                                            | Settings in `config.yaml`; secrets in `.env` |
-| **Authentication** | `auth.json`                                                      | OAuth tokens and credential pools            |
-| **Sessions**       | `state.db`, `sessions/`                                          | Session history, FTS index, gateway records  |
-| **User content**   | `skills/`, `skins/`, `desktop-plugins/`, `tui-widgets/`, `pets/` | Extensions, themes, widgets, and mascots     |
-| **Diagnostics**    | `logs/`                                                          | Gateway and error logs                       |
-| **Source**         | `hermes-agent/`                                                  | Source checkout when installed in home       |
+| Kind           | Paths                                                            | Purpose                                      |
+|----------------|------------------------------------------------------------------|----------------------------------------------|
+| Configuration  | `config.yaml`, `.env`                                            | Settings in `config.yaml`; secrets in `.env` |
+| Authentication | `auth.json`                                                      | OAuth tokens and credential pools            |
+| Sessions       | `state.db`, `sessions/`                                          | Session history, FTS index, gateway records  |
+| User content   | `skills/`, `skins/`, `desktop-plugins/`, `tui-widgets/`, `pets/` | Extensions, themes, widgets, and mascots     |
+| Diagnostics    | `logs/`                                                          | Gateway and error logs                       |
+| Source         | `hermes-agent/`                                                  | Source checkout when installed in home       |
 
 `state.db` is the canonical SQLite session store.  Gateway routing
 indexes, request dumps, and JSONL transcripts may also be written below
@@ -117,11 +105,6 @@ Profiles are isolated below `~/.hermes/profiles/<name>/`.  When a
 profile or custom `HERMES_HOME` is in use, persist that effective home
 instead of assuming the default path.
 
-The installer uses an FHS-style system install for the root Docker build:
-Hermes code is under `/usr/local/lib/hermes-agent` and the `hermes`
-command is available at `/usr/local/bin/hermes`.  Runtime data remains
-in the container user's `HERMES_HOME`.
-
 ---
 
 ## Persistence beyond the container
@@ -130,16 +113,23 @@ Containers are ephemeral.  Without a volume, Hermes configuration,
 credentials, sessions, memory, and user-installed skills disappear when
 the container exits.
 
-### Option 1 - Mount the complete Hermes home (recommended)
+### Recommended: extract and mount the Hermes home
 
-Persist the whole runtime home while keeping the executable and
-installed code in the image:
+Before the first run with a bind mount, extract the preinstalled Hermes
+home directory from the image into a host directory:
 
 ```bash
 mkdir -p "$HOME/.hermes-docker"
 
-touch "$HOME/.hermes-docker/.env"
+container_id=$(docker create hermes)
+docker cp "$container_id:/home/user/.hermes/." "$HOME/.hermes-docker/"
+docker rm "$container_id"
+```
 
+After extracting it once, mount that directory on every run to preserve
+Hermes state beyond the container lifecycle:
+
+```bash
 docker run --rm -it \
   -v "$HOME/.hermes-docker:/home/user/.hermes" \
   -v "$PWD:/workspaces/project" \
@@ -148,12 +138,11 @@ docker run --rm -it \
   hermes hermes
 ```
 
-This preserves `config.yaml`, `.env`, `auth.json`, `state.db`, sessions,
-logs, profiles, and user extensions.  Keep the directory private because
-it may contain credentials and conversation history.  The `/usr/local/bin/hermes`
-command and system installation are not inside this mount.
+If you build the image with a different `CONTAINER_USER`, replace `user`
+in the container path with that username.  Keep the extracted directory
+private because it may contain credentials and conversation history.
 
-### Option 2 - Use a named volume
+### Alternative: use a named volume
 
 ```bash
 docker run --rm -it \
@@ -169,7 +158,7 @@ Hermes state across containers, but rebuilding the image does not update
 the system-installed Hermes code until the image is rebuilt and the
 container is recreated.
 
-### Option 3 - Mount selected state paths
+### Alternative: mount selected state paths
 
 Leave the image-owned installation in place and persist only selected
 files or directories:
@@ -191,8 +180,8 @@ docker run --rm -it \
 ```
 
 Add `auth.json`, `memory/`, `skins/`, `desktop-plugins/`, or other paths
-as needed.  Mounting the whole home (Option 1) is less error-prone and
-also preserves newly added Hermes state directories.
+as needed.  Mounting the whole home is less error-prone and also
+preserves newly added Hermes state directories.
 
 ### Notice: secrets and profiles
 
@@ -219,7 +208,7 @@ the container.  For reliable resume behaviour across runs:
 | Keep settings         | `config.yaml`                                 |
 | Keep profiles         | `profiles/`                                   |
 | Preserve custom tools | `skills/`, `desktop-plugins/`, `tui-widgets/` |
-| Full Hermes state     | Entire `HERMES_HOME` (Option 1 or 2)          |
+| Full Hermes state     | Entire `HERMES_HOME`                          |
 
 ---
 

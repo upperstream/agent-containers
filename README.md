@@ -139,8 +139,7 @@ Declared at the top of the root `Dockerfile` (with current defaults/comments):
 |----------------------------|-----------------------------------------------------|
 | `CONTAINER_USER`           | `user`                                              |
 | `ENVIRONMENT`              | `production` (`development` adds doas tooling)      |
-| `HERMES_COMMIT`            | `3c27eb6`; specific Hermes git commit to install    |
-| `HERMES_NODE_VERSION`      | `v22.23.2`; Node.js version for Hermes              |
+| `HERMES_VERSION`           | `v2026.8.13` (Specific Hermes git tag to install)   |
 | `NANO_CLASSIC_KEYBINDINGS` | unset; set to `yes` for classic nano bindings       |
 | `PROVIDER`                 | `all`                                               |
 | `NODE_VERSION`             | `v24.18.1`                                          |
@@ -168,7 +167,7 @@ stages, not only at file top):
 | `PI_VERSION`       | `pi`       |
 
 Prefer **standalone** Dockerfiles for a minimal build context and docs
-next to one install path. Prefer the **root** Dockerfile for one image
+next to one install path.  Prefer the **root** Dockerfile for one image
 with many agents on `PATH`, or when iterating on the shared multi-stage
 graph.
 
@@ -230,8 +229,8 @@ Common patterns:
 path that also holds the tool's install (binary, docs, bundled skills)
 will hide the image contents and can break the CLI.
 
-Session stores are often keyed by **container working directory**. Use a
-stable `-w` path (this repo defaults to `/workspaces`) so resumes work
+Session stores are often keyed by **container working directory**.  Use
+a stable `-w` path (this repo defaults to `/workspaces`) so resumes work
 across runs.
 
 Detailed mount recipes for tools that install into a home directory
@@ -285,7 +284,7 @@ are licensed under the _2-Clause BSD License_.  See
 
 ### Third-party agents
 
-This repository only packages installers and public CLIs. Each agent
+This repository only packages installers and public CLIs.  Each agent
 binary, npm package, or tool you install through these images is subject
-to **its own** license and terms of use. Obtain API keys and accounts
+to **its own** license and terms of use.  Obtain API keys and accounts
 from the respective providers.

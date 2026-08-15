@@ -1,9 +1,23 @@
 # Changelog
 
+## [20260815][]
+
+* Changed
+  * Upgrade [Hermes Agent][] to v2026.8.13.
+    * Replace `HERMES_COMMIT` with `HERMES_VERSION` for selecting the
+      Hermes branch or tag.
+    * Remove `HERMES_NODE_VERSION` because Node.js is automatically
+      installed by the Hermes installer.
+    * Install Hermes and its runtime dependencies through the updated
+      source-based installation flow, including `uv` and the CUA driver.
+    * Document extracting the preinstalled Hermes home directory before
+      mounting it for persistent configuration, credentials, and
+      sessions.
+
 ## [20260807][]
 
 * Changed
-  * Upgrade [Hermes Agent][] to v2026.8.3.
+  * Upgrade Hermes Agent to v2026.8.3.
     * Introduce `HERMES_COMMIT` to specify commit hash to install Hermes
       Agent with.
     * Introduce `HERMES_NODE_VERSION` to specify [Node.js][] version for
@@ -39,6 +53,7 @@
 
 * Initial release.
 
+[20260815]: https://github.com/upperstream/agent-containers/compare/20260807...20260815
 [20260807]: https://github.com/upperstream/agent-containers/compare/20260801...20260807
 [20260801]: https://github.com/upperstream/agent-containers/compare/20260731...20260801
 [20260731]: https://github.com/upperstream/agent-containers/compare/20260711...20260731

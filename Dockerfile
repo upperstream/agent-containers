@@ -9,8 +9,7 @@ ARG CRUSH_VERSION                   # 'latest' or 'v0.81.0'
 ARG GEMINI_RELEASE                  # 'latest', 'preview', or 'nightly'
 ARG GROK_CHANNEL
 ARG GROK_VERSION
-ARG HERMES_COMMIT=3c27eb6
-ARG HERMES_NODE_VERSION=v22.23.2
+ARG HERMES_VERSION=v2026.8.13       # branch (main) or tag (v2026.8.13)
 ARG KILO_VERSION                    # '7.4.1'
 ARG KIRO_CHANNEL
 ARG KIRO_FORCE                      # '--force', defaults to unset
@@ -26,8 +25,10 @@ RUN apt-get install -y ca-certificates curl
 FROM builder_base AS node_base
 ARG NODE_VERSION    # global default
 ARG NPM_VERSION     # global default
-RUN apt-get install -y xz-utils && \
-    case "$(uname -s)" in \
+
+RUN apt-get update
+RUN apt-get install -y xz-utils
+RUN case "$(uname -s)" in \
     Linux) kernel=linux; machine="$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')"; format=xz;; \
     Darwin) kernel=darwin; machine="$(uname -m | sed 's/x86_64/x64/')"; format=gz;; \
     esac && \
@@ -216,19 +217,16 @@ ARG CONTAINER_USER  # global default
 
 COPY --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
 
-FROM container_base AS hermes
-ARG HERMES_COMMIT       # global default
-ARG HERMES_NODE_VERSION # global default
+FROM builder_base AS hermes_builder
+ARG HERMES_VERSION	# global default
 
-COPY --from=node_base "/usr/local/node-${HERMES_NODE_VERSION}" "/usr/local/node-${HERMES_NODE_VERSION}"
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends ca-certificates curl ffmpeg git ripgrep xz-utils && \
-    apt-get clean
-RUN ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
-RUN curl -fsSL https://hermes-agent.nousresearch.com/install.sh | \
-    PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" \
-        bash -s -- --skip-setup --skip-browser --non-interactive ${HERMES_COMMIT:+--commit $HERMES_COMMIT}
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends \
+        build-essential ca-certificates curl ffmpeg git ripgrep xz-utils
+RUN curl -fsSL https://hermes-agent.nousresearch.com/install.sh | sed 's!npm install --silent!env PYTHON="${PYTHON_PATH:-$(command -v python)}" npm install!' > hermes_installer.sh
+RUN git clone --depth 1 --branch ${HERMES_VERSION:=main} https://github.com/NousResearch/hermes-agent.git /usr/local/lib/hermes-agent
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN bash -x hermes_installer.sh --skip-setup --skip-browser --non-interactive ${HERMES_VERSION:+--commit $HERMES_VERSION} --force-commit
 
 FROM bin_stripper AS kilo_builder
 ARG KILO_VERSION    # global default
@@ -290,8 +288,9 @@ FROM builder_base AS openwiki_builder
 ARG OPENWIKI_NODE_VERSION   # global default
 ARG OPENWIKI_VERSION
 
-RUN apt-get install -y xz-utils && \
-    case "$(uname -s)" in \
+RUN apt-get update
+RUN apt-get install -y xz-utils
+RUN case "$(uname -s)" in \
     Linux) kernel=linux; machine="$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')"; format=xz;; \
     Darwin) kernel=darwin; machine="$(uname -m | sed 's/x86_64/x64/')"; format=gz;; \
     esac && \
@@ -367,6 +366,13 @@ COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.grok"
 
 COPY --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
 
+COPY --from=hermes_builder /usr/local/lib/hermes-agent /usr/local/lib/hermes-agent
+COPY --from=hermes_builder /usr/local/bin/hermes* /usr/local/bin/
+COPY --from=hermes_builder /usr/local/share/uv /usr/local/share/uv
+COPY --from=hermes_builder /root/.cua-driver "/home/${CONTAINER_USER}/.cua-driver"
+COPY --from=hermes_builder /root/.hermes "/home/${CONTAINER_USER}/.hermes"
+COPY --from=hermes_builder /root/.local "/home/${CONTAINER_USER}/.local"
+
 COPY --from=kilo_builder /root/.kilo "/home/${CONTAINER_USER}/.kilo"
 
 COPY --from=kiro_builder /root/.local/bin/kiro-cli /usr/local/bin/kiro-cli
@@ -379,22 +385,21 @@ COPY --from=openwiki_builder "/usr/local/node-${OPENWIKI_NODE_VERSION}" "/usr/lo
 
 COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
 
-RUN ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
+RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     ln -s "/home/${CONTAINER_USER}/.local/share/uv/tools/aider-chat/bin/aider" /usr/local/bin/aider && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline/bin/cline" /usr/local/bin/cline && \
     ln -s "$(echo /home/${CONTAINER_USER}/.local/share/cursor-agent/versions/*-*/cursor-agent)" /usr/local/bin/cursor-agent && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google/gemini-cli/bundle/gemini.js" /usr/local/bin/gemini && \
     ln -s "/home/${CONTAINER_USER}/.grok/bin/grok" /usr/local/bin/grok && \
+    (cd "/home/${CONTAINER_USER}/.local/bin" && ln -sf ../../.cua-driver/packages/current/cua-driver) && \
     ln -s "/home/${CONTAINER_USER}/.kilo/bin/kilo" /usr/local/bin/kilo && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js" /usr/local/bin/pi && \
     apt-get update && \
-    apt-get install -y --no-install-recommends curl ffmpeg git xz-utils && \
+    apt-get install -y --no-install-recommends ca-certificates curl ffmpeg git ripgrep && \
     apt-get clean && \
-    curl -fsSL https://hermes-agent.nousresearch.com/install.sh | \
-    PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" \
-        bash -s -- --skip-setup --skip-browser --non-interactive ${HERMES_COMMIT:+--commit $HERMES_COMMIT} && \
-    printf 'PATH=$PATH:%s\n' "/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" >> "/home/${CONTAINER_USER}/.bashrc"
+    printf 'PATH=$PATH:%s:%s\n' "/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" "/home/${CONTAINER_USER}/.local/bin" >> "/home/${CONTAINER_USER}/.bashrc"
 
 FROM "${PROVIDER}" AS production
 ARG CONTAINER_USER  # global default
