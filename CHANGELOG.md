@@ -2,8 +2,10 @@
 
 ## [Unreleased][]
 
+* Changed:
+  * [Hermes Agent][]: Suppress verbose output during installation.
 * Fixed:
-  * [Hermes Agent][]: `HERMES_VERSION` did not work for tag name.
+  * Hermes Agent: `HERMES_VERSION` did not work for tag name.
 
 ## [20260815][]
 

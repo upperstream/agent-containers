@@ -32,10 +32,10 @@ ARG HERMES_VERSION	# global default
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
     build-essential ca-certificates curl ffmpeg git ripgrep xz-utils
-RUN curl -fsSL https://hermes-agent.nousresearch.com/install.sh | sed 's!npm install --silent!env PYTHON="${PYTHON_PATH:-$(command -v python)}" npm install!' > hermes_installer.sh
+RUN curl -fsSL https://hermes-agent.nousresearch.com/install.sh | sed 's!npm install --silent!env PYTHON="${PYTHON_PATH:-$(command -v python)}" npm install --silent!' > hermes_installer.sh
 RUN git clone --depth 1 --branch ${HERMES_VERSION:=main} https://github.com/NousResearch/hermes-agent.git /usr/local/lib/hermes-agent
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-RUN bash -x hermes_installer.sh --skip-setup --skip-browser --non-interactive ${HERMES_VERSION:+--commit "$(git -C /usr/local/lib/hermes-agent rev-parse --short "${HERMES_VERSION}"^{commit})"} --force-commit
+RUN bash hermes_installer.sh --skip-setup --skip-browser --non-interactive ${HERMES_VERSION:+--commit "$(git -C /usr/local/lib/hermes-agent rev-parse --short "${HERMES_VERSION}"^{commit})"} --force-commit
 
 FROM container_base AS production
 ARG CONTAINER_USER  # global default
