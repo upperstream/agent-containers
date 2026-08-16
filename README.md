@@ -245,9 +245,11 @@ Detailed mount recipes for tools that install into a home directory
 ├── Dockerfile                      # Multi-stage: all agents + PROVIDER
 ├── LICENSE.txt                     # 2-Clause BSD
 ├── README.md                       # This file
+├── .agents/                        # Instructions to the coding agents
 ├── .editorconfig
 ├── .gitattributes
 ├── .gitignore
+├── .markdownlint.json
 ├── aider/                          # Standalone Dockerfile + README
 ├── antigravity/
 ├── claude/
