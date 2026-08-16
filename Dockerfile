@@ -3,7 +3,7 @@ ARG ENVIRONMENT=production          # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS        # 'yes', default to 'no'
 ARG NODE_VERSION=v24.18.1
 ARG NPM_VERSION="12.0.0"
-ARG CODEX_RELEASE                   # 'latest' or '0.142.5'
+ARG CODEX_RELEASE=0.147.0           # 'latest' or '0.142.5'
 ARG COPILOT_VERSION                 # 'latest', 'prerelease', or 'v0.0.369'
 ARG CRUSH_VERSION                   # 'latest' or 'v0.81.0'
 ARG GEMINI_RELEASE                  # 'latest', 'preview', or 'nightly'
@@ -122,8 +122,21 @@ RUN curl -fsSL https://chatgpt.com/codex/install.sh > codex_installer.sh
 RUN CODEX_NON_INTERACTIVE=1 sh codex_installer.sh
 
 FROM container_base AS codex
+ARG CONTAINER_USER              # global default
 
-COPY --from=codex_builder /root/.local/bin/codex /usr/local/bin/codex
+COPY --from=codex_builder /root/.codex "/home/${CONTAINER_USER}/.codex"
+
+RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
+    (cd "/home/${CONTAINER_USER}/.codex/packages/standalone" && \
+        ln -s $(readlink current | sed 's!/root/.codex/packages/standalone/!!' && rm current) current) && \
+    (cd $(echo "/home/${CONTAINER_USER}"/.codex/tmp/arg0/* | head -n1) && \
+        for f in *; do echo ">>>> $f <<<<"; ln -sf "$(printf "../../../%s" "$(readlink "$f" | sed 's!/root/.codex/!!' && rm "$f")")" "$f"; done) && \
+    ln -sf "/home/${CONTAINER_USER}/.codex/packages/standalone/current/bin/codex" "/home/${CONTAINER_USER}/.local/bin/" && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends bubblewrap && \
+    apt-get clean && \
+    chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}" && \
+    printf 'PATH=$PATH:%s\n' "/home/${CONTAINER_USER}/.local/bin" >> "/home/${CONTAINER_USER}/.bashrc"
 
 FROM builder_base AS copilot_builder
 ARG COPILOT_VERSION # global default
@@ -350,7 +363,7 @@ COPY --from=claude_builder /usr/bin/claude /usr/local/bin/claude
 
 COPY --from=cline_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline" "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline"
 
-COPY --from=codex_builder /root/.local/bin/codex /usr/local/bin/codex
+COPY --from=codex_builder /root/.codex "/home/${CONTAINER_USER}/.codex"
 
 COPY --from=copilot_builder /usr/local/bin/copilot /usr/local/bin/copilot
 
@@ -389,6 +402,11 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     ln -s "/home/${CONTAINER_USER}/.local/share/uv/tools/aider-chat/bin/aider" /usr/local/bin/aider && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline/bin/cline" /usr/local/bin/cline && \
+    (cd "/home/${CONTAINER_USER}/.codex/packages/standalone" && \
+        ln -s $(readlink current | sed 's!/root/.codex/packages/standalone/!!' && rm current) current) && \
+    (cd $(echo "/home/${CONTAINER_USER}"/.codex/tmp/arg0/* | head -n1) && \
+        for f in *; do echo ">>>> $f <<<<"; ln -sf "$(printf "../../../%s" "$(readlink "$f" | sed 's!/root/.codex/!!' && rm "$f")")" "$f"; done) && \
+    ln -sf "/home/${CONTAINER_USER}/.codex/packages/standalone/current/bin/codex" "/home/${CONTAINER_USER}/.local/bin/" && \
     ln -s "$(echo /home/${CONTAINER_USER}/.local/share/cursor-agent/versions/*-*/cursor-agent)" /usr/local/bin/cursor-agent && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google/gemini-cli/bundle/gemini.js" /usr/local/bin/gemini && \
     ln -s "/home/${CONTAINER_USER}/.grok/bin/grok" /usr/local/bin/grok && \
@@ -397,7 +415,7 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js" /usr/local/bin/pi && \
     apt-get update && \
-    apt-get install -y --no-install-recommends ca-certificates curl ffmpeg git ripgrep && \
+    apt-get install -y --no-install-recommends bubblewrap ca-certificates curl ffmpeg git ripgrep && \
     apt-get clean && \
     printf 'PATH=$PATH:%s:%s\n' "/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" "/home/${CONTAINER_USER}/.local/bin" >> "/home/${CONTAINER_USER}/.bashrc"
 

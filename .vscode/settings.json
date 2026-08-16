@@ -1,12 +1,15 @@
 {
     "cSpell.words": [
+        "applypatch",
         "binutils",
+        "bubblewrap",
         "charmbracelet",
         "doas",
         "Dockerfiles",
         "dpkg",
         "earendil",
         "esac",
+        "execve",
         "herdr",
         "KIRO",
         "langchain",

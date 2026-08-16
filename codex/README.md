@@ -1,8 +1,11 @@
 # Codex container
 
-Debian-based image with OpenAI [Codex CLI](https://chatgpt.com/codex) preinstalled, plus common editor and search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).
+Debian-based image with OpenAI [Codex CLI](https://chatgpt.com/codex)
+preinstalled, plus common editor and search tools (`git`, `ripgrep`,
+`fd`, `vim`, `nano`, etc.).
 
-The default container user is `user` (override at build time with `CONTAINER_USER`). Working directory is `/workspaces`.
+The default container user is `user` (override at build time with
+`CONTAINER_USER`). Working directory is `/workspaces`.
 
 ---
 
@@ -47,35 +50,61 @@ docker run --rm -it \
   -v "$PWD:/workspaces/project" \
   -w /workspaces/project \
   -e OPENAI_API_KEY \
-  codex codex
+  codex /home/user/.local/bin/codex
 ```
 
-Authenticate with `OPENAI_API_KEY` or the CLI’s login flow. Config and session data often live under `~/.codex`.
+Authenticate with `OPENAI_API_KEY` or the CLI’s login flow.  Config
+and session data often live under `~/.codex`.
 
 ---
 
 ## Image layout
 
-| Path                   | Description               |
-|------------------------|---------------------------|
-| `/usr/local/bin/codex` | Codex CLI binary          |
-| `/workspaces`          | Default working directory |
+| Path                          | Description               |
+|-------------------------------|---------------------------|
+| `/home/user/.codex`           | Codex installation and data |
+| `/home/user/.local/bin/codex` | Symlink to the Codex CLI  |
+| `/workspaces`                 | Default working directory |
 
 ### Persistence
 
+The Codex installation and its user data, including configuration and
+session information, live in `/home/user/.codex` inside the container.
+Before mounting that path, copy its initial contents out of the image.
+An empty bind mount would hide the installed files and leave the Codex
+symlink unusable.
+
+```bash
+docker create --name codex-extract codex
+docker cp codex-extract:/home/user/.codex ./.codex
+docker rm codex-extract
+```
+
+Then mount the extracted directory when starting Codex:
+
 ```bash
 docker run --rm -it \
-  -v "$HOME/.codex:/home/user/.codex" \
+  -v "$PWD/.codex:/home/user/.codex" \
   -v "$PWD:/workspaces/project" \
   -w /workspaces/project \
   -e OPENAI_API_KEY \
-  codex codex
+  codex /home/user/.local/bin/codex
 ```
 
-Mount additional paths if your Codex version documents other state locations.
+The host-side `.codex` directory then retains the data when the
+container is removed and makes it available to later containers
+started with the same mount.  Add `.codex/` to the project's
+`.gitignore`; it can contain credentials and private session data and
+should not be committed.
+
+If the image was built with a different `CONTAINER_USER`, replace `user`
+in `/home/user/.codex` with that user's name.  Mount additional paths if
+your Codex version documents other state locations.
 
 ---
 
 ## Related
 
-The monorepo root `Dockerfile` can also include Codex via multi-stage targets. This directory is a **standalone** build so you can image Codex without the multi-agent graph.
+The monorepo root `Dockerfile` can also include Codex via multi-stage
+targets.  This directory is a standalone build so you can image Codex
+without the multi-agent graph.

@@ -1,10 +1,22 @@
 # Changelog
 
-## [Unreleased][]
+## [20260817][]
 
 * Changed:
+  * [Codex CLI][]:
+    * Upgrade to v0.147.0.
+    * Keep installed bundle inside `$HOME/.codex` directory.
+    * Move `codex` executable into `$HOME/.local/bin` directory, which
+      is now included in `PATH` environment variable.
+    * Update document.
   * [Hermes Agent][]: Suppress verbose output during installation.
 * Fixed:
+  * Codex CLI: The following bundled executables were not installed:
+    * `codex-code-mode-host`
+    * `apply_patch`
+    * `applypatch`
+    * `codex-execve-wrapper`
+    * `codex-linux-sandbox`
   * Hermes Agent: `HERMES_VERSION` did not work for tag name.
 
 ## [20260815][]
@@ -50,6 +62,8 @@
   * Use Node.js v22.14.0 for OpenWiki in order to properly install
     `better-sqlite3`.
 
+[Codex CLI]: https://learn.chatgpt.com/docs/codex/cli
+  "CLI – Codex | OpenAI Developers"
 [Hermes Agent]: https://hermes-agent.nousresearch.com/
   "Hermes Agent | Nous Research"
 [Node.js]: https://nodejs.org/ "Node.js — Run JavaScript Everywhere"
@@ -60,7 +74,7 @@
 
 * Initial release.
 
-[Unreleased]: https://github.com/upperstream/agent-containers/compare/20260815...HEAD
+[20260817]: https://github.com/upperstream/agent-containers/compare/20260815...20260817
 [20260815]: https://github.com/upperstream/agent-containers/compare/20260807...20260815
 [20260807]: https://github.com/upperstream/agent-containers/compare/20260801...20260807
 [20260801]: https://github.com/upperstream/agent-containers/compare/20260731...20260801

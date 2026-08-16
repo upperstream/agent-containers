@@ -1,7 +1,7 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG CODEX_RELEASE               # 'latest' or '0.142.5'
+ARG CODEX_RELEASE=0.147.0       # 'latest' or '0.142.5'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
@@ -27,18 +27,28 @@ EOF
 EOT
 
 FROM builder_base AS codex_builder
-ARG CODEX_RELEASE               # global default
+ARG CODEX_RELEASE   # global default
 
 RUN echo "CODEX_RELEASE=\"$CODEX_RELEASE\""
 RUN curl -fsSL https://chatgpt.com/codex/install.sh > codex_installer.sh
 RUN CODEX_NON_INTERACTIVE=1 sh codex_installer.sh
 
 FROM container_base AS production
-ARG CONTAINER_USER              # global default
+ARG CONTAINER_USER  # global default
 
-COPY --from=codex_builder /root/.local/bin/codex /usr/local/bin/codex
+COPY --from=codex_builder /root/.codex "/home/${CONTAINER_USER}/.codex"
 
-RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
+RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
+    (cd "/home/${CONTAINER_USER}/.codex/packages/standalone" && \
+        ln -s $(readlink current | sed 's!/root/.codex/packages/standalone/!!' && rm current) current) && \
+    (cd $(echo "/home/${CONTAINER_USER}"/.codex/tmp/arg0/* | head -n1) && \
+        for f in *; do echo ">>>> $f <<<<"; ln -sf "$(printf "../../../%s" "$(readlink "$f" | sed 's!/root/.codex/!!' && rm "$f")")" "$f"; done) && \
+    ln -sf "/home/${CONTAINER_USER}/.codex/packages/standalone/current/bin/codex" "/home/${CONTAINER_USER}/.local/bin/" && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends bubblewrap && \
+    apt-get clean && \
+    chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}" && \
+    printf 'PATH=$PATH:%s\n' "/home/${CONTAINER_USER}/.local/bin" >> "/home/${CONTAINER_USER}/.bashrc"
 
 FROM production AS development
 ARG CONTAINER_USER              # global default
