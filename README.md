@@ -48,14 +48,14 @@ the shared layout and how to build.
 All images (standalone and root) share the same runtime shape unless an
 agent README says otherwise:
 
-| Item                      | Default                                                                       |
-|---------------------------|-------------------------------------------------------------------------------|
-| Base OS                   | `debian:trixie-slim`                                                          |
-| User                      | `user` (`CONTAINER_USER`)                                                     |
-| Working directory         | `/workspaces`                                                                 |
-| Editors / tools           | `git`, `ripgrep` (`rg`), `fd-find`, `vim`, `nano`, `emacs-nox`, `mg`, `micro` |
-| Production vs development | `ENVIRONMENT=production` or `development`                                     |
-| Final env passthrough     | `EDITOR`, `GIT_EDITOR`, `TERM` (empty unless set at build/run)                |
+| Item                      | Default                                                                                     |
+|---------------------------|---------------------------------------------------------------------------------------------|
+| Base OS                   | `debian:trixie-slim`                                                                        |
+| User                      | `user` (`CONTAINER_USER`)                                                                   |
+| Working directory         | `/workspaces`                                                                               |
+| Editors / tools           | `bubblewrap`, `git`, `ripgrep` (`rg`), `fd-find`, `vim`, `nano`, `emacs-nox`, `mg`, `micro` |
+| Production vs development | `ENVIRONMENT=production` or `development`                                                   |
+| Final env passthrough     | `EDITOR`, `GIT_EDITOR`, `TERM` (empty unless set at build/run)                              |
 
 **Development** images (`ENVIRONMENT=development`) add `doas` (passwordless
 for group `sudo`), `binutils`, `file`, and `tree`, and add the container
@@ -145,7 +145,7 @@ Declared at the top of the root `Dockerfile` (with current defaults/comments):
 | `NODE_VERSION`             | `v24.18.1`                                          |
 | `NPM_VERSION`              | `12.0.0`                                            |
 | `CODEX_RELEASE`            | installer default (`latest` or a version)           |
-| `COPILOT_VERSION`          | defaults to `latest` in the builder                 |
+| `COPILOT_VERSION`          | `1.0.80` (`latest` or a version)                    |
 | `CRUSH_VERSION`            | defaults to `latest` in the Go install              |
 | `GEMINI_RELEASE`           | defaults to `latest` for `@google/gemini-cli`       |
 | `GROK_CHANNEL`             | unset                                               |

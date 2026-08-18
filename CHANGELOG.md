@@ -4,6 +4,9 @@
 
 * Added:
   * Add an agent skill for documentation standards.
+* Changed:
+  * [GitHub Copilot CLI][]:
+    * Upgrade to version 1.0.80
 
 ## [20260817][]
 
@@ -69,6 +72,8 @@
 
 [Codex CLI]: https://learn.chatgpt.com/docs/codex/cli
   "CLI – Codex | OpenAI Developers"
+[GitHub Copilot CLI]: https://github.com/features/copilot/cli
+  "GitHub Copilot CLI"
 [Hermes Agent]: https://hermes-agent.nousresearch.com/
   "Hermes Agent | Nous Research"
 [Node.js]: https://nodejs.org/ "Node.js — Run JavaScript Everywhere"

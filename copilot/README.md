@@ -1,20 +1,25 @@
 # GitHub Copilot CLI container
 
-Debian-based image with [GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/use-copilot-extensions/use-copilot-cli) preinstalled, plus common editor and search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).
+Debian Trixie Slim image with [GitHub Copilot CLI][] and common
+editor, search, and development tools preinstalled.
 
-The default container user is `user` (override at build time with `CONTAINER_USER`). Working directory is `/workspaces`.
+The default container user is `user`.  Override it at build time with
+`CONTAINER_USER`.  The working directory is `/workspaces`.
+
+[GitHub Copilot CLI]:
+https://docs.github.com/en/copilot/how-tos/use-copilot-extensions/use-copilot-cli
 
 ---
 
 ## Build
 
-From this directory:
+Build from this directory:
 
 ```bash
 docker build -t copilot .
 ```
 
-From the repository root:
+Or build from the repository root:
 
 ```bash
 docker build -t copilot -f copilot/Dockerfile copilot
@@ -22,12 +27,14 @@ docker build -t copilot -f copilot/Dockerfile copilot
 
 ### Build arguments
 
-| Argument                   | Default      | Description                                              |
-|----------------------------|--------------|----------------------------------------------------------|
-| `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
-| `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
-| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings                |
-| `COPILOT_VERSION`          | `latest`     | Pin version: `latest`, `prerelease`, or e.g. `v0.0.369`  |
+- `CONTAINER_USER` defaults to `user`, the non-root user created in the
+  image.
+- `ENVIRONMENT` defaults to `production`.  It selects either the
+  `production` or `development` final image.
+- `NANO_CLASSIC_KEYBINDINGS` defaults to `no`.  Set it to `yes` for
+  classic nano keybindings.
+- `COPILOT_VERSION` defaults to `1.0.80`.  It is passed to the Copilot
+  installer.
 
 Examples:
 
@@ -36,34 +43,53 @@ docker build -t copilot:dev --build-arg ENVIRONMENT=development .
 docker build -t copilot:prerelease --build-arg COPILOT_VERSION=prerelease .
 ```
 
+The development image adds `binutils`, `file`, `opendoas`, and `tree`.
+It permits members of the `sudo` group to run `doas` without a password.
+
 ---
 
 ## Run
 
+To retain Copilot user data and session information after the container
+is removed, create an empty state directory on the host:
+
+```bash
+mkdir -p .copilot
+```
+
+Mount it at the default container user's Copilot data path when running
+the image:
+
 ```bash
 docker run --rm -it \
   -v "$PWD:/workspaces/project" \
+  -v "$PWD/.copilot:/home/user/.copilot" \
   -w /workspaces/project \
   copilot copilot
 ```
 
-Authenticate with GitHub (device flow or token) as required by the Copilot CLI. You may need to pass a `GH_TOKEN` or mount GitHub credential helpers depending on your setup.
+Authenticate with GitHub, using device flow or a token, as required by
+the Copilot CLI.  Copilot writes its authentication and session data to
+the mounted `.copilot` directory.  Adjust `/home/user` if you build the
+image with a different `CONTAINER_USER`.
 
 ---
 
-## Image layout
+## Included software
 
-| Path                     | Description               |
-|--------------------------|---------------------------|
-| `/usr/local/bin/copilot` | Copilot CLI binary        |
-| `/workspaces`            | Default working directory |
+The production image includes:
 
-### Persistence
+- GitHub Copilot CLI at `/usr/local/bin/copilot`
+- `emacs-nox`, `mg`, `micro`, `nano`, and `vim-nox`
+- `fd-find`, `git`, and `ripgrep`
 
-Mount home config/credential directories the CLI uses so login state survives container restarts. Prefer paths documented for your Copilot CLI version (often under `~/.config` or GitHub CLI auth stores).
+The image has no entrypoint or default command.  Run `copilot`
+explicitly, as in the preceding example.
 
 ---
 
 ## Related
 
-The monorepo root `Dockerfile` can also include Copilot via multi-stage targets. This directory is a **standalone** build so you can image Copilot without the multi-agent graph.
+The monorepo root `Dockerfile` can also include Copilot through
+multi-stage targets.  This directory is a standalone build for an
+image that contains only the Copilot environment.

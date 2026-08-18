@@ -1,7 +1,7 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG COPILOT_VERSION             # 'latest', 'prerelease', or 'v0.0.369'
+ARG COPILOT_VERSION=1.0.80      # 'latest', 'prerelease', or 'v0.0.369'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
