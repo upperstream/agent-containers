@@ -1,8 +1,11 @@
 # Kiro CLI container
 
-Debian-based image with [Kiro CLI](https://cli.kiro.dev/) (`kiro-cli`) preinstalled, plus common editor and search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).
+Debian-based image with [Kiro CLI](https://cli.kiro.dev/) (`kiro-cli`)
+preinstalled, plus common editor and search tools (`git`, `ripgrep`,
+`fd`, `vim`, `nano`, etc.).
 
-The default container user is `user` (override at build time with `CONTAINER_USER`). Working directory is `/workspaces`.
+The default container user is `user` (override at build time with
+`CONTAINER_USER`).  Working directory is `/workspaces`.
 
 ---
 
@@ -26,9 +29,9 @@ docker build -t kiro -f kiro/Dockerfile kiro
 |----------------------------|--------------|---------------------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                            |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling)      |
-| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings                     |
-| `KIRO_CHANNEL`             | *(unset)*    | Installer channel (`--channel …` when set)                    |
-| `KIRO_FORCE`               | *(unset)*    | Set to any non-empty value to pass `--force` to the installer |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                     |
+| `KIRO_CHANNEL`             | (unset)      | Installer channel (`--channel ...` when set)                  |
+| `KIRO_FORCE`               | (unset)      | Set to any non-empty value to pass `--force` to the installer |
 
 Examples:
 
@@ -62,10 +65,14 @@ Authenticate according to Kiro CLI documentation for your environment.
 
 ### Persistence
 
-Mount home-directory config or credential paths `kiro-cli` creates if you need them across container runs. Prefer the locations documented for your Kiro release.
+Mount home-directory config or credential paths `kiro-cli` creates if
+you need them across container runs.  Prefer the locations documented
+for your Kiro release.
 
 ---
 
 ## Related
 
-The monorepo root `Dockerfile` can also include Kiro via multi-stage targets. This directory is a **standalone** build so you can image Kiro without the multi-agent graph.
+The monorepo root `Dockerfile` can also include Kiro via multi-stage
+targets.  This directory is a **standalone** build so you can image Kiro
+without the multi-agent graph.

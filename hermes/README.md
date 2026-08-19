@@ -1,10 +1,11 @@
 # Hermes Agent container
 
-Debian-based image with [Hermes Agent](https://hermes-agent.nousresearch.com/)
-(Nous Research's terminal AI agent) preinstalled, plus common editor and
-search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).  The image
-also includes Node.js and `ffmpeg`, which are used by Hermes and its
-optional tool integrations.
+Debian-based image with [Hermes
+Agent](https://hermes-agent.nousresearch.com/) (Nous Research's terminal
+AI agent) preinstalled, plus common editor and search tools (`git`,
+`ripgrep`, `fd`, `vim`, `nano`, etc.).  The image also includes Node.js
+and `ffmpeg`, which are used by Hermes and its optional tool
+integrations.
 
 The default container user is `user` (override at build time with
 `CONTAINER_USER`).  Working directory is `/workspaces`.
@@ -31,7 +32,7 @@ docker build -t hermes -f hermes/Dockerfile hermes
 |----------------------------|--------------|----------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                 |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas` tools)  |
-| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings          |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings          |
 | `HERMES_VERSION`           | `v2026.8.13` | Hermes version tag (or Git branch name) to install |
 
 Examples:
@@ -74,10 +75,10 @@ docker run --rm -it \
 ```
 
 You can pass the API key for the provider you use, or configure a
-provider interactively inside the container with `hermes setup` / `hermes model`.
-For example, replace `OPENAI_API_KEY` with `ANTHROPIC_API_KEY`,
-`OPENROUTER_API_KEY`, `GEMINI_API_KEY`, or another provider-specific
-credential supported by Hermes.
+provider interactively inside the container with `hermes setup` /
+`hermes model`.  For example, replace `OPENAI_API_KEY` with
+`ANTHROPIC_API_KEY`, `OPENROUTER_API_KEY`, `GEMINI_API_KEY`, or another
+provider-specific credential supported by Hermes.
 
 ---
 
@@ -85,8 +86,8 @@ credential supported by Hermes.
 
 Hermes stores configuration, credentials, sessions, skills, and other
 runtime data under `HERMES_HOME` (default `~/.hermes`).  When the image
-runs as its default user, this is `/home/user/.hermes`; set `HERMES_HOME`
-to use a different location.
+runs as its default user, this is `/home/user/.hermes`; set
+`HERMES_HOME` to use a different location.
 
 | Kind           | Paths                                                            | Purpose                                      |
 |----------------|------------------------------------------------------------------|----------------------------------------------|
@@ -101,9 +102,9 @@ to use a different location.
 indexes, request dumps, and JSONL transcripts may also be written below
 `~/.hermes/sessions/`.
 
-Profiles are isolated below `~/.hermes/profiles/<name>/`.  When a
-profile or custom `HERMES_HOME` is in use, persist that effective home
-instead of assuming the default path.
+Profiles are isolated below `~/.hermes/profiles/<name>/`.
+When a profile or custom `HERMES_HOME` is in use, persist that effective
+home instead of assuming the default path.
 
 ---
 
@@ -153,7 +154,7 @@ docker run --rm -it \
   hermes hermes
 ```
 
-The named volume is initialized automatically on first use.  It persists
+The named volume is initialised automatically on first use.  It persists
 Hermes state across containers, but rebuilding the image does not update
 the system-installed Hermes code until the image is rebuilt and the
 container is recreated.

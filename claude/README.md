@@ -1,8 +1,11 @@
 # Claude Code container
 
-Debian-based image with [Claude Code](https://claude.ai/) CLI preinstalled, plus common editor and search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).
+Debian-based image with [Claude Code](https://claude.ai/) CLI
+preinstalled, plus common editor and search tools (`git`, `ripgrep`,
+`fd`, `vim`, `nano`, etc.).
 
-The default container user is `user` (override at build time with `CONTAINER_USER`). Working directory is `/workspaces`.
+The default container user is `user` (override at build time with
+`CONTAINER_USER`).  Working directory is `/workspaces`.
 
 ---
 
@@ -26,7 +29,7 @@ docker build -t claude -f claude/Dockerfile claude
 |----------------------------|-----------------------|----------------------------------------------------------|
 | `CONTAINER_USER`           | `user`                | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production`          | `production` or `development` (adds `doas`/sudo tooling) |
-| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*             | Set to `yes` for classic nano keybindings                |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)               | Set to `yes` for classic nano keybindings                |
 
 Examples:
 
@@ -47,7 +50,9 @@ docker run --rm -it \
   claude claude
 ```
 
-Authenticate with `ANTHROPIC_API_KEY` or the CLI’s login flow. Credentials and settings typically land under the user’s home (commonly `~/.claude`).
+Authenticate with `ANTHROPIC_API_KEY` or the CLI’s login flow.
+Credentials and settings typically land under the user’s home (commonly
+`~/.claude`).
 
 ---
 
@@ -60,7 +65,8 @@ Authenticate with `ANTHROPIC_API_KEY` or the CLI’s login flow. Credentials and
 
 ### Persistence
 
-Ephemeral containers lose home-directory state. Mount Claude config and related paths if you want login and settings to survive:
+Ephemeral containers lose home-directory state.  Mount Claude config and
+related paths if you want login and settings to survive:
 
 ```bash
 docker run --rm -it \
@@ -71,10 +77,13 @@ docker run --rm -it \
   claude claude
 ```
 
-Also consider mounting project-level `.claude/` settings with the workspace volume (already included when you bind the project root).
+Also consider mounting project-level `.claude/` settings with the
+workspace volume (already included when you bind the project root).
 
 ---
 
 ## Related
 
-The monorepo root `Dockerfile` can also include Claude via multi-stage targets (`PROVIDER=claude` or `all`). This directory is a **standalone** build so you can image Claude without the multi-agent graph.
+The monorepo root `Dockerfile` can also include Claude via multi-stage
+targets (`PROVIDER=claude` or `all`).  This directory is a standalone
+build so you can image Claude without the multi-agent graph.

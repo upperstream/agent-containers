@@ -1,8 +1,11 @@
 # Kilo container
 
-Debian-based image with [Kilo](https://kilo.ai/) CLI preinstalled under `/home/user/.kilo`, plus common editor and search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).
+Debian-based image with [Kilo](https://kilo.ai/) CLI preinstalled under
+`/home/user/.kilo`, plus common editor and search tools (`git`,
+`ripgrep`, `fd`, `vim`, `nano`, etc.).
 
-The default container user is `user` (override at build time with `CONTAINER_USER`). Working directory is `/workspaces`.
+The default container user is `user` (override at build time with
+`CONTAINER_USER`).  Working directory is `/workspaces`.
 
 ---
 
@@ -22,12 +25,12 @@ docker build -t kilo -f kilo/Dockerfile kilo
 
 ### Build arguments
 
-| Argument                   | Default               | Description                                              |
-|----------------------------|-----------------------|----------------------------------------------------------|
-| `CONTAINER_USER`           | `user`                | Non-root user created in the image                       |
-| `ENVIRONMENT`              | `production`          | `production` or `development` (adds `doas`/sudo tooling) |
-| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*             | Set to `yes` for classic nano keybindings                |
-| `KILO_VERSION`             | *(installer default)* | Pin version, e.g. `7.4.1`                                |
+| Argument                   | Default             | Description                                              |
+|----------------------------|---------------------|----------------------------------------------------------|
+| `CONTAINER_USER`           | `user`              | Non-root user created in the image                       |
+| `ENVIRONMENT`              | `production`        | `production` or `development` (adds `doas`/sudo tooling) |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)             | Set to `yes` for classic nano keybindings                |
+| `KILO_VERSION`             | (installer default) | Pin version, e.g. `7.4.1`                                |
 
 Examples:
 
@@ -61,15 +64,20 @@ Authenticate according to Kilo’s documentation for your environment.
 
 ### Persistence
 
-Kilo’s install and runtime data both live under `~/.kilo`. Binding a host directory over `/home/user/.kilo` **replaces** the image install.
+Kilo’s install and runtime data both live under `~/.kilo`.  Binding a
+host directory over `/home/user/.kilo` **replaces** the image install.
 
-**Notice:** Do not mount an empty or partial host `~/.kilo` over the container path, or you may lose the binary and install assets.
+**Notice:** Do not mount an empty or partial host `~/.kilo` over the
+container path, or you may lose the binary and install assets.
 
 Options:
 
-1. **Full home mount** — only if the host tree is a complete install (seed from the image if needed).
-2. **Selective mounts** — leave install assets in the image; mount only mutable subpaths the tool documents (config, sessions, auth).
-3. **Named volume** — seed once from the image, then reattach the volume for full persistence.
+1. **Full home mount** — only if the host tree is a complete install
+   (seed from the image if needed).
+2. **Selective mounts** — leave install assets in the image; mount only
+   mutable subpaths the tool documents (config, sessions, auth).
+3. **Named volume** — seed once from the image, then reattach the volume
+   for full persistence.
 
 ```bash
 # Seed a named volume from the image
@@ -87,4 +95,6 @@ docker run --rm -it \
 
 ## Related
 
-The monorepo root `Dockerfile` can also include Kilo via multi-stage targets. This directory is a **standalone** build so you can image Kilo without the multi-agent graph.
+The monorepo root `Dockerfile` can also include Kilo via multi-stage
+targets.  This directory is a **standalone** build so you can image Kilo
+without the multi-agent graph.

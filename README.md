@@ -20,28 +20,28 @@ the shared layout and how to build.
 
 ## Agents
 
-| Agent              | Standalone dir                       | Root `PROVIDER` | Entrypoint          | Docs                               |
-|--------------------|--------------------------------------|-----------------|---------------------|------------------------------------|
-| Aider              | [`aider/`](aider/)                   | `aider`         | `aider`             | [README](aider/README.md)          |
-| Antigravity        | [`antigravity/`](antigravity/)       | `antigravity`   | `agy`               | [README](antigravity/README.md)    |
-| Claude Code        | [`claude/`](claude/)                 | `claude`        | `claude`            | [README](claude/README.md)         |
-| Cline              | [`cline/`](cline/)                   | `cline`         | `cline`             | [README](cline/README.md)          |
-| Codex              | [`codex/`](codex/)                   | `codex`         | `codex`             | [README](codex/README.md)          |
-| GitHub Copilot CLI | [`copilot/`](copilot/)               | `copilot`       | `copilot`           | [README](copilot/README.md)        |
-| Crush              | [`crush/`](crush/)                   | `crush`         | `crush`             | [README](crush/README.md)          |
-| Cursor Agent       | [`cursor/`](cursor/)                 | `cursor`        | `cursor-agent`      | [README](cursor/README.md)         |
-| Droid (Factory)    | [`droid/`](droid/)                   | `droid`         | `droid`             | [README](droid/README.md)          |
-| Gemini CLI         | [`gemini/`](gemini/)                 | `gemini`        | `gemini`            | [README](gemini/README.md)         |
-| Grok Build         | [`grok/`](grok/)                     | `grok`          | `grok`              | [README](grok/README.md)           |
-| Herdr              | [`herdr/`](herdr/)                   | `herdr`         | `herdr`             | [README](herdr/README.md)          |
-| Hermes Agent       | [`hermes/`](hermes/)                 | `hermes`        | `hermes`            | [README](hermes/README.md)         |
-| Kilo               | [`kilo/`](kilo/)                     | `kilo`          | `kilo`              | [README](kilo/README.md)           |
-| Kiro CLI           | [`kiro/`](kiro/)                     | `kiro`          | `kiro-cli`          | [README](kiro/README.md)           |
-| OpenClaw           | [`openclaw/`](openclaw/)             | `openclaw`      | `openclaw`          | [README](openclaw/README.md)       |
-| OpenCode           | [`opencode/`](opencode/)             | `opencode`      | `opencode`          | [README](opencode/README.md)       |
-| OpenWiki           | [`openwiki-agent/`](openwiki-agent/) | `openwiki`      | `openwiki`          | [README](openwiki-agent/README.md) |
-| Pi coding agent    | [`pi/`](pi/)                         | `pi`            | `pi`                | [README](pi/README.md)             |
-| All of the above   |                                      | `all` (default) | *(each entrypoint)* | This file                          |
+| Agent              | Standalone dir                       | Root `PROVIDER` | Entrypoint        | Docs                               |
+|--------------------|--------------------------------------|-----------------|-------------------|------------------------------------|
+| Aider              | [`aider/`](aider/)                   | `aider`         | `aider`           | [README](aider/README.md)          |
+| Antigravity        | [`antigravity/`](antigravity/)       | `antigravity`   | `agy`             | [README](antigravity/README.md)    |
+| Claude Code        | [`claude/`](claude/)                 | `claude`        | `claude`          | [README](claude/README.md)         |
+| Cline              | [`cline/`](cline/)                   | `cline`         | `cline`           | [README](cline/README.md)          |
+| Codex              | [`codex/`](codex/)                   | `codex`         | `codex`           | [README](codex/README.md)          |
+| GitHub Copilot CLI | [`copilot/`](copilot/)               | `copilot`       | `copilot`         | [README](copilot/README.md)        |
+| Crush              | [`crush/`](crush/)                   | `crush`         | `crush`           | [README](crush/README.md)          |
+| Cursor Agent       | [`cursor/`](cursor/)                 | `cursor`        | `cursor-agent`    | [README](cursor/README.md)         |
+| Droid (Factory)    | [`droid/`](droid/)                   | `droid`         | `droid`           | [README](droid/README.md)          |
+| Gemini CLI         | [`gemini/`](gemini/)                 | `gemini`        | `gemini`          | [README](gemini/README.md)         |
+| Grok Build         | [`grok/`](grok/)                     | `grok`          | `grok`            | [README](grok/README.md)           |
+| Herdr              | [`herdr/`](herdr/)                   | `herdr`         | `herdr`           | [README](herdr/README.md)          |
+| Hermes Agent       | [`hermes/`](hermes/)                 | `hermes`        | `hermes`          | [README](hermes/README.md)         |
+| Kilo               | [`kilo/`](kilo/)                     | `kilo`          | `kilo`            | [README](kilo/README.md)           |
+| Kiro CLI           | [`kiro/`](kiro/)                     | `kiro`          | `kiro-cli`        | [README](kiro/README.md)           |
+| OpenClaw           | [`openclaw/`](openclaw/)             | `openclaw`      | `openclaw`        | [README](openclaw/README.md)       |
+| OpenCode           | [`opencode/`](opencode/)             | `opencode`      | `opencode`        | [README](opencode/README.md)       |
+| OpenWiki           | [`openwiki-agent/`](openwiki-agent/) | `openwiki`      | `openwiki`        | [README](openwiki-agent/README.md) |
+| Pi coding agent    | [`pi/`](pi/)                         | `pi`            | `pi`              | [README](pi/README.md)             |
+| All of the above   |                                      | `all` (default) | (each entrypoint) | This file                          |
 
 ## Shared conventions
 
@@ -57,9 +57,9 @@ agent README says otherwise:
 | Production vs development | `ENVIRONMENT=production` or `development`                                                   |
 | Final env passthrough     | `EDITOR`, `GIT_EDITOR`, `TERM` (empty unless set at build/run)                              |
 
-**Development** images (`ENVIRONMENT=development`) add `doas` (passwordless
-for group `sudo`), `binutils`, `file`, and `tree`, and add the container
-user to the `sudo` group.
+**Development** images (`ENVIRONMENT=development`) add `doas`
+(passwordless for group `sudo`), `binutils`, `file`, and `tree`, and add
+the container user to the `sudo` group.
 
 Optional build arg `NANO_CLASSIC_KEYBINDINGS=yes` writes classic nano
 keybindings into the container user's `~/.nanorc`.
@@ -81,8 +81,8 @@ docker build -t claude -f claude/Dockerfile claude
 docker build -t codex -f codex/Dockerfile codex
 ```
 
-Version pins and agent-specific build args are documented in each
-[agent README](#agents).
+Version pins and agent-specific build args are documented in each [agent
+README](#agents).
 
 ```bash
 docker build -t copilot:stable -f copilot/Dockerfile \
@@ -133,7 +133,8 @@ docker build -t agents:all-dev \
 
 ### Root build arguments
 
-Declared at the top of the root `Dockerfile` (with current defaults/comments):
+Declared at the top of the root `Dockerfile` (with current
+defaults/comments):
 
 | Argument                   | Default / notes                                     |
 |----------------------------|-----------------------------------------------------|
@@ -200,19 +201,22 @@ docker run --rm -it \
 Examples:
 
 ```bash
-docker run --rm -it -v "$PWD:/workspaces/project" -w /workspaces/project -e XAI_API_KEY grok grok
-docker run --rm -it -v "$PWD:/workspaces/project" -w /workspaces/project -e ANTHROPIC_API_KEY claude claude
-docker run --rm -it -v "$PWD:/workspaces/project" -w /workspaces/project -e OPENAI_API_KEY codex codex
+docker run --rm -it -v "$PWD:/workspaces/project" \
+    -w /workspaces/project -e XAI_API_KEY grok grok
+docker run --rm -it -v "$PWD:/workspaces/project" \
+    -w /workspaces/project -e ANTHROPIC_API_KEY claude claude
+docker run --rm -it -v "$PWD:/workspaces/project" \
+    -w /workspaces/project -e OPENAI_API_KEY codex codex
 ```
 
-Auth is tool-specific (API keys, device login, GitHub tokens, and so on).
-See each agent README for environment variables and login flows.
+Auth is tool-specific (API keys, device login, GitHub tokens, and so
+on).  See each agent README for environment variables and login flows.
 
 ---
 
 ## Persistence
 
-Containers are ephemeral. Config, credentials, and sessions under the
+Containers are ephemeral.  Config, credentials, and sessions under the
 container home (and some tool-specific trees) disappear unless you mount
 storage.
 
@@ -229,8 +233,9 @@ Common patterns:
 path that also holds the tool's install (binary, docs, bundled skills)
 will hide the image contents and can break the CLI.
 
-Session stores are often keyed by **container working directory**.  Use
-a stable `-w` path (this repo defaults to `/workspaces`) so resumes work
+Session stores are often keyed by the
+**container working directory**.  Use a stable `-w` path (this repo
+defaults to `/workspaces`) so resumes work
 across runs.
 
 Detailed mount recipes for tools that install into a home directory
@@ -273,8 +278,8 @@ Detailed mount recipes for tools that install into a home directory
 
 Each standalone directory contains:
 
-- `Dockerfile` - self-contained build for that agent  
-- `README.md` - build args, run examples, image layout, persistence  
+- `Dockerfile` - self-contained build for that agent
+- `README.md` - build args, run examples, image layout, persistence
 
 ---
 

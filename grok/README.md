@@ -5,7 +5,7 @@ coding agent) preinstalled under `/home/user/.grok`, plus common editor
 and search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).
 
 The default container user is `user` (override at build time with
-`CONTAINER_USER`). Working directory is `/workspaces`.
+`CONTAINER_USER`).  Working directory is `/workspaces`.
 
 ---
 
@@ -29,9 +29,9 @@ docker build -t grok -f grok/Dockerfile grok
 |----------------------------|--------------|--------------------------------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling)                 |
-| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings                                |
-| `GROK_VERSION`             | *(latest)*   | Pin a Grok CLI version for the installer                                 |
-| `GROK_CHANNEL`             | *(unset)*    | Reserved for channel selection (passed through like the root Dockerfile) |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                                |
+| `GROK_VERSION`             | (latest)     | Pin a Grok CLI version for the installer                                 |
+| `GROK_CHANNEL`             | (unset)      | Reserved for channel selection (passed through like the root Dockerfile) |
 
 Examples:
 
@@ -76,7 +76,7 @@ persistence below).
 ## What lives in `~/.grok`
 
 Grok uses a **single home directory** (`GROK_HOME`, default `~/.grok`)
-for both install assets and runtime state. This image copies a full
+for both install assets and runtime state.  This image copies a full
 install into `/home/user/.grok`.
 
 | Kind               | Paths                                                                                                                | Purpose                                                        |
@@ -96,15 +96,15 @@ Override the home directory with `GROK_HOME` if needed.
 
 ## Persistence beyond the container
 
-Ephemeral containers lose everything under `/home/user/.grok` unless you
-mount storage.  You need more than sessions: auth, config, and
+Ephemeral containers lose everything under `/home/user/.grok` unless
+you mount storage.  You need more than sessions: auth, config, and
 (depending on strategy) install assets such as the user guide under
 `docs/`.
 
-### Notice: do not mount an empty or session-only host directory over `~/.grok`
+### Do not mount an empty or session-only host `~/.grok`
 
 Bind-mounting host `~/.grok` onto `/home/user/.grok` **replaces** the
-image’s full install with the host tree. If the host directory is empty
+image’s full install with the host tree.  If the host directory is empty
 or only contains `sessions/`, you lose:
 
 - the Grok binary layout under `bin/` / `downloads/`
@@ -114,7 +114,7 @@ or only contains `sessions/`, you lose:
 Either mount a **complete** `GROK_HOME`, or leave install assets in the
 image and mount **only mutable paths**.
 
-### Option 1 - Mount a full host `~/.grok` (host and container share one home)
+### Option 1: mount a full host `~/.grok`
 
 ```bash
 docker run --rm -it \
@@ -133,7 +133,8 @@ docker run --rm -it \
 
    ```bash
    # Copy install assets out of this image onto the host
-   docker run --rm grok tar -C /home/user -cf - .grok | tar -C "$HOME" -xf -
+   docker run --rm grok tar -C /home/user -cf - .grok | \
+       tar -C "$HOME" -xf -
    ```
 
    Or install Grok on the host with the official installer (match
@@ -141,14 +142,15 @@ docker run --rm -it \
 3. Keep **versions aligned** between host and image (`grok update` /
    rebuild) so binary, docs, and bundled assets do not drift.
 
-### Option 2 - Keep install in the image; mount only mutable state (recommended for Docker)
+### Option 2: keep install; mount mutable state (recommended)
 
 Leave `/home/user/.grok` from the image (docs, `bin`, `bundled`, shipped
-skills). Persist user state only:
+skills).  Persist user state only:
 
 ```bash
 mkdir -p "$HOME/.grok-docker"/{sessions,memory,logs,skills,hooks}
-# Ensure auth/config are files (Docker creates a directory if the host path is missing)
+# Ensure auth/config are files
+# (Docker creates a directory if the host path is missing)
 touch "$HOME/.grok-docker/auth.json" "$HOME/.grok-docker/config.toml"
 
 docker run --rm -it \
@@ -184,16 +186,16 @@ docker run --rm -it \
   grok grok
 ```
 
-Persists **everything** (sessions, auth, docs, binary tree). Rebuilds do
-not refresh install assets until you re-seed or run `grok update` inside
-the container with the volume attached.
+Persists **everything** (sessions, auth, docs, binary tree).  Rebuilds
+do not refresh install assets until you re-seed or run `grok update`
+inside the container with the volume attached.
 
 ### Notice: session keys use container working directory
 
 Sessions are grouped by the **encoded absolute cwd** inside the
 container (for example `/workspaces/project`), not by the host path.
-Host Grok at `/home/you/proj` and container Grok at `/workspaces/project`
-are different session buckets.
+Host Grok at `/home/you/proj` and container Grok at
+`/workspaces/project` are different session buckets.
 
 For reliable `/resume` across container runs:
 
@@ -207,7 +209,7 @@ For reliable `/resume` across container runs:
 |--------------------------------|-----------------------------------------------------------|
 | Resume conversations           | `sessions/`                                               |
 | Stay logged in                 | `auth.json`                                               |
-| Keep settings                  | `config.toml` (and `pager.toml` if customized)            |
+| Keep settings                  | `config.toml` (and `pager.toml` if customised)            |
 | Cross-session memory           | `memory/`                                                 |
 | Custom skills/hooks            | user `skills/`, `hooks/`, plugins                         |
 | Docs + binary + bundled skills | full `GROK_HOME` or leave them in the image (options 2/3) |
@@ -230,6 +232,6 @@ setup.
 ## Related
 
 The monorepo root `Dockerfile` can also build a Grok-only image via
-multi-stage targets (`PROVIDER=grok`).  This directory is a **standalone**
-Dockerfile so you can build and document Grok without the multi-agent
-graph.
+multi-stage targets (`PROVIDER=grok`).  This directory is a
+**standalone** Dockerfile so you can build and document Grok without the
+multi-agent graph.

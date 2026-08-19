@@ -1,7 +1,7 @@
 # GitHub Copilot CLI container
 
-Debian Trixie Slim image with [GitHub Copilot CLI][] and common
-editor, search, and development tools preinstalled.
+Debian Trixie Slim image with [GitHub Copilot CLI][] and common editor,
+search, and development tools preinstalled.
 
 The default container user is `user`.  Override it at build time with
 `CONTAINER_USER`.  The working directory is `/workspaces`.
@@ -40,7 +40,8 @@ Examples:
 
 ```bash
 docker build -t copilot:dev --build-arg ENVIRONMENT=development .
-docker build -t copilot:prerelease --build-arg COPILOT_VERSION=prerelease .
+docker build -t copilot:prerelease \
+    --build-arg COPILOT_VERSION=prerelease .
 ```
 
 The development image adds `binutils`, `file`, `opendoas`, and `tree`.
@@ -91,5 +92,5 @@ explicitly, as in the preceding example.
 ## Related
 
 The monorepo root `Dockerfile` can also include Copilot through
-multi-stage targets.  This directory is a standalone build for an
-image that contains only the Copilot environment.
+multi-stage targets.  This directory is a standalone build for an image
+that contains only the Copilot environment.

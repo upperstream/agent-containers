@@ -1,8 +1,12 @@
 # OpenWiki container
 
-Debian-based image with [OpenWiki](https://www.npmjs.com/package/openwiki) preinstalled on a bundled Node.js runtime, plus common editor and search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).
+Debian-based image with
+[OpenWiki](https://www.npmjs.com/package/openwiki) preinstalled on a
+bundled Node.js runtime, plus common editor and search tools (`git`,
+`ripgrep`, `fd`, `vim`, `nano`, etc.).
 
-The default container user is `user` (override at build time with `CONTAINER_USER`). Working directory is `/workspaces`.
+The default container user is `user` (override at build time with
+`CONTAINER_USER`).  Working directory is `/workspaces`.
 
 ---
 
@@ -26,7 +30,7 @@ docker build -t openwiki -f openwiki-agent/Dockerfile openwiki-agent
 |----------------------------|--------------|----------------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
-| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings                |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 | `NODE_VERSION`             | `v24.18.1`   | Node.js version to install                               |
 | `NPM_VERSION`              | `12.0.0`     | Global npm version                                       |
 | `OPENWIKI_VERSION`         | `latest`     | npm version tag or version number                        |
@@ -65,10 +69,14 @@ Configure OpenWiki according to its documentation for your version.
 
 ### Persistence
 
-Mount home-directory or project data paths OpenWiki uses if you need generated content or config across container runs. Prefer the locations documented for your OpenWiki release.
+Mount home-directory or project data paths OpenWiki uses if you need
+generated content or config across container runs.  Prefer the locations
+documented for your OpenWiki release.
 
 ---
 
 ## Related
 
-The monorepo root `Dockerfile` can also include OpenWiki via multi-stage targets. This directory is a **standalone** build so you can image OpenWiki without the multi-agent graph.
+The monorepo root `Dockerfile` can also include OpenWiki via multi-stage
+targets.  This directory is a **standalone** build so you can image
+OpenWiki without the multi-agent graph.

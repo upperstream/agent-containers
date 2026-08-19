@@ -1,8 +1,12 @@
 # Pi coding agent container
 
-Debian-based image with [@earendil-works/pi-coding-agent](https://www.npmjs.com/package/@earendil-works/pi-coding-agent) (`pi`) preinstalled on a bundled Node.js runtime, plus common editor and search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).
+Debian-based image with
+[@earendil-works/pi-coding-agent](https://www.npmjs.com/package/@earendil-works/pi-coding-agent)
+(`pi`) preinstalled on a bundled Node.js runtime, plus common editor and
+search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).
 
-The default container user is `user` (override at build time with `CONTAINER_USER`). Working directory is `/workspaces`.
+The default container user is `user` (override at build time with
+`CONTAINER_USER`).  Working directory is `/workspaces`.
 
 ---
 
@@ -26,7 +30,7 @@ docker build -t pi -f pi/Dockerfile pi
 |----------------------------|--------------|----------------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
-| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings                |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 | `NODE_VERSION`             | `v24.18.1`   | Node.js version to install                               |
 | `NPM_VERSION`              | `12.0.0`     | Global npm version                                       |
 | `PI_VERSION`               | `latest`     | npm version of `@earendil-works/pi-coding-agent`         |
@@ -51,7 +55,8 @@ docker run --rm -it \
   pi pi
 ```
 
-Configure API keys and providers according to Pi’s documentation for your version.
+Configure API keys and providers according to Pi’s documentation for
+your version.
 
 ---
 
@@ -65,14 +70,19 @@ Configure API keys and providers according to Pi’s documentation for your vers
 | `/usr/local/bin/*`                                                           | Node/npm binaries         |
 | `/workspaces`                                                                | Default working directory |
 
-`fd-find` and `ripgrep` are ensured in the production stage in addition to the shared editor toolkit.
+`fd-find` and `ripgrep` are ensured in the production stage in addition
+to the shared editor toolkit.
 
 ### Persistence
 
-Mount home-directory config or credential paths Pi creates if you need them across container runs. Prefer the locations documented for your Pi release.
+Mount home-directory config or credential paths Pi creates if you need
+them across container runs.  Prefer the locations documented for your Pi
+release.
 
 ---
 
 ## Related
 
-The monorepo root `Dockerfile` can also include Pi via multi-stage targets (`PROVIDER=pi` or `all`). This directory is a **standalone** build so you can image Pi without the multi-agent graph.
+The monorepo root `Dockerfile` can also include Pi via multi-stage
+targets (`PROVIDER=pi` or `all`).  This directory is a **standalone**
+build so you can image Pi without the multi-agent graph.

@@ -29,7 +29,7 @@ docker build -t crush -f crush/Dockerfile crush
 |----------------------------|--------------|----------------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
-| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings                |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 | `CRUSH_VERSION`            | `v0.87.0`    | Git tag, e.g. `v0.89.0`, or `nightly`                    |
 
 Examples:

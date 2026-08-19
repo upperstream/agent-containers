@@ -14,6 +14,8 @@
     * Allow a line in GFM table to exceeds the line length limit.
     * Make markdownlint configuration consistent with the
       `document-standards` agent skill.
+  * Update `README.md` files in accordance to the latest documentation
+    standards.
 
 ## [20260817][]
 

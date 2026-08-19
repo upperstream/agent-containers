@@ -1,8 +1,11 @@
 # Aider container
 
-Debian-based image with [Aider](https://aider.chat/) preinstalled, plus common editor and search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).
+Debian-based image with [Aider](https://aider.chat/) preinstalled, plus
+common editor and search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`,
+etc.).
 
-The default container user is `user` (override at build time with `CONTAINER_USER`). Working directory is `/workspaces`.
+The default container user is `user` (override at build time with
+`CONTAINER_USER`).  Working directory is `/workspaces`.
 
 ---
 
@@ -26,7 +29,7 @@ docker build -t aider -f aider/Dockerfile aider
 |----------------------------|--------------|----------------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
-| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings                |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 
 Examples:
 
@@ -47,7 +50,8 @@ docker run --rm -it \
   aider aider
 ```
 
-Pass the API keys your model provider requires. See [Aider docs](https://aider.chat/docs/) for model selection and auth options.
+Pass the API keys your model provider requires.  See [Aider
+docs](https://aider.chat/docs/) for model selection and auth options.
 
 ---
 
@@ -61,7 +65,8 @@ Pass the API keys your model provider requires. See [Aider docs](https://aider.c
 
 ### Persistence
 
-Ephemeral containers lose home-directory state. Mount host paths if you want history, config, or caches to survive:
+Ephemeral containers lose home-directory state.  Mount host paths if you
+want history, config, or caches to survive:
 
 ```bash
 docker run --rm -it \
@@ -72,10 +77,13 @@ docker run --rm -it \
   aider aider
 ```
 
-Exact config locations depend on your Aider version; prefer mounting the paths Aider documents for your release.
+Exact config locations depend on your Aider version; prefer mounting the
+paths Aider documents for your release.
 
 ---
 
 ## Related
 
-The monorepo root `Dockerfile` can also include Aider via multi-stage targets (`PROVIDER=aider` or `all`). This directory is a **standalone** build so you can image Aider without the multi-agent graph.
+The monorepo root `Dockerfile` can also include Aider via multi-stage
+targets (`PROVIDER=aider` or `all`).  This directory is a standalone
+build so you can image Aider without the multi-agent graph.

@@ -5,7 +5,7 @@ preinstalled, plus common editor and search tools (`git`, `ripgrep`,
 `fd`, `vim`, `nano`, etc.).
 
 The default container user is `user` (override at build time with
-`CONTAINER_USER`). Working directory is `/workspaces`.
+`CONTAINER_USER`).  Working directory is `/workspaces`.
 
 ---
 
@@ -25,12 +25,12 @@ docker build -t codex -f codex/Dockerfile codex
 
 ### Build arguments
 
-| Argument                   | Default               | Description                                              |
-|----------------------------|-----------------------|----------------------------------------------------------|
-| `CONTAINER_USER`           | `user`                | Non-root user created in the image                       |
-| `ENVIRONMENT`              | `production`          | `production` or `development` (adds `doas`/sudo tooling) |
-| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*             | Set to `yes` for classic nano keybindings                |
-| `CODEX_RELEASE`            | *(installer default)* | Pin release, e.g. `latest` or `0.142.5`                  |
+| Argument                   | Default             | Description                                              |
+|----------------------------|---------------------|----------------------------------------------------------|
+| `CONTAINER_USER`           | `user`              | Non-root user created in the image                       |
+| `ENVIRONMENT`              | `production`        | `production` or `development` (adds `doas`/sudo tooling) |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)             | Set to `yes` for classic nano keybindings                |
+| `CODEX_RELEASE`            | (installer default) | Pin release, e.g. `latest` or `0.142.5`                  |
 
 Examples:
 
@@ -53,18 +53,18 @@ docker run --rm -it \
   codex /home/user/.local/bin/codex
 ```
 
-Authenticate with `OPENAI_API_KEY` or the CLI’s login flow.  Config
-and session data often live under `~/.codex`.
+Authenticate with `OPENAI_API_KEY` or the CLI’s login flow.  Config and
+session data often live under `~/.codex`.
 
 ---
 
 ## Image layout
 
-| Path                          | Description               |
-|-------------------------------|---------------------------|
+| Path                          | Description                 |
+|-------------------------------|-----------------------------|
 | `/home/user/.codex`           | Codex installation and data |
-| `/home/user/.local/bin/codex` | Symlink to the Codex CLI  |
-| `/workspaces`                 | Default working directory |
+| `/home/user/.local/bin/codex` | Symlink to the Codex CLI    |
+| `/workspaces`                 | Default working directory   |
 
 ### Persistence
 
@@ -92,10 +92,10 @@ docker run --rm -it \
 ```
 
 The host-side `.codex` directory then retains the data when the
-container is removed and makes it available to later containers
-started with the same mount.  Add `.codex/` to the project's
-`.gitignore`; it can contain credentials and private session data and
-should not be committed.
+container is removed and makes it available to later containers started
+with the same mount.  Add `.codex/` to the project's `.gitignore`; it
+can contain credentials and private session data and should not be
+committed.
 
 If the image was built with a different `CONTAINER_USER`, replace `user`
 in `/home/user/.codex` with that user's name.  Mount additional paths if
