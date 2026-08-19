@@ -7,6 +7,9 @@
 * Changed:
   * [GitHub Copilot CLI][]:
     * Upgrade to version 1.0.80
+  * [Crush][]:
+    * Upgrade to v0.87.0.
+    * Use precompiled package rather than compiling source code.
 
 ## [20260817][]
 
@@ -72,6 +75,8 @@
 
 [Codex CLI]: https://learn.chatgpt.com/docs/codex/cli
   "CLI – Codex | OpenAI Developers"
+[Crush]: https://github.com/charmbracelet/crush
+  "charmbracelet/crush: Glamourous agentic coding for all 💘"
 [GitHub Copilot CLI]: https://github.com/features/copilot/cli
   "GitHub Copilot CLI"
 [Hermes Agent]: https://hermes-agent.nousresearch.com/

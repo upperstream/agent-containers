@@ -5,7 +5,7 @@ ARG NODE_VERSION=v24.18.1
 ARG NPM_VERSION="12.0.0"
 ARG CODEX_RELEASE=0.147.0           # 'latest' or '0.142.5'
 ARG COPILOT_VERSION=1.0.80          # 'latest', 'prerelease', or 'v0.0.369'
-ARG CRUSH_VERSION                   # 'latest' or 'v0.81.0'
+ARG CRUSH_VERSION=v0.87.0           # 'nightly' or 'v0.89.0'
 ARG GEMINI_RELEASE                  # 'latest', 'preview', or 'nightly'
 ARG GROK_CHANNEL
 ARG GROK_VERSION
@@ -20,7 +20,7 @@ ARG PROVIDER=all                    # 'pi' or 'all'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
-RUN apt-get install -y ca-certificates curl
+RUN apt-get install -y --no-install-recommends ca-certificates curl
 
 FROM builder_base AS node_base
 ARG NODE_VERSION    # global default
@@ -149,18 +149,34 @@ ARG CONTAINER_USER  # global default
 
 COPY --from=copilot_builder /usr/local/bin/copilot /usr/local/bin/copilot
 
-FROM golang:1.26-trixie AS crush_builder
+FROM builder_base AS crush_builder
 ARG CRUSH_VERSION   # global default
 
-RUN apt-get update
-RUN apt-get install -y binutils
-RUN go install "github.com/charmbracelet/crush@${CRUSH_VERSION:-latest}"
-RUN strip /go/bin/crush
+RUN ARCH=$(uname -m | sed 's/aarch64/arm64/') && \
+    if [ -z "$CRUSH_VERSION" ] || [ "$CRUSH_VERSION" = "nightly" ]; then \
+        FILENAME=$(curl -fsSL https://github.com/charmbracelet/crush/releases/download/nightly/checksums.txt | grep "Linux_${ARCH}.tar.gz" | head -n1 | awk '{print $2}'); \
+        URL="https://github.com/charmbracelet/crush/releases/download/nightly/${FILENAME}"; \
+    else \
+        TAG="${CRUSH_VERSION}"; \
+        TAG_NO_V=$(echo "$TAG" | sed 's/^v//'); \
+        URL="https://github.com/charmbracelet/crush/releases/download/${TAG}/crush_${TAG_NO_V}_Linux_${ARCH}.tar.gz"; \
+    fi && \
+    curl -fsSL "$URL" -o /root/crush.tar.gz && \
+    tar -xzf /root/crush.tar.gz -C /root
 
 FROM container_base AS crush
 ARG CONTAINER_USER  # global default
 
-COPY --from=crush_builder /go/bin/crush /usr/local/bin/crush
+RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}" && \
+RUN mkdir -p /usr/local/share/doc/crush /etc/bash_completion_d /usr/share/fish/vendor_completions.d /usr/share/zsh/site-functions /usr/local/share/man/man1
+
+COPY --from=crush_builder /root/*/LICENSE.md /usr/local/share/doc/crush/LICENSE.md
+COPY --from=crush_builder /root/*/README.md /usr/local/share/doc/crush/README.md
+COPY --from=crush_builder /root/*/completions/crush.bash /etc/bash_completion_d/crush
+COPY --from=crush_builder /root/*/completions/crush.fish /usr/share/fish/vendor_completions.d/crush.fish
+COPY --from=crush_builder /root/*/completions/crush.zsh /usr/share/zsh/site-functions/_crush
+COPY --from=crush_builder /root/*/manpages/crush.1.gz /usr/local/share/man/man1/crush.1.gz
+COPY --from=crush_builder /root/*/crush /usr/local/bin/crush
 
 FROM builder_base AS cursor_builder
 RUN curl https://cursor.com/install -fsS > cursor_installer.sh
@@ -353,6 +369,8 @@ ARG CONTAINER_USER          # global default
 ARG NODE_VERSION            # global default
 ARG OPENWIKI_NODE_VERSION   # global default
 
+RUN mkdir -p /usr/local/share/doc/crush /etc/bash_completion_d /usr/share/fish/vendor_completions.d /usr/share/zsh/site-functions /usr/local/share/man/man1
+
 COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
 
 COPY --from=aider_builder "/home/${CONTAINER_USER}/.local/share/uv" "/home/${CONTAINER_USER}/.local/share/uv"
@@ -367,7 +385,13 @@ COPY --from=codex_builder /root/.codex "/home/${CONTAINER_USER}/.codex"
 
 COPY --from=copilot_builder /usr/local/bin/copilot /usr/local/bin/copilot
 
-COPY --from=crush_builder /go/bin/crush /usr/local/bin/crush
+COPY --from=crush_builder /root/*/LICENSE.md /usr/local/share/doc/crush/LICENSE.md
+COPY --from=crush_builder /root/*/README.md /usr/local/share/doc/crush/README.md
+COPY --from=crush_builder /root/*/completions/crush.bash /etc/bash_completion_d/crush
+COPY --from=crush_builder /root/*/completions/crush.fish /usr/share/fish/vendor_completions.d/crush.fish
+COPY --from=crush_builder /root/*/completions/crush.zsh /usr/share/zsh/site-functions/_crush
+COPY --from=crush_builder /root/*/manpages/crush.1.gz /usr/local/share/man/man1/crush.1.gz
+COPY --from=crush_builder /root/*/crush /usr/local/bin/crush
 
 COPY --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CONTAINER_USER}/.local/share/cursor-agent/versions"
 

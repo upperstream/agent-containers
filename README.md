@@ -146,7 +146,7 @@ Declared at the top of the root `Dockerfile` (with current defaults/comments):
 | `NPM_VERSION`              | `12.0.0`                                            |
 | `CODEX_RELEASE`            | installer default (`latest` or a version)           |
 | `COPILOT_VERSION`          | `1.0.80` (`latest` or a version)                    |
-| `CRUSH_VERSION`            | defaults to `latest` in the Go install              |
+| `CRUSH_VERSION`            | `v0.87.0` (release tag or `nightly`)                |
 | `GEMINI_RELEASE`           | defaults to `latest` for `@google/gemini-cli`       |
 | `GROK_CHANNEL`             | unset                                               |
 | `GROK_VERSION`             | installer default when unset                        |
