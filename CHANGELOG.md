@@ -10,6 +10,10 @@
   * [Crush][]:
     * Upgrade to v0.87.0.
     * Use precompiled package rather than compiling source code.
+  * Update documentation standards:
+    * Allow a line in GFM table to exceeds the line length limit.
+    * Make markdownlint configuration consistent with the
+      `document-standards` agent skill.
 
 ## [20260817][]
 

@@ -1,3 +1,8 @@
 {
-    "MD049": false
+  "MD013": {
+    "line_length": 72,
+    "stern": true,
+    "tables": false
+  },
+  "MD049": false
 }
