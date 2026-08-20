@@ -5,6 +5,12 @@
 * Added:
   * Add an agent skill for documentation standards.
 * Changed:
+  * [Codex CLI][]:
+    * Upgrade to version 0.148.0.
+    * Install `bubblewrap`, `ca-certificates`, and `curl` in Codex
+      images.
+    * Add the container user's `~/.local/bin` directory to the
+      image-wide `PATH`, allowing `codex` to be run directly.
   * [GitHub Copilot CLI][]:
     * Upgrade to version 1.0.80
   * [Crush][]:
@@ -20,7 +26,7 @@
 ## [20260817][]
 
 * Changed:
-  * [Codex CLI][]:
+  * Codex CLI:
     * Upgrade to v0.147.0.
     * Keep installed bundle inside `$HOME/.codex` directory.
     * Move `codex` executable into `$HOME/.local/bin` directory, which
@@ -39,7 +45,7 @@
 ## [20260815][]
 
 * Changed
-  * Upgrade [Hermes Agent][] to v2026.8.13.
+  * Upgrade Hermes Agent to v2026.8.13.
     * Replace `HERMES_COMMIT` with `HERMES_VERSION` for selecting the
       Hermes branch or tag.
     * Remove `HERMES_NODE_VERSION` because Node.js is automatically

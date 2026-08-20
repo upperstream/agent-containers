@@ -1,7 +1,7 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG CODEX_RELEASE=0.147.0       # 'latest' or '0.142.5'
+ARG CODEX_RELEASE=0.148.0       # 'latest' or '0.142.5'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
@@ -45,10 +45,9 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
         for f in *; do echo ">>>> $f <<<<"; ln -sf "$(printf "../../../%s" "$(readlink "$f" | sed 's!/root/.codex/!!' && rm "$f")")" "$f"; done) && \
     ln -sf "/home/${CONTAINER_USER}/.codex/packages/standalone/current/bin/codex" "/home/${CONTAINER_USER}/.local/bin/" && \
     apt-get update && \
-    apt-get install -y --no-install-recommends bubblewrap && \
+    apt-get install -y --no-install-recommends bubblewrap ca-certificates curl && \
     apt-get clean && \
-    chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}" && \
-    printf 'PATH=$PATH:%s\n' "/home/${CONTAINER_USER}/.local/bin" >> "/home/${CONTAINER_USER}/.bashrc"
+    chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
 FROM production AS development
 ARG CONTAINER_USER              # global default
@@ -65,6 +64,7 @@ FROM "${ENVIRONMENT}"
 ARG CONTAINER_USER              # global default
 ENV EDITOR="${EDITOR}"
 ENV GIT_EDITOR="${GIT_EDITOR}"
+ENV PATH="/home/${CONTAINER_USER}/.local/bin:${PATH}"
 ENV TERM="${TERM}"
 
 USER "${CONTAINER_USER}"

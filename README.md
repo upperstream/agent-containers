@@ -64,6 +64,11 @@ the container user to the `sudo` group.
 Optional build arg `NANO_CLASSIC_KEYBINDINGS=yes` writes classic nano
 keybindings into the container user's `~/.nanorc`.
 
+Codex images install `bubblewrap`, `ca-certificates`, and `curl`.  The
+Codex executable is linked at `~/.local/bin/codex`, and the final image
+adds that directory to its image-wide `PATH`.  It can therefore be run
+directly as `codex` (substitute `user` if you set `CONTAINER_USER`).
+
 ---
 
 ## Build: standalone image
@@ -145,7 +150,7 @@ defaults/comments):
 | `PROVIDER`                 | `all`                                               |
 | `NODE_VERSION`             | `v24.18.1`                                          |
 | `NPM_VERSION`              | `12.0.0`                                            |
-| `CODEX_RELEASE`            | installer default (`latest` or a version)           |
+| `CODEX_RELEASE`            | `0.148.0` (`latest` or a version)                   |
 | `COPILOT_VERSION`          | `1.0.80` (`latest` or a version)                    |
 | `CRUSH_VERSION`            | `v0.87.0` (release tag or `nightly`)                |
 | `GEMINI_RELEASE`           | defaults to `latest` for `@google/gemini-cli`       |

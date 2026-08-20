@@ -3,7 +3,7 @@ ARG ENVIRONMENT=production          # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS        # 'yes', default to 'no'
 ARG NODE_VERSION=v24.18.1
 ARG NPM_VERSION="12.0.0"
-ARG CODEX_RELEASE=0.147.0           # 'latest' or '0.142.5'
+ARG CODEX_RELEASE=0.148.0           # 'latest' or '0.142.5'
 ARG COPILOT_VERSION=1.0.80          # 'latest', 'prerelease', or 'v0.0.369'
 ARG CRUSH_VERSION=v0.87.0           # 'nightly' or 'v0.89.0'
 ARG GEMINI_RELEASE                  # 'latest', 'preview', or 'nightly'
@@ -133,10 +133,9 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
         for f in *; do echo ">>>> $f <<<<"; ln -sf "$(printf "../../../%s" "$(readlink "$f" | sed 's!/root/.codex/!!' && rm "$f")")" "$f"; done) && \
     ln -sf "/home/${CONTAINER_USER}/.codex/packages/standalone/current/bin/codex" "/home/${CONTAINER_USER}/.local/bin/" && \
     apt-get update && \
-    apt-get install -y --no-install-recommends bubblewrap && \
+    apt-get install -y --no-install-recommends bubblewrap ca-certificates curl && \
     apt-get clean && \
-    chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}" && \
-    printf 'PATH=$PATH:%s\n' "/home/${CONTAINER_USER}/.local/bin" >> "/home/${CONTAINER_USER}/.bashrc"
+    chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
 FROM builder_base AS copilot_builder
 ARG COPILOT_VERSION # global default
@@ -441,7 +440,7 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
     apt-get update && \
     apt-get install -y --no-install-recommends bubblewrap ca-certificates curl ffmpeg git ripgrep && \
     apt-get clean && \
-    printf 'PATH=$PATH:%s:%s\n' "/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" "/home/${CONTAINER_USER}/.local/bin" >> "/home/${CONTAINER_USER}/.bashrc"
+    printf 'PATH=$PATH:%s\n' "/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" >> "/home/${CONTAINER_USER}/.bashrc"
 
 FROM "${PROVIDER}" AS production
 ARG CONTAINER_USER  # global default
@@ -455,7 +454,7 @@ RUN usermod -a -G sudo "${CONTAINER_USER}"
 RUN rm -f /etc/dpkg/dpkg.cfg.d/docker && \
     rm -f /etc/dpkg/dpkg.cfg.d/01_nodo
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends binutils ca-certificates curl file opendoas tree
+RUN apt-get install -y --no-install-recommends binutils file opendoas tree
 RUN echo "permit nopass :sudo" > /etc/doas.conf
 RUN doas -C /etc/doas.conf
 
@@ -463,6 +462,7 @@ FROM "${ENVIRONMENT}"
 ARG CONTAINER_USER  # global default
 ENV EDITOR="${EDITOR}"
 ENV GIT_EDITOR="${GIT_EDITOR}"
+ENV PATH="/home/${CONTAINER_USER}/.local/bin:${PATH}"
 ENV TERM="${TERM}"
 
 USER "${CONTAINER_USER}"
