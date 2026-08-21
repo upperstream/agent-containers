@@ -443,6 +443,11 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
     ln -s "/home/${CONTAINER_USER}/.local/share/grok/bin/grok" /usr/local/bin/grok && \
     (cd "/home/${CONTAINER_USER}/.local/bin" && ln -sf ../../.cua-driver/packages/current/cua-driver) && \
     ln -s "/home/${CONTAINER_USER}/.kilo/bin/kilo" /usr/local/bin/kilo && \
+    mkdir -p "/home/${CONTAINER_USER}/.local/share" && \
+    ln -s /mnt/kilo/share/kilo "/home/${CONTAINER_USER}/.local/share/" && \
+    mkdir -p "/home/${CONTAINER_USER}/.local/state" && \
+    for f in kilo kilo-sandbox-policy; do \
+      ln -s "/mnt/kilo/state/$f" "/home/${CONTAINER_USER}/.local/state/"; done && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js" /usr/local/bin/pi && \
     apt-get update && \

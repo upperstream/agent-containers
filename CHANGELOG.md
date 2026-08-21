@@ -30,6 +30,8 @@
     * Pin version to 7.4.23.
     * Do not strip the Bun-compiled executable, preserving its embedded
       application payload.
+    * Document mounting a host `kilo` directory at `/mnt/kilo` to retain
+      user data, sessions, and sandbox-policy state.
   * Update documentation standards:
     * Allow a line in GFM table to exceeds the line length limit.
     * Make markdownlint configuration consistent with the

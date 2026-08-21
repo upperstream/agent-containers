@@ -32,12 +32,27 @@ ARG KILO_VERSION                # global default
 RUN curl -fsSL https://kilo.ai/cli/install > kilo_installer.sh
 RUN bash kilo_installer.sh ${KILO_VERSION:+--version "$KILO_VERSION"}
 
+# To retain Kilo user data and sessions beyond the container lifespan,
+# create a host directory with `share/kilo`, `state/kilo`, and
+# `state/kilo-sandbox-policy`, then bind-mount it at `/mnt/kilo`.
+# The production image links the corresponding XDG paths to those
+# mounted directories.
+#
+# docker run -e TERM="$TERM" \
+#    -v /host/path/kilo:/mnt/kilo -v "$PWD":/workspaces/agent-containers \
+#    -w /workspaces/agent-containers -it agents bash
+
 FROM container_base AS production
 ARG CONTAINER_USER              # global default
 
 COPY --from=kilo_builder /root/.kilo "/home/${CONTAINER_USER}/.kilo"
 
 RUN ln -s "/home/${CONTAINER_USER}/.kilo/bin/kilo" /usr/local/bin/kilo && \
+    mkdir -p "/home/${CONTAINER_USER}/.local/share" && \
+    ln -s /mnt/kilo/share/kilo "/home/${CONTAINER_USER}/.local/share/" && \
+    mkdir -p "/home/${CONTAINER_USER}/.local/state" && \
+    for f in kilo kilo-sandbox-policy; do \
+      ln -s "/mnt/kilo/state/$f" "/home/${CONTAINER_USER}/.local/state/"; done && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
 FROM production AS development

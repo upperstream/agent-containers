@@ -25,12 +25,12 @@ docker build -t kilo -f kilo/Dockerfile kilo
 
 ### Build arguments
 
-| Argument                   | Default             | Description                                              |
-|----------------------------|---------------------|----------------------------------------------------------|
-| `CONTAINER_USER`           | `user`              | Non-root user created in the image                       |
-| `ENVIRONMENT`              | `production`        | `production` or `development` (adds `doas`/sudo tooling) |
-| `KILO_VERSION`             | `7.4.23`            | Kilo version to install                                  |
-| `NANO_CLASSIC_KEYBINDINGS` | (unset)             | Set to `yes` for classic nano keybindings                |
+| Argument                   | Default      | Description                                              |
+|----------------------------|--------------|----------------------------------------------------------|
+| `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
+| `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
+| `KILO_VERSION`             | `7.4.23`     | Kilo version to install                                  |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 
 Examples:
 
@@ -64,37 +64,38 @@ Authenticate according to Kilo’s documentation for your environment.
 
 ### Persistence
 
-Kilo’s install and runtime data both live under `~/.kilo`.  Binding a
-host directory over `/home/user/.kilo` **replaces** the image install.
+The image keeps Kilo's install under `/home/user/.kilo` and links its
+mutable XDG directories to `/mnt/kilo`:
 
-**Notice:** Do not mount an empty or partial host `~/.kilo` over the
-container path, or you may lose the binary and install assets.
+| Container path                       | Mounted host subdirectory   |
+|--------------------------------------|-----------------------------|
+| `~/.local/share/kilo`                | `share/kilo`                |
+| `~/.local/state/kilo`                | `state/kilo`                |
+| `~/.local/state/kilo-sandbox-policy` | `state/kilo-sandbox-policy` |
 
-Options:
-
-1. **Full home mount** — only if the host tree is a complete install
-   (seed from the image if needed).
-2. **Selective mounts** — leave install assets in the image; mount only
-   mutable subpaths the tool documents (config, sessions, auth).
-3. **Named volume** — seed once from the image, then reattach the volume
-   for full persistence.
+To retain Kilo user data, sessions, and sandbox-policy state after the
+container is removed, create this layout on the host and bind-mount its
+parent directory at `/mnt/kilo`:
 
 ```bash
-# Seed a named volume from the image
-docker run --rm -v kilo-home:/data kilo \
-  sh -c 'cp -a /home/user/.kilo/. /data/'
+mkdir -p "$HOME/kilo/share/kilo" \
+  "$HOME/kilo/state/kilo" \
+  "$HOME/kilo/state/kilo-sandbox-policy"
 
 docker run --rm -it \
-  -v kilo-home:/home/user/.kilo \
+  -v "$HOME/kilo:/mnt/kilo" \
   -v "$PWD:/workspaces/project" \
   -w /workspaces/project \
   kilo kilo
 ```
+
+Do not mount a host directory over `/home/user/.kilo`, as that replaces
+the Kilo installation bundled in the image.
 
 ---
 
 ## Related
 
 The monorepo root `Dockerfile` can also include Kilo via multi-stage
-targets.  This directory is a **standalone** build so you can image Kilo
+targets.  This directory is a standalone build so you can image Kilo
 without the multi-agent graph.
