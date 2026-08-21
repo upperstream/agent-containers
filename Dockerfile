@@ -6,7 +6,7 @@ ARG NPM_VERSION="12.0.0"
 ARG CODEX_RELEASE=0.148.0           # 'latest' or '0.142.5'
 ARG COPILOT_VERSION=1.0.80          # 'latest', 'prerelease', or 'v0.0.369'
 ARG CRUSH_VERSION=v0.87.0           # 'nightly' or 'v0.89.0'
-ARG GEMINI_RELEASE                  # 'latest', 'preview', or 'nightly'
+ARG GEMINI_RELEASE=0.55.1           # 'latest', 'preview', 'nightly', or '0.55.1'
 ARG GROK_CHANNEL
 ARG GROK_VERSION
 ARG HERMES_VERSION=v2026.8.13       # branch (main) or tag (v2026.8.13)

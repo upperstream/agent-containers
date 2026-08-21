@@ -153,7 +153,7 @@ defaults/comments):
 | `CODEX_RELEASE`            | `0.148.0` (`latest` or a version)                   |
 | `COPILOT_VERSION`          | `1.0.80` (`latest` or a version)                    |
 | `CRUSH_VERSION`            | `v0.87.0` (release tag or `nightly`)                |
-| `GEMINI_RELEASE`           | defaults to `latest` for `@google/gemini-cli`       |
+| `GEMINI_RELEASE`           | `0.55.1` (`latest`, `preview`, or `nightly`)        |
 | `GROK_CHANNEL`             | unset                                               |
 | `GROK_VERSION`             | installer default when unset                        |
 | `KILO_VERSION`             | installer default when unset                        |

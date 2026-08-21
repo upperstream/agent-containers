@@ -11,11 +11,15 @@
       images.
     * Add the container user's `~/.local/bin` directory to the
       image-wide `PATH`, allowing `codex` to be run directly.
-  * [GitHub Copilot CLI][]:
-    * Upgrade to version 1.0.80
   * [Crush][]:
     * Upgrade to v0.87.0.
     * Use precompiled package rather than compiling source code.
+  * [Gemini CLI][]:
+    * Pin release to version 0.55.1.
+    * Document preparing and mounting a `.gemini` state directory to
+      persist user data and session information.
+  * [GitHub Copilot CLI][]:
+    * Upgrade to version 1.0.80
   * Update documentation standards:
     * Allow a line in GFM table to exceeds the line length limit.
     * Make markdownlint configuration consistent with the
@@ -89,6 +93,8 @@
   "CLI – Codex | OpenAI Developers"
 [Crush]: https://github.com/charmbracelet/crush
   "charmbracelet/crush: Glamourous agentic coding for all 💘"
+[Gemini CLI]: https://github.com/google-gemini/gemini-cli
+  "Google Gemini CLI"
 [GitHub Copilot CLI]: https://github.com/features/copilot/cli
   "GitHub Copilot CLI"
 [Hermes Agent]: https://hermes-agent.nousresearch.com/

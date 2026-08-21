@@ -30,10 +30,10 @@ docker build -t gemini -f gemini/Dockerfile gemini
 |----------------------------|--------------|---------------------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                            |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling)      |
+| `GEMINI_RELEASE`           | `0.55.1`     | npm tag/version: `latest`, `preview`, `nightly`, or a version |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                     |
 | `NODE_VERSION`             | `v24.18.1`   | Node.js version to install                                    |
 | `NPM_VERSION`              | `12.0.0`     | Global npm version                                            |
-| `GEMINI_RELEASE`           | `latest`     | npm tag/version: `latest`, `preview`, `nightly`, or a version |
 
 Examples:
 
@@ -46,16 +46,29 @@ docker build -t gemini:preview --build-arg GEMINI_RELEASE=preview .
 
 ## Run
 
+To retain Gemini user data and session information after the container
+is removed, create an empty state directory on the host:
+
+```bash
+mkdir -p .gemini
+```
+
+Mount it at the default container user's Gemini data path when running
+the image:
+
 ```bash
 docker run --rm -it \
   -v "$PWD:/workspaces/project" \
+  -v "$PWD/.gemini:/home/user/.gemini" \
   -w /workspaces/project \
   -e GEMINI_API_KEY \
   gemini gemini
 ```
 
-Authenticate with a Gemini API key or the CLI’s login flow as documented
-for your release.
+Authenticate with a Gemini API key or the CLI's login flow as
+documented for your release.  Gemini writes its configuration and
+session data to the mounted `.gemini` directory.  Adjust
+`/home/user` if you build the image with a different `CONTAINER_USER`.
 
 ---
 
@@ -71,9 +84,9 @@ for your release.
 
 ### Persistence
 
-Mount home-directory config or credential paths the Gemini CLI creates
-if you need them across container runs.  Prefer the locations documented
-for your `gemini-cli` version.
+Prepare and mount a `.gemini` directory on the host as shown in the
+preceding run instruction to persist configuration, credentials, and
+session history across container runs.
 
 ---
 

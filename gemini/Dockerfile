@@ -3,7 +3,7 @@ ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 ARG NODE_VERSION=v24.18.1
 ARG NPM_VERSION="12.0.0"
-ARG GEMINI_RELEASE              # 'latest', 'preview', or 'nightly'
+ARG GEMINI_RELEASE=0.55.1       # 'latest', 'preview', 'nightly', or '0.55.1'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
