@@ -155,7 +155,7 @@ defaults/comments):
 | `CRUSH_VERSION`            | `v0.87.0` (release tag or `nightly`)                |
 | `GEMINI_RELEASE`           | `0.55.1` (`latest`, `preview`, or `nightly`)        |
 | `GROK_CHANNEL`             | unset                                               |
-| `GROK_VERSION`             | installer default when unset                        |
+| `GROK_VERSION`             | `1.0.5`                                             |
 | `KILO_VERSION`             | installer default when unset                        |
 | `KIRO_CHANNEL`             | unset                                               |
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                   |
@@ -229,8 +229,11 @@ Common patterns:
 
 - Mount only mutable state (auth, config, sessions) and leave install
   assets in the image.
-- Mount a full tool home (e.g. `~/.grok`, `~/.kilo`) only when the host
-  tree is a complete install—or seed it from the image first.
+- Mount a full tool home (e.g. `~/.kilo`) only when the host tree is a
+  complete install—or seed it from the image first.  For Grok, prepare
+  a host directory with dangling `bin`, `completions`, `docs`, and
+  `downloads` symlinks and bind-mount it on `~/.grok`; see
+  [grok/README.md](grok/README.md).
 - Use a named volume seeded once from the image for full home
   persistence.
 

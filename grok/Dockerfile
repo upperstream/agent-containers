@@ -2,7 +2,7 @@ ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 ARG GROK_CHANNEL
-ARG GROK_VERSION
+ARG GROK_VERSION=1.0.5          # '1.0.5'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
@@ -42,9 +42,13 @@ RUN case "$(uname -s)" in \
 FROM container_base AS production
 ARG CONTAINER_USER              # global default
 
-COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.grok"
-
-RUN ln -s "/home/${CONTAINER_USER}/.grok/bin/grok" /usr/local/bin/grok && \
+COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.local/share/grok"
+RUN mkdir -p "/home/${CONTAINER_USER}/.grok/" && \
+    for f in active_sessions.json active_sessions.lock config.toml; do \
+      mv "/home/${CONTAINER_USER}/.local/share/grok/$f" "/home/${CONTAINER_USER}/.grok/"; done && \
+    for f in bin completions docs downloads; do \
+      ln -s "/home/${CONTAINER_USER}/.local/share/grok/$f" "/home/${CONTAINER_USER}/.grok/"; done && \
+    ln -s "/home/${CONTAINER_USER}/.local/share/grok/bin/grok" /usr/local/bin/grok && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
 FROM production AS development

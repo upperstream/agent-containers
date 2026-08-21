@@ -20,6 +20,12 @@
       persist user data and session information.
   * [GitHub Copilot CLI][]:
     * Upgrade to version 1.0.80
+  * [Grok Build][]:
+    * Pin version to 1.0.5.
+    * Keep the install bundle under `~/.local/share/grok`.  Bind-mount
+      a host directory onto `~/.grok` with dangling symlinks to `bin`,
+      `completions`, `docs`, and `downloads`.
+    * By this change online update is discarded one the container exists.
   * Update documentation standards:
     * Allow a line in GFM table to exceeds the line length limit.
     * Make markdownlint configuration consistent with the
@@ -97,6 +103,7 @@
   "Google Gemini CLI"
 [GitHub Copilot CLI]: https://github.com/features/copilot/cli
   "GitHub Copilot CLI"
+[Grok Build]: https://x.ai/build "Grok Build | SpaceXAI"
 [Hermes Agent]: https://hermes-agent.nousresearch.com/
   "Hermes Agent | Nous Research"
 [Node.js]: https://nodejs.org/ "Node.js — Run JavaScript Everywhere"

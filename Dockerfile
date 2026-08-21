@@ -8,7 +8,7 @@ ARG COPILOT_VERSION=1.0.80          # 'latest', 'prerelease', or 'v0.0.369'
 ARG CRUSH_VERSION=v0.87.0           # 'nightly' or 'v0.89.0'
 ARG GEMINI_RELEASE=0.55.1           # 'latest', 'preview', 'nightly', or '0.55.1'
 ARG GROK_CHANNEL
-ARG GROK_VERSION
+ARG GROK_VERSION=1.0.5              # '1.0.5'
 ARG HERMES_VERSION=v2026.8.13       # branch (main) or tag (v2026.8.13)
 ARG KILO_VERSION                    # '7.4.1'
 ARG KIRO_CHANNEL
@@ -229,9 +229,13 @@ RUN case "$(uname -s)" in \
 FROM container_base AS grok
 ARG CONTAINER_USER  # global default
 
-COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.grok"
-
-RUN ln -s "/home/${CONTAINER_USER}/.grok/bin/grok" /usr/local/bin/grok
+COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.local/share/grok"
+RUN mkdir -p "/home/${CONTAINER_USER}/.grok/" && \
+    for f in active_sessions.json active_sessions.lock config.toml; do \
+      mv "/home/${CONTAINER_USER}/.local/share/grok/$f" "/home/${CONTAINER_USER}/.grok/"; done && \
+    for f in bin completions docs downloads; do \
+      ln -s "/home/${CONTAINER_USER}/.local/share/grok/$f" "/home/${CONTAINER_USER}/.grok/"; done && \
+    ln -s "/home/${CONTAINER_USER}/.local/share/grok/bin/grok" /usr/local/bin/grok
 
 FROM bin_stripper AS herdr_builder
 RUN apt-get update
@@ -398,7 +402,7 @@ COPY --from=droid_builder /root/.local/bin/droid /usr/local/bin/droid
 
 COPY --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
 
-COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.grok"
+COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.local/share/grok"
 
 COPY --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
 
@@ -432,7 +436,12 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
     ln -sf "/home/${CONTAINER_USER}/.codex/packages/standalone/current/bin/codex" "/home/${CONTAINER_USER}/.local/bin/" && \
     ln -s "$(echo /home/${CONTAINER_USER}/.local/share/cursor-agent/versions/*-*/cursor-agent)" /usr/local/bin/cursor-agent && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google/gemini-cli/bundle/gemini.js" /usr/local/bin/gemini && \
-    ln -s "/home/${CONTAINER_USER}/.grok/bin/grok" /usr/local/bin/grok && \
+    mkdir -p "/home/${CONTAINER_USER}/.grok/" && \
+    for f in active_sessions.json active_sessions.lock config.toml; do \
+      mv "/home/${CONTAINER_USER}/.local/share/grok/$f" "/home/${CONTAINER_USER}/.grok/"; done && \
+    for f in bin completions docs downloads; do \
+      ln -s "/home/${CONTAINER_USER}/.local/share/grok/$f" "/home/${CONTAINER_USER}/.grok/"; done && \
+    ln -s "/home/${CONTAINER_USER}/.local/share/grok/bin/grok" /usr/local/bin/grok && \
     (cd "/home/${CONTAINER_USER}/.local/bin" && ln -sf ../../.cua-driver/packages/current/cua-driver) && \
     ln -s "/home/${CONTAINER_USER}/.kilo/bin/kilo" /usr/local/bin/kilo && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
