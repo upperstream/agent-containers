@@ -26,6 +26,10 @@
       a host directory onto `~/.grok` with dangling symlinks to `bin`,
       `completions`, `docs`, and `downloads`.
     * By this change online update is discarded one the container exists.
+  * [Kilo CLI][]:
+    * Pin version to 7.4.23.
+    * Do not strip the Bun-compiled executable, preserving its embedded
+      application payload.
   * Update documentation standards:
     * Allow a line in GFM table to exceeds the line length limit.
     * Make markdownlint configuration consistent with the
@@ -106,6 +110,8 @@
 [Grok Build]: https://x.ai/build "Grok Build | SpaceXAI"
 [Hermes Agent]: https://hermes-agent.nousresearch.com/
   "Hermes Agent | Nous Research"
+[Kilo CLI]: https://kilo.ai/cli
+  "Kilo CLI – Open Source CLI Coding Agent"
 [Node.js]: https://nodejs.org/ "Node.js — Run JavaScript Everywhere"
 [OpenWiki]: https://github.com/langchain-ai/openwiki
   "langchain-ai/openwiki: OpenWiki is a CLI that writes and maintains agent documentation for your codebase."

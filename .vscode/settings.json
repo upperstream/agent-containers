@@ -29,6 +29,7 @@
       "passthrough",
       "passwordless",
       "readlink",
+      "subpaths",
       "usermod"
     ]
 }

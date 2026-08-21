@@ -1,14 +1,11 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG KILO_VERSION                # '7.4.1'
+ARG KILO_VERSION=7.4.23         # '7.4.23'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
 RUN apt-get install -y ca-certificates curl
-
-FROM builder_base AS bin_stripper
-RUN apt-get install -y binutils
 
 FROM debian:trixie-slim AS container_base
 ARG CONTAINER_USER              # global default
@@ -29,12 +26,11 @@ EOF
     fi
 EOT
 
-FROM bin_stripper AS kilo_builder
+FROM builder_base AS kilo_builder
 ARG KILO_VERSION                # global default
 
 RUN curl -fsSL https://kilo.ai/cli/install > kilo_installer.sh
 RUN bash kilo_installer.sh ${KILO_VERSION:+--version "$KILO_VERSION"}
-RUN strip /root/.kilo/bin/kilo
 
 FROM container_base AS production
 ARG CONTAINER_USER              # global default

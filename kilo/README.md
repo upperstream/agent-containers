@@ -29,14 +29,14 @@ docker build -t kilo -f kilo/Dockerfile kilo
 |----------------------------|---------------------|----------------------------------------------------------|
 | `CONTAINER_USER`           | `user`              | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production`        | `production` or `development` (adds `doas`/sudo tooling) |
+| `KILO_VERSION`             | `7.4.23`            | Kilo version to install                                  |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)             | Set to `yes` for classic nano keybindings                |
-| `KILO_VERSION`             | (installer default) | Pin version, e.g. `7.4.1`                                |
 
 Examples:
 
 ```bash
 docker build -t kilo:dev --build-arg ENVIRONMENT=development .
-docker build -t kilo:7.4.1 --build-arg KILO_VERSION=7.4.1 .
+docker build -t kilo:7.4.23 --build-arg KILO_VERSION=7.4.23 .
 ```
 
 ---

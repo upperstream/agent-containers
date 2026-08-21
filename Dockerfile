@@ -10,7 +10,7 @@ ARG GEMINI_RELEASE=0.55.1           # 'latest', 'preview', 'nightly', or '0.55.1
 ARG GROK_CHANNEL
 ARG GROK_VERSION=1.0.5              # '1.0.5'
 ARG HERMES_VERSION=v2026.8.13       # branch (main) or tag (v2026.8.13)
-ARG KILO_VERSION                    # '7.4.1'
+ARG KILO_VERSION=7.4.23             # '7.4.23'
 ARG KIRO_CHANNEL
 ARG KIRO_FORCE                      # '--force', defaults to unset
 ARG OPENCLAW_VERSION                # 'latest' or '2026.6.11'
@@ -260,12 +260,11 @@ RUN git clone --depth 1 --branch ${HERMES_VERSION:=main} https://github.com/Nous
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 RUN bash hermes_installer.sh --skip-setup --skip-browser --non-interactive ${HERMES_VERSION:+--commit "$(git -C /usr/local/lib/hermes-agent rev-parse --short "${HERMES_VERSION}"^{commit})"} --force-commit
 
-FROM bin_stripper AS kilo_builder
+FROM builder_base AS kilo_builder
 ARG KILO_VERSION    # global default
 
 RUN curl -fsSL https://kilo.ai/cli/install > kilo_installer.sh
 RUN bash kilo_installer.sh ${KILO_VERSION:+--version "$KILO_VERSION"}
-RUN strip /root/.kilo/bin/kilo
 
 FROM container_base AS kilo
 ARG CONTAINER_USER  # global default
