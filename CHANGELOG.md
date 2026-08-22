@@ -32,6 +32,8 @@
       application payload.
     * Document mounting a host `kilo` directory at `/mnt/kilo` to retain
       user data, sessions, and sandbox-policy state.
+  * [OpenClaw][]:
+    * Pin version to 2026.6.34.
   * Update documentation standards:
     * Allow a line in GFM table to exceeds the line length limit.
     * Make markdownlint configuration consistent with the
@@ -114,6 +116,7 @@
   "Hermes Agent | Nous Research"
 [Kilo CLI]: https://kilo.ai/cli
   "Kilo CLI – Open Source CLI Coding Agent"
+[OpenClaw]: https://openclaw.ai/ "OpenClaw — Personal AI Assistant"
 [Node.js]: https://nodejs.org/ "Node.js — Run JavaScript Everywhere"
 [OpenWiki]: https://github.com/langchain-ai/openwiki
   "langchain-ai/openwiki: OpenWiki is a CLI that writes and maintains agent documentation for your codebase."

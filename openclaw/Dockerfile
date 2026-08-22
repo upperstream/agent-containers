@@ -3,7 +3,7 @@ ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 ARG NODE_VERSION=v24.18.1
 ARG NPM_VERSION="12.0.0"
-ARG OPENCLAW_VERSION            # 'latest' or '2026.6.11'
+ARG OPENCLAW_VERSION=2026.6.34    # 'latest' or '2026.6.34'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
@@ -49,7 +49,7 @@ EOT
 
 FROM node_base AS openclaw_builder
 ARG NODE_VERSION                # global default
-ARG OPENCLAW_VERSION            # global default
+ARG OPENCLAW_VERSION=2026.6.34    # 'latest' or '2026.6.34'
 
 RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "openclaw@${OPENCLAW_VERSION:-latest}"
 

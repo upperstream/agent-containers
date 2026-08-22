@@ -13,7 +13,7 @@ ARG HERMES_VERSION=v2026.8.13       # branch (main) or tag (v2026.8.13)
 ARG KILO_VERSION=7.4.23             # '7.4.23'
 ARG KIRO_CHANNEL
 ARG KIRO_FORCE                      # '--force', defaults to unset
-ARG OPENCLAW_VERSION                # 'latest' or '2026.6.11'
+ARG OPENCLAW_VERSION=2026.6.34      # 'latest' or '2026.6.34'
 ARG OPENWIKI_NODE_VERSION=v24.18.1
 ARG OPENCODE_VERSION                # '1.17.13'
 ARG PROVIDER=all                    # 'pi' or 'all'
@@ -287,7 +287,7 @@ COPY --from=kiro_builder /root/.local/bin/kiro-cli /usr/local/bin/kiro-cli
 
 FROM node_base AS openclaw_builder
 ARG NODE_VERSION        # global default
-ARG OPENCLAW_VERSION    # global default
+ARG OPENCLAW_VERSION=2026.6.34      # 'latest' or '2026.6.34'
 
 RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "openclaw@${OPENCLAW_VERSION:-latest}"
 

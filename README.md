@@ -159,7 +159,7 @@ defaults/comments):
 | `KILO_VERSION`             | `7.4.23`                                            |
 | `KIRO_CHANNEL`             | unset                                               |
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                   |
-| `OPENCLAW_VERSION`         | defaults to `latest`                                |
+| `OPENCLAW_VERSION`         | `2026.6.34` (`latest` or a version)                 |
 | `OPENCODE_VERSION`         | installer default when unset                        |
 | `OPENWIKI_NODE_VERSION`    | `v24.18.1`; Node.js version to install for OpenWiki |
 
