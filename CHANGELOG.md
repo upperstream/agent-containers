@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased][]
+## [20260823][]
 
 * Added:
   * Add an agent skill for documentation standards.
@@ -131,7 +131,7 @@
 
 * Initial release.
 
-[Unreleased]: https://github.com/upperstream/agent-containers/compare/20260815...HEAD
+[20260823]: https://github.com/upperstream/agent-containers/compare/20260817...20260823
 [20260817]: https://github.com/upperstream/agent-containers/compare/20260815...20260817
 [20260815]: https://github.com/upperstream/agent-containers/compare/20260807...20260815
 [20260807]: https://github.com/upperstream/agent-containers/compare/20260801...20260807
