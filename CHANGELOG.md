@@ -34,6 +34,9 @@
       user data, sessions, and sandbox-policy state.
   * [OpenClaw][]:
     * Pin version to 2026.6.34.
+  * [OpenCode][]:
+    * Do not strip the Bun-compiled executable, preserving its embedded
+      application payload.
   * Update documentation standards:
     * Allow a line in GFM table to exceeds the line length limit.
     * Make markdownlint configuration consistent with the
@@ -117,6 +120,8 @@
 [Kilo CLI]: https://kilo.ai/cli
   "Kilo CLI – Open Source CLI Coding Agent"
 [OpenClaw]: https://openclaw.ai/ "OpenClaw — Personal AI Assistant"
+[OpenCode]: https://opencode.ai/
+  "OpenCode | The open source AI coding agent"
 [Node.js]: https://nodejs.org/ "Node.js — Run JavaScript Everywhere"
 [OpenWiki]: https://github.com/langchain-ai/openwiki
   "langchain-ai/openwiki: OpenWiki is a CLI that writes and maintains agent documentation for your codebase."

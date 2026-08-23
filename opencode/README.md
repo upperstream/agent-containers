@@ -40,7 +40,9 @@ docker build -t opencode:1.17.13 --build-arg OPENCODE_VERSION=1.17.13 .
 ```
 
 The installer is invoked with `--no-modify-path`; the binary is copied
-to `/usr/local/bin/opencode` and stripped in the builder stage.
+to `/usr/local/bin/opencode`.  The builder does not strip the
+executable, so the Bun-compiled payload at the tail of the binary is
+preserved.
 
 ---
 
@@ -61,7 +63,7 @@ Authenticate according to OpenCode’s documentation for your environment.
 
 | Path                      | Description                    |
 |---------------------------|--------------------------------|
-| `/usr/local/bin/opencode` | OpenCode CLI binary (stripped) |
+| `/usr/local/bin/opencode` | OpenCode CLI binary            |
 | `/workspaces`             | Default working directory      |
 
 ### Persistence

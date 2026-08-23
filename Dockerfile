@@ -304,12 +304,11 @@ RUN apt-get update && \
 
 COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
 
-FROM bin_stripper AS opencode_builder
+FROM builder_base AS opencode_builder
 ARG OPENCODE_VERSION    # global default
 
 RUN curl -fsSL https://opencode.ai/install > opencode_installer.sh
 RUN bash opencode_installer.sh --no-modify-path ${OPENCODE_VERSION:+--version "$OPENCODE_VERSION"}
-RUN strip /root/.opencode/bin/opencode
 
 FROM container_base AS opencode
 
