@@ -35,6 +35,7 @@
   * [OpenClaw][]:
     * Pin version to 2026.6.34.
   * [OpenCode][]:
+    * Pin version to 1.18.21.
     * Do not strip the Bun-compiled executable, preserving its embedded
       application payload.
   * Update documentation standards:

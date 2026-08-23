@@ -1,7 +1,7 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG OPENCODE_VERSION            # '1.17.13'
+ARG OPENCODE_VERSION=1.18.21    # '1.18.21'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update

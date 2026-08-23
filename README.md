@@ -160,7 +160,7 @@ defaults/comments):
 | `KIRO_CHANNEL`             | unset                                               |
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                   |
 | `OPENCLAW_VERSION`         | `2026.6.34` (`latest` or a version)                 |
-| `OPENCODE_VERSION`         | installer default when unset                        |
+| `OPENCODE_VERSION`         | `1.18.21`                                           |
 | `OPENWIKI_NODE_VERSION`    | `v24.18.1`; Node.js version to install for OpenWiki |
 
 Also used by named stages (pass with `--build-arg`; declared on those
@@ -301,5 +301,5 @@ are licensed under the _2-Clause BSD License_.  See
 
 This repository only packages installers and public CLIs.  Each agent
 binary, npm package, or tool you install through these images is subject
-to **its own** license and terms of use.  Obtain API keys and accounts
-from the respective providers.
+to its own license and terms of use.  Obtain API keys and accounts from
+the respective providers.

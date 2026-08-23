@@ -14,8 +14,8 @@ ARG KILO_VERSION=7.4.23             # '7.4.23'
 ARG KIRO_CHANNEL
 ARG KIRO_FORCE                      # '--force', defaults to unset
 ARG OPENCLAW_VERSION=2026.6.34      # 'latest' or '2026.6.34'
+ARG OPENCODE_VERSION=1.18.21        # '1.18.21'
 ARG OPENWIKI_NODE_VERSION=v24.18.1
-ARG OPENCODE_VERSION                # '1.17.13'
 ARG PROVIDER=all                    # 'pi' or 'all'
 
 FROM debian:trixie-slim AS builder_base
