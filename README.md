@@ -145,17 +145,18 @@ defaults/comments):
 |----------------------------|-----------------------------------------------------|
 | `CONTAINER_USER`           | `user`                                              |
 | `ENVIRONMENT`              | `production` (`development` adds doas tooling)      |
-| `HERMES_VERSION`           | `v2026.8.13` (Specific Hermes git tag to install)   |
 | `NANO_CLASSIC_KEYBINDINGS` | unset; set to `yes` for classic nano bindings       |
 | `PROVIDER`                 | `all`                                               |
 | `NODE_VERSION`             | `v24.18.1`                                          |
 | `NPM_VERSION`              | `12.0.0`                                            |
+| `AIDER_VERSION`            | `0.86.2`; `aider-chat` version installed with uv    |
 | `CODEX_RELEASE`            | `0.148.0` (`latest` or a version)                   |
 | `COPILOT_VERSION`          | `1.0.80` (`latest` or a version)                    |
 | `CRUSH_VERSION`            | `v0.87.0` (release tag or `nightly`)                |
 | `GEMINI_RELEASE`           | `0.55.1` (`latest`, `preview`, or `nightly`)        |
 | `GROK_CHANNEL`             | unset                                               |
 | `GROK_VERSION`             | `1.0.5`                                             |
+| `HERMES_VERSION`           | `v2026.8.13` (Specific Hermes git tag to install)   |
 | `KILO_VERSION`             | `7.4.23`                                            |
 | `KIRO_CHANNEL`             | unset                                               |
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                   |
@@ -188,6 +189,14 @@ and adds symlinks for Node-based CLIs and tools that live under home:
 `PATH`.
 
 It also appends `$HOME/.local/bin` to the container user's `.bashrc`.
+
+Aider is installed with [uv](https://docs.astral.sh/uv/) (`uv tool
+install --force --python python3.12 --with pip
+aider-chat@${AIDER_VERSION}`).  Default `AIDER_VERSION` is `0.86.2` for
+both the root `aider` / `all` stages and the standalone `aider/` image.
+The `uv` CLI is used only during the build; the runtime image keeps the
+UV tools tree under `~/.local/share/uv` and a `/usr/local/bin/aider`
+symlink.
 
 ---
 

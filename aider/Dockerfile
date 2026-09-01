@@ -1,10 +1,15 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
+ARG AIDER_VERSION=0.86.2
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
 RUN apt-get install -y ca-certificates curl
+
+FROM builder_base AS uv_base
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:${PATH}"
 
 FROM debian:trixie-slim AS container_base
 ARG CONTAINER_USER              # global default
@@ -25,10 +30,12 @@ EOF
     fi
 EOT
 
-FROM builder_base AS aider_builder
+FROM uv_base AS aider_builder
+ARG AIDER_VERSION   # global default
 ARG CONTAINER_USER
 
-RUN curl -LsSf https://aider.chat/install.sh | HOME="/home/${CONTAINER_USER}" sh
+RUN mkdir -p "/home/${CONTAINER_USER}" && \
+    HOME="/home/${CONTAINER_USER}" uv tool install --force --python python3.12 --with pip "aider-chat@${AIDER_VERSION}"
 
 FROM container_base AS production
 ARG CONTAINER_USER  # global default

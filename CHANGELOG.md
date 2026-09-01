@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased][]
+
+* Changed:
+  * [Aider][]: Pin version to 0.86.2.  Use [uv][] (`uv tool install`)
+    instead of the official `aider.chat/install.sh` script.  Default
+    `AIDER_VERSION` is `0.86.2`.  Applies to the root multi-stage image
+    and the standalone `aider/` build.
+
 ## [20260823][]
 
 * Added:
@@ -107,6 +115,8 @@
   * Use Node.js v22.14.0 for OpenWiki in order to properly install
     `better-sqlite3`.
 
+[Aider]: https://aider.chat/
+  "Aider - AI Pair Programming in Your Terminal"
 [Codex CLI]: https://learn.chatgpt.com/docs/codex/cli
   "CLI – Codex | OpenAI Developers"
 [Crush]: https://github.com/charmbracelet/crush
@@ -126,11 +136,13 @@
 [Node.js]: https://nodejs.org/ "Node.js — Run JavaScript Everywhere"
 [OpenWiki]: https://github.com/langchain-ai/openwiki
   "langchain-ai/openwiki: OpenWiki is a CLI that writes and maintains agent documentation for your codebase."
+[uv]: https://docs.astral.sh/uv/ "uv - An extremely fast Python package and project manager"
 
 ## [20260711][]
 
 * Initial release.
 
+[Unreleased]: https://github.com/upperstream/agent-containers/compare/20260823...HEAD
 [20260823]: https://github.com/upperstream/agent-containers/compare/20260817...20260823
 [20260817]: https://github.com/upperstream/agent-containers/compare/20260815...20260817
 [20260815]: https://github.com/upperstream/agent-containers/compare/20260807...20260815

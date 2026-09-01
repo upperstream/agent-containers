@@ -29,13 +29,20 @@ docker build -t aider -f aider/Dockerfile aider
 |----------------------------|--------------|----------------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
-| `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
+| `AIDER_VERSION`            | `0.86.2`     | `aider-chat` version installed with uv                   |
+| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings                |
 
 Examples:
 
 ```bash
 docker build -t aider:dev --build-arg ENVIRONMENT=development .
+docker build -t aider:0.86.2 --build-arg AIDER_VERSION=0.86.2 .
 ```
+
+The builder installs [uv](https://docs.astral.sh/uv/) from Astral, then
+runs `uv tool install --force --python python3.12 --with pip
+aider-chat@${AIDER_VERSION}`.  The final image copies that UV tools tree
+and symlinks `aider` to `/usr/local/bin/aider`.
 
 ---
 
@@ -57,11 +64,15 @@ docs](https://aider.chat/docs/) for model selection and auth options.
 
 ## Image layout
 
-| Path                         | Description                                         |
-|------------------------------|-----------------------------------------------------|
-| `/home/user/.local/share/uv` | UV tool install used by Aider                       |
-| `/usr/local/bin/aider`       | Symlink to the Aider binary under the UV tools tree |
-| `/workspaces`                | Default working directory                           |
+| Path                                              | Description                                         |
+|---------------------------------------------------|-----------------------------------------------------|
+| `/home/user/.local/share/uv`                      | UV tools tree (Aider + Python 3.12 environment)     |
+| `/home/user/.local/share/uv/tools/aider-chat/bin` | Aider binary and its tool environment               |
+| `/usr/local/bin/aider`                            | Symlink to the Aider binary under the UV tools tree |
+| `/workspaces`                                     | Default working directory                           |
+
+The `uv` CLI itself is used only during the build and is not copied
+into the runtime image.
 
 ### Persistence
 
