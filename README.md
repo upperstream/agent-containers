@@ -141,28 +141,29 @@ docker build -t agents:all-dev \
 Declared at the top of the root `Dockerfile` (with current
 defaults/comments):
 
-| Argument                   | Default / notes                                     |
-|----------------------------|-----------------------------------------------------|
-| `CONTAINER_USER`           | `user`                                              |
-| `ENVIRONMENT`              | `production` (`development` adds doas tooling)      |
-| `NANO_CLASSIC_KEYBINDINGS` | unset; set to `yes` for classic nano bindings       |
-| `PROVIDER`                 | `all`                                               |
-| `NODE_VERSION`             | `v24.18.1`                                          |
-| `NPM_VERSION`              | `12.0.0`                                            |
-| `AIDER_VERSION`            | `0.86.2`; `aider-chat` version installed with uv    |
-| `CODEX_RELEASE`            | `0.148.0` (`latest` or a version)                   |
-| `COPILOT_VERSION`          | `1.0.80` (`latest` or a version)                    |
-| `CRUSH_VERSION`            | `v0.87.0` (release tag or `nightly`)                |
-| `GEMINI_RELEASE`           | `0.55.1` (`latest`, `preview`, or `nightly`)        |
-| `GROK_CHANNEL`             | unset                                               |
-| `GROK_VERSION`             | `1.0.5`                                             |
-| `HERMES_VERSION`           | `v2026.8.13` (Specific Hermes git tag to install)   |
-| `KILO_VERSION`             | `7.4.23`                                            |
-| `KIRO_CHANNEL`             | unset                                               |
-| `KIRO_FORCE`               | unset; non-empty passes `--force`                   |
-| `OPENCLAW_VERSION`         | `2026.6.34` (`latest` or a version)                 |
-| `OPENCODE_VERSION`         | `1.18.21`                                           |
-| `OPENWIKI_NODE_VERSION`    | `v24.18.1`; Node.js version to install for OpenWiki |
+| Argument                   | Default / notes                                                 |
+|----------------------------|-----------------------------------------------------------------|
+| `CONTAINER_USER`           | `user`                                                          |
+| `ENVIRONMENT`              | `production` (`development` adds doas tooling)                  |
+| `NANO_CLASSIC_KEYBINDINGS` | unset; set to `yes` for classic nano bindings                   |
+| `PROVIDER`                 | `all`                                                           |
+| `NODE_VERSION`             | `v24.18.1`                                                      |
+| `NPM_VERSION`              | `12.0.0`                                                        |
+| `AIDER_VERSION`            | `0.86.2`; `aider-chat` version installed with uv                |
+| `CLAUDE_VERSION`           | `2.1.236`; Claude Code version installed (or `latest`/`stable`) |
+| `CODEX_RELEASE`            | `0.148.0` (`latest` or a version)                               |
+| `COPILOT_VERSION`          | `1.0.80` (`latest` or a version)                                |
+| `CRUSH_VERSION`            | `v0.87.0` (release tag or `nightly`)                            |
+| `GEMINI_RELEASE`           | `0.55.1` (`latest`, `preview`, or `nightly`)                    |
+| `GROK_CHANNEL`             | unset                                                           |
+| `GROK_VERSION`             | `1.0.5`                                                         |
+| `HERMES_VERSION`           | `v2026.8.13` (Specific Hermes git tag to install)               |
+| `KILO_VERSION`             | `7.4.23`                                                        |
+| `KIRO_CHANNEL`             | unset                                                           |
+| `KIRO_FORCE`               | unset; non-empty passes `--force`                               |
+| `OPENCLAW_VERSION`         | `2026.6.34` (`latest` or a version)                             |
+| `OPENCODE_VERSION`         | `1.18.21`                                                       |
+| `OPENWIKI_NODE_VERSION`    | `v24.18.1`; Node.js version to install for OpenWiki             |
 
 Also used by named stages (pass with `--build-arg`; declared on those
 stages, not only at file top):

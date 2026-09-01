@@ -4,6 +4,7 @@ ARG AIDER_VERSION=0.86.2
 ARG NANO_CLASSIC_KEYBINDINGS        # 'yes', default to 'no'
 ARG NODE_VERSION=v24.18.1
 ARG NPM_VERSION="12.0.0"
+ARG CLAUDE_VERSION=2.1.236          # 'latest', 'stable', or a version
 ARG CODEX_RELEASE=0.148.0           # 'latest' or '0.142.5'
 ARG COPILOT_VERSION=1.0.80          # 'latest', 'prerelease', or 'v0.0.369'
 ARG CRUSH_VERSION=v0.87.0           # 'nightly' or 'v0.89.0'
@@ -94,8 +95,9 @@ ARG CONTAINER_USER  # global default
 COPY --from=agy_builder /root/.local/bin/agy /usr/local/bin/agy
 
 FROM builder_base AS claude_builder
+ARG CLAUDE_VERSION   # global default
 
-RUN curl -fsSL https://claude.ai/install.sh | bash
+RUN curl -fsSL https://claude.ai/install.sh | bash -s "${CLAUDE_VERSION}"
 RUN install -Dm0755 "$(readlink -f /root/.local/bin/claude)" /usr/local/bin/claude
 
 FROM container_base AS claude

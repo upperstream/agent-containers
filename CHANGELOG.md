@@ -11,11 +11,13 @@
     * Document extracting Aider configuration, per-user data, project
       chat history, input history, and optional repo-map cache files
       from the container before removal when state is not bind-mounted.
-  * [Claude Code][]: Use the official `claude.ai/install.sh` one-liner
-    install script instead of installing the `claude-code` apt package.
-    This installs the `latest` release channel rather than the apt
-    repository's `stable` channel.  Applies to the root multi-stage
-    image and the standalone `claude/` build.
+  * [Claude Code][]:
+    * Use the official `claude.ai/install.sh` one-liner install script
+      instead of installing the `claude-code` apt package.
+    * Pin version to 2.1.236 via the new `CLAUDE_VERSION` build argument
+      (accepts a specific version, or `latest`/`stable` to track a
+      release channel).  Applies to the root multi-stage image and the
+      standalone `claude/` build.
 
 ## [20260823][]
 

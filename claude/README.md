@@ -5,8 +5,10 @@ preinstalled, plus common editor and search tools (`git`, `ripgrep`,
 `fd`, `vim`, `nano`, etc.).
 
 Claude Code is installed with the official one-liner install script
-(`curl -fsSL https://claude.ai/install.sh | bash`), which installs the
-`latest` release channel.
+(`curl -fsSL https://claude.ai/install.sh | bash -s "${CLAUDE_VERSION}"`).
+Default `CLAUDE_VERSION` is `2.1.236`; override at build time to pin a
+different version, or set it to `latest` or `stable` to track a release
+channel instead.
 
 The default container user is `user` (override at build time with
 `CONTAINER_USER`).  Working directory is `/workspaces`.
@@ -31,6 +33,7 @@ docker build -t claude -f claude/Dockerfile claude
 
 | Argument                   | Default      | Description                                              |
 |----------------------------|--------------|----------------------------------------------------------|
+| `CLAUDE_VERSION`           | `2.1.236`    | Claude Code version to install (or `latest`/`stable`)    |
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |

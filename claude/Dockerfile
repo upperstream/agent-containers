@@ -1,3 +1,4 @@
+ARG CLAUDE_VERSION=2.1.236      # 'latest', 'stable', or a version
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
@@ -26,8 +27,9 @@ EOF
 EOT
 
 FROM builder_base AS claude_builder
+ARG CLAUDE_VERSION   # global default
 
-RUN curl -fsSL https://claude.ai/install.sh | bash
+RUN curl -fsSL https://claude.ai/install.sh | bash -s "${CLAUDE_VERSION}"
 RUN install -Dm0755 "$(readlink -f /root/.local/bin/claude)" /usr/local/bin/claude
 
 FROM container_base AS production
