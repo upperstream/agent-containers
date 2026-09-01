@@ -27,15 +27,12 @@ EOT
 
 FROM builder_base AS claude_builder
 
-RUN install -d -m 0755 /etc/apt/keyrings
-RUN curl -fsSL https://downloads.claude.ai/keys/claude-code.asc -o /etc/apt/keyrings/claude-code.asc
-RUN echo "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/stable stable main" > /etc/apt/sources.list.d/claude-code.list
-RUN apt-get update
-RUN apt-get install -y claude-code
+RUN curl -fsSL https://claude.ai/install.sh | bash
+RUN install -Dm0755 "$(readlink -f /root/.local/bin/claude)" /usr/local/bin/claude
 
 FROM container_base AS production
 
-COPY --from=claude_builder /usr/bin/claude /usr/local/bin/claude
+COPY --from=claude_builder /usr/local/bin/claude /usr/local/bin/claude
 
 FROM production AS development
 ARG CONTAINER_USER              # global default

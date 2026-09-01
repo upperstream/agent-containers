@@ -11,6 +11,11 @@
     * Document extracting Aider configuration, per-user data, project
       chat history, input history, and optional repo-map cache files
       from the container before removal when state is not bind-mounted.
+  * [Claude Code][]: Use the official `claude.ai/install.sh` one-liner
+    install script instead of installing the `claude-code` apt package.
+    This installs the `latest` release channel rather than the apt
+    repository's `stable` channel.  Applies to the root multi-stage
+    image and the standalone `claude/` build.
 
 ## [20260823][]
 
@@ -121,6 +126,8 @@
 
 [Aider]: https://aider.chat/
   "Aider - AI Pair Programming in Your Terminal"
+[Claude Code]: https://claude.com/product/claude-code
+  "Claude Code by Anthropic | AI Coding Agent, Terminal, IDE"
 [Codex CLI]: https://learn.chatgpt.com/docs/codex/cli
   "CLI – Codex | OpenAI Developers"
 [Crush]: https://github.com/charmbracelet/crush

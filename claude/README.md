@@ -4,6 +4,10 @@ Debian-based image with [Claude Code](https://claude.ai/) CLI
 preinstalled, plus common editor and search tools (`git`, `ripgrep`,
 `fd`, `vim`, `nano`, etc.).
 
+Claude Code is installed with the official one-liner install script
+(`curl -fsSL https://claude.ai/install.sh | bash`), which installs the
+`latest` release channel.
+
 The default container user is `user` (override at build time with
 `CONTAINER_USER`).  Working directory is `/workspaces`.
 
@@ -25,11 +29,11 @@ docker build -t claude -f claude/Dockerfile claude
 
 ### Build arguments
 
-| Argument                   | Default               | Description                                              |
-|----------------------------|-----------------------|----------------------------------------------------------|
-| `CONTAINER_USER`           | `user`                | Non-root user created in the image                       |
-| `ENVIRONMENT`              | `production`          | `production` or `development` (adds `doas`/sudo tooling) |
-| `NANO_CLASSIC_KEYBINDINGS` | (unset)               | Set to `yes` for classic nano keybindings                |
+| Argument                   | Default      | Description                                              |
+|----------------------------|--------------|----------------------------------------------------------|
+| `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
+| `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
+| `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 
 Examples:
 
@@ -58,10 +62,10 @@ Credentials and settings typically land under the user’s home (commonly
 
 ## Image layout
 
-| Path                    | Description                       |
-|-------------------------|-----------------------------------|
-| `/usr/local/bin/claude` | Claude Code CLI binary (stripped) |
-| `/workspaces`           | Default working directory         |
+| Path                    | Description               |
+|-------------------------|---------------------------|
+| `/usr/local/bin/claude` | Claude Code CLI binary    |
+| `/workspaces`           | Default working directory |
 
 ### Persistence
 
