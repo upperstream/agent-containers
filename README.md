@@ -151,6 +151,7 @@ defaults/comments):
 | `NPM_VERSION`              | `12.0.0`                                                        |
 | `AIDER_VERSION`            | `0.86.2`; `aider-chat` version installed with uv                |
 | `CLAUDE_VERSION`           | `2.1.236`; Claude Code version installed (or `latest`/`stable`) |
+| `CLINE_RELEASE`            | `3.0.60` (`nightly` or a version)                               |
 | `CODEX_RELEASE`            | `0.148.0` (`latest` or a version)                               |
 | `COPILOT_VERSION`          | `1.0.80` (`latest` or a version)                                |
 | `CRUSH_VERSION`            | `v0.87.0` (release tag or `nightly`)                            |
@@ -170,7 +171,6 @@ stages, not only at file top):
 
 | Argument           | Used by    |
 |--------------------|------------|
-| `CLINE_RELEASE`    | `cline`    |
 | `OPENWIKI_VERSION` | `openwiki` |
 | `PI_VERSION`       | `pi`       |
 

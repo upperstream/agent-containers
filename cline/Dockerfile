@@ -3,7 +3,7 @@ ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 ARG NODE_VERSION=v24.18.1
 ARG NPM_VERSION="12.0.0"
-ARG CLINE_RELEASE               # 'nightly' or '3.0.37'
+ARG CLINE_RELEASE=3.0.60        # 'nightly' or '3.0.60'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
@@ -48,7 +48,7 @@ EOF
 EOT
 
 FROM node_base AS cline_builder
-ARG CLINE_RELEASE   # 'nightly' or '3.0.37'
+ARG CLINE_RELEASE   # global default
 ARG NODE_VERSION    # global default
 
 RUN PATH=$PATH:/usr/local/node-${NODE_VERSION}/bin npm install -g cline${CLINE_RELEASE:+@"$CLINE_RELEASE"}

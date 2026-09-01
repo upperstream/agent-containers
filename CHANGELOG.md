@@ -18,6 +18,10 @@
       (accepts a specific version, or `latest`/`stable` to track a
       release channel).  Applies to the root multi-stage image and the
       standalone `claude/` build.
+  * [Cline][]: Pin version to 3.0.60.  The `CLINE_RELEASE` build
+    argument now defaults to `3.0.60` (it was previously unset,
+    installing the latest release).  Applies to the root multi-stage
+    image and the standalone `cline/` build.
 
 ## [20260823][]
 
@@ -130,6 +134,8 @@
   "Aider - AI Pair Programming in Your Terminal"
 [Claude Code]: https://claude.com/product/claude-code
   "Claude Code by Anthropic | AI Coding Agent, Terminal, IDE"
+[Cline]: https://cline.bot/cli
+  "Cline CLI - Coding Agents in Your Terminal and on a Kanban Board"
 [Codex CLI]: https://learn.chatgpt.com/docs/codex/cli
   "CLI – Codex | OpenAI Developers"
 [Crush]: https://github.com/charmbracelet/crush

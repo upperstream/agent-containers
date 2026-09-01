@@ -32,13 +32,13 @@ docker build -t cline -f cline/Dockerfile cline
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 | `NODE_VERSION`             | `v24.18.1`   | Node.js version to install                               |
 | `NPM_VERSION`              | `12.0.0`     | Global npm version                                       |
-| `CLINE_RELEASE`            | (latest)     | Pin Cline: e.g. `nightly` or `3.0.37`                    |
+| `CLINE_RELEASE`            | `3.0.60`     | Pin Cline: e.g. `nightly` or `3.0.60`                    |
 
 Examples:
 
 ```bash
 docker build -t cline:dev --build-arg ENVIRONMENT=development .
-docker build -t cline:3.0.37 --build-arg CLINE_RELEASE=3.0.37 .
+docker build -t cline:3.0.60 --build-arg CLINE_RELEASE=3.0.60 .
 ```
 
 ---
