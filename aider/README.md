@@ -93,7 +93,49 @@ paths Aider documents for your release.
 
 ---
 
-## Related
+### Files to extract outside the container
+
+If you are not bind-mounting Aider's state, copy these paths out of the
+container before it is removed.  Replace `/home/user` with your chosen
+`CONTAINER_USER`.
+
+| Path                               | Purpose                                                                                          | Needed for                |
+|------------------------------------|--------------------------------------------------------------------------------------------------|---------------------------|
+| `/home/user/.aider.conf.yml`       | Global Aider configuration (model defaults, options; may contain API keys if you put them there) | User settings             |
+| `/home/user/.aider/`               | Per-user Aider data/cache/model metadata created by Aider                                        | User-level cache/metadata |
+| `<project>/.aider.chat.history.md` | Chat/session transcript for the project                                                          | Session history           |
+| `<project>/.aider.input.history`   | Input command history for the project                                                            | Session input history     |
+
+The minimum files needed to retain a project's Aider session are:
+
+- `.aider.chat.history.md`
+- `.aider.input.history`
+
+These live in the project directory, typically `/workspaces/project` in
+this image.  If you mount your host project directory into
+`/workspaces/project`, those files persist automatically with that
+mount.
+
+If you also want to preserve Aider's global settings or model metadata,
+extract:
+
+- `/home/user/.aider.conf.yml`
+- `/home/user/.aider/`
+
+If you want to preserve the repo-map cache for faster startup, also copy
+`<project>/.aider.tags.cache.v3/`.  It is not required for chat/session
+data, only performance.
+
+Example:
+
+```bash
+docker cp aider:/home/user/.aider ./aider-home
+docker cp aider:/home/user/.aider.conf.yml ./aider.conf.yml
+docker cp aider:/workspaces/project/.aider.chat.history.md ./project/
+docker cp aider:/workspaces/project/.aider.input.history ./project/
+```
+
+for user data or session information.
 
 The monorepo root `Dockerfile` can also include Aider via multi-stage
 targets (`PROVIDER=aider` or `all`).  This directory is a standalone

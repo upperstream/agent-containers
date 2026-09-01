@@ -3,10 +3,14 @@
 ## [Unreleased][]
 
 * Changed:
-  * [Aider][]: Pin version to 0.86.2.  Use [uv][] (`uv tool install`)
-    instead of the official `aider.chat/install.sh` script.  Default
-    `AIDER_VERSION` is `0.86.2`.  Applies to the root multi-stage image
-    and the standalone `aider/` build.
+  * [Aider][]:
+    * Pin version to 0.86.2.  Use [uv][] (`uv tool install`) instead of
+      the official `aider.chat/install.sh` script.  Default
+      `AIDER_VERSION` is `0.86.2`.  Applies to the root multi-stage
+      image and the standalone `aider/` build.
+    * Document extracting Aider configuration, per-user data, project
+      chat history, input history, and optional repo-map cache files
+      from the container before removal when state is not bind-mounted.
 
 ## [20260823][]
 
