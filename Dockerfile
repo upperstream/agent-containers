@@ -195,10 +195,9 @@ COPY --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CON
 
 RUN ln -s "$(echo /home/${CONTAINER_USER}/.local/share/cursor-agent/versions/*-*/cursor-agent)" /usr/local/bin/cursor-agent
 
-FROM bin_stripper AS droid_builder
+FROM builder_base AS droid_builder
 RUN curl -fsSL https://app.factory.ai/cli > droid_installer.sh
 RUN sh droid_installer.sh
-RUN strip /root/.local/bin/droid
 
 FROM container_base AS droid
 ARG CONTAINER_USER  # global default

@@ -22,6 +22,8 @@
     argument now defaults to `3.0.60` (it was previously unset,
     installing the latest release).  Applies to the root multi-stage
     image and the standalone `cline/` build.
+  * [Droid CLI][]: Do not strip the Bun-compiled executable, preserving
+    its embedded application payload.
 
 ## [20260823][]
 
@@ -140,6 +142,8 @@
   "CLI – Codex | OpenAI Developers"
 [Crush]: https://github.com/charmbracelet/crush
   "charmbracelet/crush: Glamourous agentic coding for all 💘"
+[Droid CLI]: https://factory.com/product/cli
+  "Factory Terminal UI | Interactive AI Agents in Your Terminal"
 [Gemini CLI]: https://github.com/google-gemini/gemini-cli
   "Google Gemini CLI"
 [GitHub Copilot CLI]: https://github.com/features/copilot/cli

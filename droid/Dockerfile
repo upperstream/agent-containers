@@ -6,9 +6,6 @@ FROM debian:trixie-slim AS builder_base
 RUN apt-get update
 RUN apt-get install -y ca-certificates curl
 
-FROM builder_base AS bin_stripper
-RUN apt-get install -y binutils
-
 FROM debian:trixie-slim AS container_base
 ARG CONTAINER_USER              # global default
 ARG NANO_CLASSIC_KEYBINDINGS    # global default
@@ -28,10 +25,9 @@ EOF
     fi
 EOT
 
-FROM bin_stripper AS droid_builder
+FROM builder_base AS droid_builder
 RUN curl -fsSL https://app.factory.ai/cli > droid_installer.sh
 RUN sh droid_installer.sh
-RUN strip /root/.local/bin/droid
 
 FROM container_base AS production
 ARG CONTAINER_USER              # global default
