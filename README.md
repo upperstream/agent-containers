@@ -155,6 +155,7 @@ defaults/comments):
 | `CODEX_RELEASE`            | `0.148.0` (`latest` or a version)                               |
 | `COPILOT_VERSION`          | `1.0.80` (`latest` or a version)                                |
 | `CRUSH_VERSION`            | `v0.87.0` (release tag or `nightly`)                            |
+| `DROID_VERSION`            | `0.209.0` (version of the `droid` npm package, or `latest`)     |
 | `GEMINI_RELEASE`           | `0.55.1` (`latest`, `preview`, or `nightly`)                    |
 | `GROK_CHANNEL`             | unset                                                           |
 | `GROK_VERSION`             | `1.0.5`                                                         |

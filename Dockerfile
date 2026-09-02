@@ -9,6 +9,7 @@ ARG CLINE_RELEASE=3.0.60            # 'nightly' or '3.0.60'
 ARG CODEX_RELEASE=0.148.0           # 'latest' or '0.142.5'
 ARG COPILOT_VERSION=1.0.80          # 'latest', 'prerelease', or 'v0.0.369'
 ARG CRUSH_VERSION=v0.87.0           # 'nightly' or 'v0.89.0'
+ARG DROID_VERSION=0.209.0           # 'latest' or '0.209.0'
 ARG GEMINI_RELEASE=0.55.1           # 'latest', 'preview', 'nightly', or '0.55.1'
 ARG GROK_CHANNEL
 ARG GROK_VERSION=1.0.5              # '1.0.5'
@@ -195,14 +196,21 @@ COPY --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CON
 
 RUN ln -s "$(echo /home/${CONTAINER_USER}/.local/share/cursor-agent/versions/*-*/cursor-agent)" /usr/local/bin/cursor-agent
 
-FROM builder_base AS droid_builder
-RUN curl -fsSL https://app.factory.ai/cli > droid_installer.sh
-RUN sh droid_installer.sh
+FROM node_base AS droid_builder
+ARG DROID_VERSION   # global default
+ARG NODE_VERSION    # global default
+
+RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g --ignore-scripts "droid@${DROID_VERSION:-latest}"
 
 FROM container_base AS droid
 ARG CONTAINER_USER  # global default
+ARG NODE_VERSION    # global default
 
-COPY --from=droid_builder /root/.local/bin/droid /usr/local/bin/droid
+COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --from=droid_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid" "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid"
+
+RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid/bin/droid" /usr/local/bin/droid && \
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 
 FROM node_base AS gemini_builder
 ARG GEMINI_RELEASE  # global default
@@ -402,7 +410,7 @@ COPY --from=crush_builder /root/*/crush /usr/local/bin/crush
 
 COPY --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CONTAINER_USER}/.local/share/cursor-agent/versions"
 
-COPY --from=droid_builder /root/.local/bin/droid /usr/local/bin/droid
+COPY --from=droid_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid" "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid"
 
 COPY --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
 
@@ -433,6 +441,7 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     ln -s "/home/${CONTAINER_USER}/.local/share/uv/tools/aider-chat/bin/aider" /usr/local/bin/aider && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline/bin/cline" /usr/local/bin/cline && \
+    ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid/bin/droid" /usr/local/bin/droid && \
     (cd "/home/${CONTAINER_USER}/.codex/packages/standalone" && \
         ln -s $(readlink current | sed 's!/root/.codex/packages/standalone/!!' && rm current) current) && \
     (cd $(echo "/home/${CONTAINER_USER}"/.codex/tmp/arg0/* | head -n1) && \

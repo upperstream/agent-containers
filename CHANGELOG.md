@@ -22,8 +22,16 @@
     argument now defaults to `3.0.60` (it was previously unset,
     installing the latest release).  Applies to the root multi-stage
     image and the standalone `cline/` build.
-  * [Droid CLI][]: Do not strip the Bun-compiled executable, preserving
-    its embedded application payload.
+  * [Droid CLI][]:
+    * Install the `droid` npm package via `npm install -g
+      --ignore-scripts` instead of the `app.factory.ai/cli` installer
+      script.  The CLI now runs on a bundled Node.js runtime.
+    * Add `DROID_VERSION` (default `0.209.0`) to select the `droid`
+      package version, and `NODE_VERSION`/`NPM_VERSION` to select the
+      bundled Node.js/npm.  Applies to the root multi-stage image and
+      the standalone `droid/` build.
+    * Do not strip the Bun-compiled executable, preserving its
+      embedded application payload.
 
 ## [20260823][]
 

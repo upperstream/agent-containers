@@ -1,8 +1,8 @@
 # Droid (Factory) container
 
 Debian-based image with [Factory Droid](https://app.factory.ai/) CLI
-(`droid`) preinstalled, plus common editor and search tools (`git`,
-`ripgrep`, `fd`, `vim`, `nano`, etc.).
+(`droid`) preinstalled on a bundled Node.js runtime, plus common
+editor and search tools (`git`, `ripgrep`, `fd`, `vim`, `nano`, etc.).
 
 The default container user is `user` (override at build time with
 `CONTAINER_USER`).  Working directory is `/workspaces`.
@@ -30,12 +30,18 @@ docker build -t droid -f droid/Dockerfile droid
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
+| `NODE_VERSION`             | `v24.18.1`   | Node.js version to install                               |
+| `NPM_VERSION`              | `12.0.0`     | Global npm version                                       |
+| `DROID_VERSION`            | `0.209.0`    | `latest` or a version of the `droid` npm package         |
 
 Examples:
 
 ```bash
 docker build -t droid:dev --build-arg ENVIRONMENT=development .
+docker build -t droid:pinned --build-arg DROID_VERSION=0.200.0 .
 ```
+
+The package is installed with `npm install -g --ignore-scripts`.
 
 ---
 
@@ -55,10 +61,13 @@ environment.
 
 ## Image layout
 
-| Path                   | Description                 |
-|------------------------|-----------------------------|
-| `/usr/local/bin/droid` | Droid CLI binary (stripped) |
-| `/workspaces`          | Default working directory   |
+| Path                                               | Description                           |
+|----------------------------------------------------|---------------------------------------|
+| `/usr/local/node-<version>/`                       | Bundled Node.js runtime               |
+| `/usr/local/node-<version>/lib/node_modules/droid` | `droid` launcher shim package         |
+| `/usr/local/bin/droid`                             | Symlink to `droid/bin/droid` launcher |
+| `/usr/local/bin/*`                                 | Node/npm binaries                     |
+| `/workspaces`                                      | Default working directory             |
 
 ### Persistence
 
