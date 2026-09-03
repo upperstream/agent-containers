@@ -3,7 +3,7 @@ ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 ARG NODE_VERSION=v24.20.0
 ARG NPM_VERSION=                # npm version with node distribution
-ARG OPENWIKI_VERSION
+ARG OPENWIKI_VERSION=0.5.0
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update
@@ -50,11 +50,13 @@ EOF
 EOT
 
 FROM node_base AS openwiki_builder
-ARG NODE_VERSION    # global default
+ARG NODE_VERSION      # global default
+ARG OPENWIKI_VERSION  # global default
 
 RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g openwiki@${OPENWIKI_VERSION:-latest}
 
 FROM container_base AS production
+ARG CONTAINER_USER  # global default
 ARG NODE_VERSION    # global default
 
 COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"

@@ -19,6 +19,7 @@ ARG KIRO_CHANNEL
 ARG KIRO_FORCE                      # '--force', defaults to unset
 ARG OPENCLAW_VERSION=2026.6.34      # 'latest' or '2026.6.34'
 ARG OPENCODE_VERSION=1.18.21        # '1.18.21'
+ARG OPENWIKI_VERSION=0.5.0          # 'latest' or '0.5.0'
 ARG PI_VERSION=0.84.4               # 'latest' or '0.84.4'
 ARG PROVIDER=all                    # 'pi' or 'all'
 
@@ -227,6 +228,7 @@ COPY --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@go
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google/gemini-cli/bundle/gemini.js" /usr/local/bin/gemini && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
+ARG CONTAINER_USER  # global default
 
 FROM builder_base AS grok_builder
 ARG GROK_CHANNEL    # global default
@@ -330,8 +332,8 @@ FROM container_base AS opencode
 COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
 
 FROM builder_base AS openwiki_builder
-ARG NODE_VERSION            # global default
-ARG OPENWIKI_VERSION
+ARG NODE_VERSION      # global default
+ARG OPENWIKI_VERSION  # global default
 
 RUN apt-get update
 RUN apt-get install -y xz-utils
@@ -352,7 +354,6 @@ RUN printf 'PATH=$PATH:%s\n' "/usr/local/node-${NODE_VERSION}/bin" >> /root/.bas
 RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g openwiki@${OPENWIKI_VERSION:-latest}
 
 FROM container_base AS openwiki
-ARG CONTAINER_USER  # global default
 ARG NODE_VERSION    # global default
 
 COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
@@ -433,7 +434,7 @@ COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/o
 
 COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
 
-COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki"
 
 COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
 
@@ -463,6 +464,7 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
     for f in kilo kilo-sandbox-policy; do \
       ln -s "/mnt/kilo/state/$f" "/home/${CONTAINER_USER}/.local/state/"; done && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
+    ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki/dist/cli/cli.js" /usr/local/bin/openwiki && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js" /usr/local/bin/pi && \
     apt-get update && \
     apt-get install -y --no-install-recommends bubblewrap ca-certificates curl ffmpeg git ripgrep && \

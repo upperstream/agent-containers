@@ -165,18 +165,12 @@ defaults/comments):
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                               |
 | `OPENCLAW_VERSION`         | `2026.6.34` (`latest` or a version)                             |
 | `OPENCODE_VERSION`         | `1.18.21`                                                       |
+| `OPENWIKI_VERSION`         | `0.5.0` (`latest` or a version)                                 |
 | `PI_VERSION`               | `0.84.4` (`latest` or a version)                                |
 
 Note for npm: When `NPM_VERSION` is set, the npm will be upgraded or
 downgraded to the specified version.  Otherwise the npm bundled with
 Node.js is kept.
-
-Also used by named stages (pass with `--build-arg`; declared on those
-stages, not only at file top):
-
-| Argument           | Used by    |
-|--------------------|------------|
-| `OPENWIKI_VERSION` | `openwiki` |
 
 Prefer **standalone** Dockerfiles for a minimal build context and docs
 next to one install path.  Prefer the **root** Dockerfile for one image

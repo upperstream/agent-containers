@@ -33,7 +33,7 @@ docker build -t openwiki -f openwiki-agent/Dockerfile openwiki-agent
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 | `NODE_VERSION`             | `v24.20.0`   | Node.js version to install                               |
 | `NPM_VERSION`              | (unset)      | npm version to upgrade/downgrade to                      |
-| `OPENWIKI_VERSION`         | `latest`     | npm version tag or version number                        |
+| `OPENWIKI_VERSION`         | `0.5.0`      | npm version tag or version number                        |
 
 Note for npm: When `NPM_VERSION` is set, the npm will be upgraded or
 downgraded to the specified version.  Otherwise the npm bundled with
@@ -43,7 +43,7 @@ Examples:
 
 ```bash
 docker build -t openwiki:dev --build-arg ENVIRONMENT=development .
-docker build -t openwiki:pinned --build-arg OPENWIKI_VERSION=1.0.0 .
+docker build -t openwiki:pinned --build-arg OPENWIKI_VERSION=0.4.3 .
 ```
 
 ---
