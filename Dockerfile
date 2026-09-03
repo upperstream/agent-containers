@@ -2,7 +2,7 @@ ARG CONTAINER_USER=user             # 'user'
 ARG ENVIRONMENT=production          # 'development' or 'production'
 ARG AIDER_VERSION=0.86.2
 ARG NANO_CLASSIC_KEYBINDINGS        # 'yes', default to 'no'
-ARG NODE_VERSION=v24.18.1
+ARG NODE_VERSION=v24.20.0
 ARG NPM_VERSION="12.0.0"
 ARG CLAUDE_VERSION=2.1.236          # 'latest', 'stable', or a version
 ARG CLINE_RELEASE=3.0.60            # 'nightly' or '3.0.60'
@@ -24,8 +24,8 @@ ARG PI_VERSION=0.84.4               # 'latest' or '0.84.4'
 ARG PROVIDER=all                    # 'pi' or 'all'
 
 FROM debian:trixie-slim AS builder_base
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends ca-certificates curl
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates curl
 
 FROM builder_base AS node_base
 ARG NODE_VERSION    # global default

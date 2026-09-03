@@ -147,7 +147,7 @@ defaults/comments):
 | `ENVIRONMENT`              | `production` (`development` adds doas tooling)                  |
 | `NANO_CLASSIC_KEYBINDINGS` | unset; set to `yes` for classic nano bindings                   |
 | `PROVIDER`                 | `all`                                                           |
-| `NODE_VERSION`             | `v24.18.1`                                                      |
+| `NODE_VERSION`             | `v24.20.0`                                                      |
 | `NPM_VERSION`              | `12.0.0`                                                        |
 | `AIDER_VERSION`            | `0.86.2`; `aider-chat` version installed with uv                |
 | `CLAUDE_VERSION`           | `2.1.236`; Claude Code version installed (or `latest`/`stable`) |

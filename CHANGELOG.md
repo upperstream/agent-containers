@@ -36,6 +36,9 @@
     build argument now defaults to `0.84.4` (it was previously unset,
     installing the latest release).  Applies to the root multi-stage
     image and the standalone `pi/` build.
+  * Upgrade [Node.js][] to v24.20.0 in the root multi-stage image and
+    the standalone `cline/`, `droid/`, `gemini/`, `openclaw/`, and `pi/`
+    builds.  `OPENWIKI_NODE_VERSION` remains `v24.18.1`.
 
 ## [20260823][]
 

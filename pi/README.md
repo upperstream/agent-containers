@@ -31,7 +31,7 @@ docker build -t pi -f pi/Dockerfile pi
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
-| `NODE_VERSION`             | `v24.18.1`   | Node.js version to install                               |
+| `NODE_VERSION`             | `v24.20.0`   | Node.js version to install                               |
 | `NPM_VERSION`              | `12.0.0`     | Global npm version                                       |
 | `PI_VERSION`               | `0.84.4`     | npm version of `@earendil-works/pi-coding-agent`         |
 

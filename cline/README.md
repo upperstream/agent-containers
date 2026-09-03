@@ -30,7 +30,7 @@ docker build -t cline -f cline/Dockerfile cline
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
-| `NODE_VERSION`             | `v24.18.1`   | Node.js version to install                               |
+| `NODE_VERSION`             | `v24.20.0`   | Node.js version to install                               |
 | `NPM_VERSION`              | `12.0.0`     | Global npm version                                       |
 | `CLINE_RELEASE`            | `3.0.60`     | Pin Cline: e.g. `nightly` or `3.0.60`                    |
 
