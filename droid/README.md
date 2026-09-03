@@ -28,11 +28,15 @@ docker build -t droid -f droid/Dockerfile droid
 | Argument                   | Default      | Description                                              |
 |----------------------------|--------------|----------------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
+| `DROID_VERSION`            | `0.209.0`    | `latest` or a version of the `droid` npm package         |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 | `NODE_VERSION`             | `v24.20.0`   | Node.js version to install                               |
-| `NPM_VERSION`              | `12.0.0`     | Global npm version                                       |
-| `DROID_VERSION`            | `0.209.0`    | `latest` or a version of the `droid` npm package         |
+| `NPM_VERSION`              | (unset)      | npm version to upgrade/downgrade to                      |
+
+Note for npm: When `NPM_VERSION` is set, the npm will be upgraded or
+downgraded to the specified version.  Otherwise the npm bundled with
+Node.js is kept.
 
 Examples:
 

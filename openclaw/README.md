@@ -32,8 +32,12 @@ docker build -t openclaw -f openclaw/Dockerfile openclaw
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 | `NODE_VERSION`             | `v24.20.0`   | Node.js version to install                               |
-| `NPM_VERSION`              | `12.0.0`     | Global npm version                                       |
+| `NPM_VERSION`              | (unset)      | npm version to upgrade/downgrade to                      |
 | `OPENCLAW_VERSION`         | `2026.6.34`  | npm version tag, e.g. `latest` or `2026.6.34`            |
+
+Note for npm: When `NPM_VERSION` is set, the npm will be upgraded or
+downgraded to the specified version.  Otherwise the npm bundled with
+Node.js is kept.
 
 Examples:
 

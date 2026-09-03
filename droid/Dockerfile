@@ -2,7 +2,7 @@ ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 ARG NODE_VERSION=v24.20.0
-ARG NPM_VERSION="12.0.0"
+ARG NPM_VERSION=
 ARG DROID_VERSION=0.209.0       # 'latest' or '0.209.0'
 
 FROM debian:trixie-slim AS builder_base
@@ -28,7 +28,7 @@ RUN echo "TARGETARCH=\"$TARGETARCH\""
 RUN tar --xz -C /usr/local -xf "$(echo node-${NODE_VERSION}-*-*.tar.* | tail -n1)"
 RUN mv "$(echo /usr/local/node-${NODE_VERSION}-*-* | tail -n1)" /usr/local/node-${NODE_VERSION}
 RUN printf 'PATH=$PATH:%s\n' "/usr/local/node-${NODE_VERSION}/bin" >> /root/.bashrc
-RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "npm${NPM_VERSION:+@"${NPM_VERSION}"}"
+RUN if [ -n "$NPM_VERSION" ]; then PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "npm${NPM_VERSION:+@"${NPM_VERSION}"}"; fi
 
 FROM debian:trixie-slim AS container_base
 ARG CONTAINER_USER              # global default

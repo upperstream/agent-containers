@@ -3,7 +3,7 @@ ARG ENVIRONMENT=production          # 'development' or 'production'
 ARG AIDER_VERSION=0.86.2
 ARG NANO_CLASSIC_KEYBINDINGS        # 'yes', default to 'no'
 ARG NODE_VERSION=v24.20.0
-ARG NPM_VERSION="12.0.0"
+ARG NPM_VERSION=
 ARG CLAUDE_VERSION=2.1.236          # 'latest', 'stable', or a version
 ARG CLINE_RELEASE=3.0.60            # 'nightly' or '3.0.60'
 ARG CODEX_RELEASE=0.148.0           # 'latest' or '0.142.5'
@@ -45,7 +45,7 @@ RUN echo "TARGETARCH=\"$TARGETARCH\""
 RUN tar --xz -C /usr/local -xf "$(echo node-${NODE_VERSION}-*-*.tar.* | tail -n1)"
 RUN mv "$(echo /usr/local/node-${NODE_VERSION}-*-* | tail -n1)" /usr/local/node-${NODE_VERSION}
 RUN printf 'PATH=$PATH:%s\n' "/usr/local/node-${NODE_VERSION}/bin" >> /root/.bashrc
-RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "npm${NPM_VERSION:+@"${NPM_VERSION}"}"
+RUN if [ -n "$NPM_VERSION" ]; then PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "npm${NPM_VERSION:+@"${NPM_VERSION}"}"; fi
 
 FROM builder_base AS bin_stripper
 RUN apt-get install -y binutils

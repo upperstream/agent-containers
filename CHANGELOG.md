@@ -44,6 +44,10 @@
   * Upgrade [Node.js][] to v24.20.0 in the root multi-stage image and
     the standalone `cline/`, `droid/`, `gemini/`, `openclaw/`, `openwiki/`,
     and `pi/` builds.
+  * Remove specifying the npm version in the root multi-stage image and
+    the standalone `cline/`, `droid/`, `gemini/`, `openclaw/`, `openwiki/`,
+    and `pi/` builds.  Now npm bundled with Node.js is kept unless
+    `NPM_VERSION` is explicitly set.
 
 ## [20260823][]
 

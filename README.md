@@ -148,7 +148,7 @@ defaults/comments):
 | `NANO_CLASSIC_KEYBINDINGS` | unset; set to `yes` for classic nano bindings                   |
 | `PROVIDER`                 | `all`                                                           |
 | `NODE_VERSION`             | `v24.20.0`; Node.js for all agents, including OpenWiki          |
-| `NPM_VERSION`              | `12.0.0`                                                        |
+| `NPM_VERSION`              | unset; npm version to upgrade/downgrade to                      |
 | `AIDER_VERSION`            | `0.86.2`; `aider-chat` version installed with uv                |
 | `CLAUDE_VERSION`           | `2.1.236`; Claude Code version installed (or `latest`/`stable`) |
 | `CLINE_RELEASE`            | `3.0.60` (`nightly` or a version)                               |
@@ -166,6 +166,10 @@ defaults/comments):
 | `OPENCLAW_VERSION`         | `2026.6.34` (`latest` or a version)                             |
 | `OPENCODE_VERSION`         | `1.18.21`                                                       |
 | `PI_VERSION`               | `0.84.4` (`latest` or a version)                                |
+
+Note for npm: When `NPM_VERSION` is set, the npm will be upgraded or
+downgraded to the specified version.  Otherwise the npm bundled with
+Node.js is kept.
 
 Also used by named stages (pass with `--build-arg`; declared on those
 stages, not only at file top):

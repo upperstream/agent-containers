@@ -27,12 +27,16 @@ docker build -t cline -f cline/Dockerfile cline
 
 | Argument                   | Default      | Description                                              |
 |----------------------------|--------------|----------------------------------------------------------|
+| `CLINE_RELEASE`            | `3.0.60`     | Pin Cline: e.g. `nightly` or `3.0.60`                    |
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 | `NODE_VERSION`             | `v24.20.0`   | Node.js version to install                               |
-| `NPM_VERSION`              | `12.0.0`     | Global npm version                                       |
-| `CLINE_RELEASE`            | `3.0.60`     | Pin Cline: e.g. `nightly` or `3.0.60`                    |
+| `NPM_VERSION`              | (unset)      | npm version to upgrade/downgrade to                      |
+
+Note for npm: When `NPM_VERSION` is set, the npm will be upgraded or
+downgraded to the specified version.  Otherwise the npm bundled with
+Node.js is kept.
 
 Examples:
 

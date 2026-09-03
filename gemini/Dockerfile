@@ -2,7 +2,7 @@ ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 ARG NODE_VERSION=v24.20.0
-ARG NPM_VERSION="12.0.0"
+ARG NPM_VERSION=
 ARG GEMINI_RELEASE=0.55.1       # 'latest', 'preview', 'nightly', or '0.55.1'
 
 FROM debian:trixie-slim AS builder_base
@@ -12,6 +12,7 @@ RUN apt-get install -y ca-certificates curl
 FROM builder_base AS node_base
 ARG NODE_VERSION                # global default
 ARG NPM_VERSION                 # global default
+
 RUN apt-get install -y xz-utils && \
     case "$(uname -s)" in \
     Linux) kernel=linux; machine="$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')"; format=xz;; \
@@ -26,7 +27,7 @@ RUN echo "TARGETARCH=\"$TARGETARCH\""
 RUN tar --xz -C /usr/local -xf "$(echo node-${NODE_VERSION}-*-*.tar.* | tail -n1)"
 RUN mv "$(echo /usr/local/node-${NODE_VERSION}-*-* | tail -n1)" /usr/local/node-${NODE_VERSION}
 RUN printf 'PATH=$PATH:%s\n' "/usr/local/node-${NODE_VERSION}/bin" >> /root/.bashrc
-RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "npm${NPM_VERSION:+@"${NPM_VERSION}"}"
+RUN if [ -n "$NPM_VERSION" ]; then PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "npm${NPM_VERSION:+@"${NPM_VERSION}"}"; fi
 
 FROM debian:trixie-slim AS container_base
 ARG CONTAINER_USER              # global default
