@@ -147,7 +147,7 @@ defaults/comments):
 | `ENVIRONMENT`              | `production` (`development` adds doas tooling)                  |
 | `NANO_CLASSIC_KEYBINDINGS` | unset; set to `yes` for classic nano bindings                   |
 | `PROVIDER`                 | `all`                                                           |
-| `NODE_VERSION`             | `v24.20.0`                                                      |
+| `NODE_VERSION`             | `v24.20.0`; Node.js for all agents, including OpenWiki          |
 | `NPM_VERSION`              | `12.0.0`                                                        |
 | `AIDER_VERSION`            | `0.86.2`; `aider-chat` version installed with uv                |
 | `CLAUDE_VERSION`           | `2.1.236`; Claude Code version installed (or `latest`/`stable`) |
@@ -165,7 +165,6 @@ defaults/comments):
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                               |
 | `OPENCLAW_VERSION`         | `2026.6.34` (`latest` or a version)                             |
 | `OPENCODE_VERSION`         | `1.18.21`                                                       |
-| `OPENWIKI_NODE_VERSION`    | `v24.18.1`; Node.js version to install for OpenWiki             |
 | `PI_VERSION`               | `0.84.4` (`latest` or a version)                                |
 
 Also used by named stages (pass with `--build-arg`; declared on those
@@ -192,13 +191,12 @@ and adds symlinks for Node-based CLIs and tools that live under home:
 
 It also appends `$HOME/.local/bin` to the container user's `.bashrc`.
 
-Aider is installed with [uv](https://docs.astral.sh/uv/) (`uv tool
-install --force --python python3.12 --with pip
-aider-chat@${AIDER_VERSION}`).  Default `AIDER_VERSION` is `0.86.2` for
-both the root `aider` / `all` stages and the standalone `aider/` image.
-The `uv` CLI is used only during the build; the runtime image keeps the
-UV tools tree under `~/.local/share/uv` and a `/usr/local/bin/aider`
-symlink.
+Aider is installed with [uv](https://docs.astral.sh/uv/)
+(`uv tool install --force --python python3.12 --with pip aider-chat@${AIDER_VERSION}`).
+Default `AIDER_VERSION` is `0.86.2` for both the root `aider` / `all`
+stages and the standalone `aider/` image.  The `uv` CLI is used only
+during the build; the runtime image keeps the UV tools tree under
+`~/.local/share/uv` and a `/usr/local/bin/aider` symlink.
 
 ---
 

@@ -1,7 +1,7 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG NODE_VERSION=v24.18.1
+ARG NODE_VERSION=v24.20.0
 ARG NPM_VERSION=                # npm version with node distribution
 ARG OPENWIKI_VERSION
 
@@ -13,7 +13,8 @@ FROM builder_base AS node_base
 ARG NODE_VERSION    # global default
 ARG NPM_VERSION     # global default
 
-RUN apt-get install -y xz-utils && \
+RUN apt-get update && \
+    apt-get install -y xz-utils && \
     case "$(uname -s)" in \
     Linux) kernel=linux; machine="$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')"; format=xz;; \
     Darwin) kernel=darwin; machine="$(uname -m | sed 's/x86_64/x64/')"; format=gz;; \

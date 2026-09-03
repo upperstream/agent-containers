@@ -19,7 +19,6 @@ ARG KIRO_CHANNEL
 ARG KIRO_FORCE                      # '--force', defaults to unset
 ARG OPENCLAW_VERSION=2026.6.34      # 'latest' or '2026.6.34'
 ARG OPENCODE_VERSION=1.18.21        # '1.18.21'
-ARG OPENWIKI_NODE_VERSION=v24.18.1
 ARG PI_VERSION=0.84.4               # 'latest' or '0.84.4'
 ARG PROVIDER=all                    # 'pi' or 'all'
 
@@ -131,7 +130,7 @@ RUN curl -fsSL https://chatgpt.com/codex/install.sh > codex_installer.sh
 RUN CODEX_NON_INTERACTIVE=1 sh codex_installer.sh
 
 FROM container_base AS codex
-ARG CONTAINER_USER              # global default
+ARG CONTAINER_USER  # global default
 
 COPY --from=codex_builder /root/.codex "/home/${CONTAINER_USER}/.codex"
 
@@ -253,6 +252,7 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.grok/" && \
     ln -s "/home/${CONTAINER_USER}/.local/share/grok/bin/grok" /usr/local/bin/grok
 
 FROM bin_stripper AS herdr_builder
+
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends ca-certificates curl
 RUN curl -fsSL https://herdr.dev/install.sh > herdr_installer.sh
@@ -301,8 +301,8 @@ FROM container_base AS kiro
 COPY --from=kiro_builder /root/.local/bin/kiro-cli /usr/local/bin/kiro-cli
 
 FROM node_base AS openclaw_builder
-ARG NODE_VERSION        # global default
-ARG OPENCLAW_VERSION=2026.6.34      # 'latest' or '2026.6.34'
+ARG NODE_VERSION                # global default
+ARG OPENCLAW_VERSION=2026.6.34  # 'latest' or '2026.6.34'
 
 RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "openclaw@${OPENCLAW_VERSION:-latest}"
 
@@ -330,7 +330,7 @@ FROM container_base AS opencode
 COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
 
 FROM builder_base AS openwiki_builder
-ARG OPENWIKI_NODE_VERSION   # global default
+ARG NODE_VERSION            # global default
 ARG OPENWIKI_VERSION
 
 RUN apt-get update
@@ -339,39 +339,39 @@ RUN case "$(uname -s)" in \
     Linux) kernel=linux; machine="$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')"; format=xz;; \
     Darwin) kernel=darwin; machine="$(uname -m | sed 's/x86_64/x64/')"; format=gz;; \
     esac && \
-    file="$(printf "node-%s-%s-%s.tar.%s" "$OPENWIKI_NODE_VERSION" "$kernel" "$machine" "$format")" && \
-    url="$(printf "https://nodejs.org/dist/%s/%s" "$OPENWIKI_NODE_VERSION" "$file")" && \
+    file="$(printf "node-%s-%s-%s.tar.%s" "$NODE_VERSION" "$kernel" "$machine" "$format")" && \
+    url="$(printf "https://nodejs.org/dist/%s/%s" "$NODE_VERSION" "$file")" && \
     echo "Node.js package: \"$file\"" && \
     echo "Node.js url:     \"$url\"" && \
     curl -fsSL "$url" > "$file"
 RUN echo "TARGETARCH=\"$TARGETARCH\""
-RUN tar --xz -C /usr/local -xf "$(echo node-${OPENWIKI_NODE_VERSION}-*-*.tar.* | tail -n1)"
-RUN mv "$(echo /usr/local/node-${OPENWIKI_NODE_VERSION}-*-* | tail -n1)" /usr/local/node-${OPENWIKI_NODE_VERSION}
-RUN printf 'PATH=$PATH:%s\n' "/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" >> /root/.bashrc
+RUN tar --xz -C /usr/local -xf "$(echo node-${NODE_VERSION}-*-*.tar.* | tail -n1)"
+RUN mv "$(echo /usr/local/node-${NODE_VERSION}-*-* | tail -n1)" /usr/local/node-${NODE_VERSION}
+RUN printf 'PATH=$PATH:%s\n' "/usr/local/node-${NODE_VERSION}/bin" >> /root/.bashrc
 
-RUN PATH="$PATH:/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" npm install -g openwiki@${OPENWIKI_VERSION:-latest}
+RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g openwiki@${OPENWIKI_VERSION:-latest}
 
 FROM container_base AS openwiki
-ARG CONTAINER_USER          # global default
-ARG OPENWIKI_NODE_VERSION   # global default
+ARG CONTAINER_USER  # global default
+ARG NODE_VERSION    # global default
 
-COPY --from=openwiki_builder "/usr/local/node-${OPENWIKI_NODE_VERSION}" "/usr/local/node-${OPENWIKI_NODE_VERSION}"
+COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
 
-RUN ln -s /usr/local/"node-${OPENWIKI_NODE_VERSION}"/bin/* /usr/local/bin/
+RUN ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 
 FROM node_base AS pi_builder
-ARG CONTAINER_USER
-ARG NODE_VERSION
-ARG PI_VERSION
+ARG CONTAINER_USER  # global default
+ARG NODE_VERSION    # global default
+ARG PI_VERSION      # global default
 
 RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g --ignore-scripts @earendil-works/pi-coding-agent@${PI_VERSION:-latest}
 RUN apt-get update
 
 FROM container_base AS pi
 ARG CONTAINER_USER  # global default
-ARG NODE_VERSION
+ARG NODE_VERSION    # global default
 
-COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
 COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
 
 RUN apt-get update && \
@@ -381,9 +381,8 @@ RUN apt-get update && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 
 FROM container_base AS all
-ARG CONTAINER_USER          # global default
-ARG NODE_VERSION            # global default
-ARG OPENWIKI_NODE_VERSION   # global default
+ARG CONTAINER_USER  # global default
+ARG NODE_VERSION    # global default
 
 RUN mkdir -p /usr/local/share/doc/crush /etc/bash_completion_d /usr/share/fish/vendor_completions.d /usr/share/zsh/site-functions /usr/local/share/man/man1
 
@@ -434,7 +433,7 @@ COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/o
 
 COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
 
-COPY --from=openwiki_builder "/usr/local/node-${OPENWIKI_NODE_VERSION}" "/usr/local/node-${OPENWIKI_NODE_VERSION}"
+COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
 
 COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
 
@@ -468,7 +467,7 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
     apt-get update && \
     apt-get install -y --no-install-recommends bubblewrap ca-certificates curl ffmpeg git ripgrep && \
     apt-get clean && \
-    printf 'PATH=$PATH:%s\n' "/usr/local/node-${OPENWIKI_NODE_VERSION}/bin" >> "/home/${CONTAINER_USER}/.bashrc"
+    printf 'PATH=$PATH:%s\n' "/usr/local/node-${NODE_VERSION}/bin" >> "/home/${CONTAINER_USER}/.bashrc"
 
 FROM "${PROVIDER}" AS production
 ARG CONTAINER_USER  # global default
