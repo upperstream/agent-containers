@@ -166,6 +166,7 @@ defaults/comments):
 | `OPENCLAW_VERSION`         | `2026.6.34` (`latest` or a version)                             |
 | `OPENCODE_VERSION`         | `1.18.21`                                                       |
 | `OPENWIKI_NODE_VERSION`    | `v24.18.1`; Node.js version to install for OpenWiki             |
+| `PI_VERSION`               | `0.84.4` (`latest` or a version)                                |
 
 Also used by named stages (pass with `--build-arg`; declared on those
 stages, not only at file top):
@@ -173,7 +174,6 @@ stages, not only at file top):
 | Argument           | Used by    |
 |--------------------|------------|
 | `OPENWIKI_VERSION` | `openwiki` |
-| `PI_VERSION`       | `pi`       |
 
 Prefer **standalone** Dockerfiles for a minimal build context and docs
 next to one install path.  Prefer the **root** Dockerfile for one image

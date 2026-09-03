@@ -20,6 +20,7 @@ ARG KIRO_FORCE                      # '--force', defaults to unset
 ARG OPENCLAW_VERSION=2026.6.34      # 'latest' or '2026.6.34'
 ARG OPENCODE_VERSION=1.18.21        # '1.18.21'
 ARG OPENWIKI_NODE_VERSION=v24.18.1
+ARG PI_VERSION=0.84.4               # 'latest' or '0.84.4'
 ARG PROVIDER=all                    # 'pi' or 'all'
 
 FROM debian:trixie-slim AS builder_base

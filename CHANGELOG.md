@@ -32,6 +32,10 @@
       the standalone `droid/` build.
     * Do not strip the Bun-compiled executable, preserving its
       embedded application payload.
+  * [Pi coding agent][]: Pin version to 0.84.4.  The `PI_VERSION`
+    build argument now defaults to `0.84.4` (it was previously unset,
+    installing the latest release).  Applies to the root multi-stage
+    image and the standalone `pi/` build.
 
 ## [20260823][]
 
@@ -167,7 +171,9 @@
 [Node.js]: https://nodejs.org/ "Node.js — Run JavaScript Everywhere"
 [OpenWiki]: https://github.com/langchain-ai/openwiki
   "langchain-ai/openwiki: OpenWiki is a CLI that writes and maintains agent documentation for your codebase."
-[uv]: https://docs.astral.sh/uv/ "uv - An extremely fast Python package and project manager"
+[Pi coding agent]: https://pi.dev/ "Pi Coding Agent"
+[uv]: https://docs.astral.sh/uv/
+  "uv - An extremely fast Python package and project manager"
 
 ## [20260711][]
 

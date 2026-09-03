@@ -33,7 +33,7 @@ docker build -t pi -f pi/Dockerfile pi
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 | `NODE_VERSION`             | `v24.18.1`   | Node.js version to install                               |
 | `NPM_VERSION`              | `12.0.0`     | Global npm version                                       |
-| `PI_VERSION`               | `latest`     | npm version of `@earendil-works/pi-coding-agent`         |
+| `PI_VERSION`               | `0.84.4`     | npm version of `@earendil-works/pi-coding-agent`         |
 
 Examples:
 
