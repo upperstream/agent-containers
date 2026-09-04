@@ -198,6 +198,36 @@ during the build; the runtime image keeps the UV tools tree under
 
 ---
 
+## Build: build.sh helper
+
+[`build.sh`](build.sh) builds the production and development `agents`
+images from the top-level [`Dockerfile`](Dockerfile) (the `all`
+provider) and tags them automatically based on the current git branch,
+commit, and working tree state: a modified tree builds
+`wip`/`dev-wip` (prefixed with the branch name on non-master branches),
+while a clean tree builds `latest`/`dev` or a git tag such as
+`20260904`/`dev-20260904`.  It uses podman when available and docker
+otherwise.
+
+```bash
+# Build and tag the production + development images
+./build.sh
+
+# Show help
+./build.sh -h
+```
+
+Options:
+
+- `-h`, `-H`, `--help` - show the help message and exit.
+
+Environment:
+
+- `DOCKER` - container engine to use (default: podman if available,
+  otherwise docker).
+
+---
+
 ## Run
 
 Generic pattern (replace image name and command):
@@ -270,6 +300,7 @@ Detailed mount recipes for tools that install into a home directory
 ├── .gitattributes
 ├── .gitignore
 ├── .markdownlint.json
+├── build.sh                        # Build + tag the agents images
 ├── aider/                          # Standalone Dockerfile + README
 ├── antigravity/
 ├── claude/

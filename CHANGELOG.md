@@ -2,8 +2,11 @@
 
 ## [Unreleased][]
 
+* Added:
+  * Add a build script `build.sh` for image creation and tagging.
 * Changed:
   * Make apt-get update and apt-get install atomic
+  * Update `.editorconfig` to set shell script indentation style.
 
 ## [20260904][]
 
