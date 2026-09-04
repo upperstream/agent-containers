@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased][]
+
+* Changed:
+  * Make apt-get update and apt-get install atomic
+
 ## [20260904][]
 
 * Changed:
@@ -195,6 +200,7 @@
 
 * Initial release.
 
+[Unreleased]: https://github.com/upperstream/agent-containers/compare/20260904...HEAD
 [20260904]: https://github.com/upperstream/agent-containers/compare/20260823...20260904
 [20260823]: https://github.com/upperstream/agent-containers/compare/20260817...20260823
 [20260817]: https://github.com/upperstream/agent-containers/compare/20260815...20260817

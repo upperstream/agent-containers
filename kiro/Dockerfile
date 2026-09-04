@@ -5,8 +5,8 @@ ARG KIRO_CHANNEL
 ARG KIRO_FORCE                  # '--force', defaults to unset
 
 FROM debian:trixie-slim AS builder_base
-RUN apt-get update
-RUN apt-get install -y ca-certificates curl
+RUN apt-get update && \
+    apt-get install -y ca-certificates curl
 
 FROM builder_base AS bin_stripper
 RUN apt-get install -y binutils
@@ -52,8 +52,8 @@ ARG CONTAINER_USER              # global default
 RUN usermod -a -G sudo "${CONTAINER_USER}"
 RUN rm -f /etc/dpkg/dpkg.cfg.d/docker && \
     rm -f /etc/dpkg/dpkg.cfg.d/01_nodo
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends binutils file opendoas tree
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends binutils file opendoas tree
 RUN echo "permit nopass :sudo" > /etc/doas.conf
 RUN doas -C /etc/doas.conf
 

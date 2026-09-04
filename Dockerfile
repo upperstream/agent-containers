@@ -31,8 +31,8 @@ FROM builder_base AS node_base
 ARG NODE_VERSION    # global default
 ARG NPM_VERSION     # global default
 
-RUN apt-get update
-RUN apt-get install -y xz-utils
+RUN apt-get update && \
+    apt-get install -y xz-utils
 RUN case "$(uname -s)" in \
     Linux) kernel=linux; machine="$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')"; format=xz;; \
     Darwin) kernel=darwin; machine="$(uname -m | sed 's/x86_64/x64/')"; format=gz;; \
@@ -255,8 +255,8 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.grok/" && \
 
 FROM bin_stripper AS herdr_builder
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends ca-certificates curl
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates curl
 RUN curl -fsSL https://herdr.dev/install.sh > herdr_installer.sh
 RUN sh herdr_installer.sh
 RUN strip /root/.local/bin/herdr
@@ -269,8 +269,8 @@ COPY --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
 FROM builder_base AS hermes_builder
 ARG HERMES_VERSION	# global default
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
         build-essential ca-certificates curl ffmpeg git ripgrep xz-utils
 RUN curl -fsSL https://hermes-agent.nousresearch.com/install.sh | sed 's!npm install --silent!env PYTHON="${PYTHON_PATH:-$(command -v python)}" npm install --silent!' > hermes_installer.sh
 RUN git clone --depth 1 --branch ${HERMES_VERSION:=main} https://github.com/NousResearch/hermes-agent.git /usr/local/lib/hermes-agent
@@ -335,8 +335,8 @@ FROM builder_base AS openwiki_builder
 ARG NODE_VERSION      # global default
 ARG OPENWIKI_VERSION  # global default
 
-RUN apt-get update
-RUN apt-get install -y xz-utils
+RUN apt-get update && \
+    apt-get install -y xz-utils
 RUN case "$(uname -s)" in \
     Linux) kernel=linux; machine="$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')"; format=xz;; \
     Darwin) kernel=darwin; machine="$(uname -m | sed 's/x86_64/x64/')"; format=gz;; \
@@ -366,7 +366,6 @@ ARG NODE_VERSION    # global default
 ARG PI_VERSION      # global default
 
 RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g --ignore-scripts @earendil-works/pi-coding-agent@${PI_VERSION:-latest}
-RUN apt-get update
 
 FROM container_base AS pi
 ARG CONTAINER_USER  # global default
@@ -482,8 +481,8 @@ ARG CONTAINER_USER  # global default
 RUN usermod -a -G sudo "${CONTAINER_USER}"
 RUN rm -f /etc/dpkg/dpkg.cfg.d/docker && \
     rm -f /etc/dpkg/dpkg.cfg.d/01_nodo
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends binutils file opendoas tree
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends binutils file opendoas tree
 RUN echo "permit nopass :sudo" > /etc/doas.conf
 RUN doas -C /etc/doas.conf
 

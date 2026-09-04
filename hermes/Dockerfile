@@ -4,8 +4,8 @@ ARG HERMES_VERSION=v2026.8.13   # branch (main) or tag (v2026.8.13)
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 
 FROM debian:trixie-slim AS builder_base
-RUN apt-get update
-RUN apt-get install -y ca-certificates curl
+RUN apt-get update && \
+    apt-get install -y ca-certificates curl
 
 FROM debian:trixie-slim AS container_base
 ARG CONTAINER_USER              # global default
@@ -29,8 +29,8 @@ EOT
 FROM builder_base AS hermes_builder
 ARG HERMES_VERSION	# global default
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     build-essential ca-certificates curl ffmpeg git ripgrep xz-utils
 RUN curl -fsSL https://hermes-agent.nousresearch.com/install.sh | sed 's!npm install --silent!env PYTHON="${PYTHON_PATH:-$(command -v python)}" npm install --silent!' > hermes_installer.sh
 RUN git clone --depth 1 --branch ${HERMES_VERSION:=main} https://github.com/NousResearch/hermes-agent.git /usr/local/lib/hermes-agent
@@ -60,8 +60,8 @@ ARG CONTAINER_USER              # global default
 RUN usermod -a -G sudo "${CONTAINER_USER}"
 RUN rm -f /etc/dpkg/dpkg.cfg.d/docker && \
     rm -f /etc/dpkg/dpkg.cfg.d/01_nodo
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends binutils file opendoas tree
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends binutils file opendoas tree
 RUN echo "permit nopass :sudo" > /etc/doas.conf
 RUN doas -C /etc/doas.conf
 

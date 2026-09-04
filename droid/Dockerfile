@@ -6,15 +6,15 @@ ARG NPM_VERSION=
 ARG DROID_VERSION=0.209.0       # 'latest' or '0.209.0'
 
 FROM debian:trixie-slim AS builder_base
-RUN apt-get update
-RUN apt-get install -y ca-certificates curl
+RUN apt-get update && \
+    apt-get install -y ca-certificates curl
 
 FROM builder_base AS node_base
 ARG NODE_VERSION    # global default
 ARG NPM_VERSION     # global default
 
-RUN apt-get update
-RUN apt-get install -y xz-utils
+RUN apt-get update && \
+    apt-get install -y xz-utils
 RUN case "$(uname -s)" in \
     Linux) kernel=linux; machine="$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')"; format=xz;; \
     Darwin) kernel=darwin; machine="$(uname -m | sed 's/x86_64/x64/')"; format=gz;; \
@@ -74,8 +74,8 @@ ARG CONTAINER_USER              # global default
 RUN usermod -a -G sudo "${CONTAINER_USER}"
 RUN rm -f /etc/dpkg/dpkg.cfg.d/docker && \
     rm -f /etc/dpkg/dpkg.cfg.d/01_nodo
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends binutils file opendoas tree
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends binutils file opendoas tree
 RUN echo "permit nopass :sudo" > /etc/doas.conf
 RUN doas -C /etc/doas.conf
 

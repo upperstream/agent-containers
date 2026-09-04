@@ -3,8 +3,8 @@ ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 
 FROM debian:trixie-slim AS builder_base
-RUN apt-get update
-RUN apt-get install -y ca-certificates curl
+RUN apt-get update && \
+    apt-get install -y ca-certificates curl
 
 FROM builder_base AS bin_stripper
 RUN apt-get install -y binutils
@@ -29,8 +29,8 @@ EOF
 EOT
 
 FROM bin_stripper AS herdr_builder
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends ca-certificates curl
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates curl
 RUN curl -fsSL https://herdr.dev/install.sh > herdr_installer.sh
 RUN sh herdr_installer.sh
 RUN strip /root/.local/bin/herdr
@@ -48,8 +48,8 @@ ARG CONTAINER_USER  # global default
 RUN usermod -a -G sudo "${CONTAINER_USER}"
 RUN rm -f /etc/dpkg/dpkg.cfg.d/docker && \
     rm -f /etc/dpkg/dpkg.cfg.d/01_nodo
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends binutils file opendoas tree
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends binutils file opendoas tree
 RUN echo "permit nopass :sudo" > /etc/doas.conf
 RUN doas -C /etc/doas.conf
 
