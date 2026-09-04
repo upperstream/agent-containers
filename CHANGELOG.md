@@ -7,6 +7,9 @@
   * Add a built-in self-test to `build.sh`, run with `build.sh --test`.
 * Changed:
   * Make apt-get update and apt-get install atomic
+  * Change `build.sh` to accept the `-a`/`--all` option for building
+    the full provider set; the `all` argument is no longer a valid
+    provider name.
   * Update `.editorconfig` to set shell script indentation style.
   * Update the document standard agent skill to add clarification for
     code span length.

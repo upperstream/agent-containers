@@ -215,7 +215,7 @@ available and docker otherwise.
 ./build.sh grok pi openwiki
 
 # Build everything, continuing past failures
-./build.sh -k all
+./build.sh -k -a
 
 # Show help
 ./build.sh -h
@@ -230,13 +230,14 @@ Providers:
 - `<directory name>` - standalone build for that provider (image:
   `<directory name>`), e.g. `grok`.  OpenWiki is `openwiki` (directory
   `openwiki-agent`).
-- `all` - the root Dockerfile and all standalone providers
 
 Options:
 
 - `-h`, `-H`, `--help` - show the help message and exit.
 - `-k`, `--keep-going` - keep building even when a build fails.
   Without it, the first failure stops the build.
+- `-a`, `--all` - build the root Dockerfile and all standalone
+  providers.
 - `--test` - run the built-in self-test (no other arguments).
 
 Environment:

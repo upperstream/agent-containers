@@ -22,9 +22,9 @@
 # The same tag sets are applied to every image that is built.  Providers are
 # given as command line arguments: a provider name is the directory name of
 # its standalone build, except `openwiki` (directory openwiki-agent).
-# `root` builds the root Dockerfile only (image name agents), `all` builds
-# the root Dockerfile plus all standalone providers, and the default (no
-# provider given) is `root`.
+# `root` builds the root Dockerfile only (image name agents), and the
+# default (no provider given) is `root`.  The -a/--all option builds the
+# root Dockerfile plus all standalone providers.
 #
 # Pass `--test` as the only argument to run the built-in self-test.
 
@@ -39,15 +39,15 @@ usage() {
 	  (none)            Root Dockerfile only (image: agents)
 	  root              Root Dockerfile (image: agents)
 	  openwiki          Standalone OpenWiki (directory: openwiki-agent)
-	  all               Root Dockerfile and all standalone providers
 	  <directory name>  Standalone build for the named provider; the image
 	                    name is the directory name
 
 	Options:
 	  -h, -H, --help        Show this help and exit
 	  -k, --keep-going      Keep building even when a build fails
-	  --test                Run the built-in self-test (no other
-	                      arguments)
+	  -a, --all             Build the root Dockerfile and all standalone
+	                        providers
+	  --test                Run the built-in self-test (no other arguments)
 
 	Environment:
 	  DOCKER            Container engine to use (default: podman if
@@ -56,7 +56,7 @@ usage() {
 	Examples:
 	  build.sh            Build and tag the root images
 	  build.sh grok pi    Build and tag the standalone grok and pi images
-	  build.sh -k all     Build everything, continuing past failures
+	  build.sh -k -a      Build everything, continuing past failures
 	  build.sh -h         Show this help
 	  build.sh --test     Run the built-in self-test
 	EOF
@@ -69,6 +69,7 @@ standalone_providers="aider antigravity claude cline codex copilot crush cursor 
 # Parse options and provider arguments.  Sets keep_going and resolved.
 parse_args() {
 	keep_going=no
+	build_all=no
 	providers=
 	for arg in "$@"; do
 		case $arg in
@@ -78,6 +79,9 @@ parse_args() {
 				;;
 			-k|--keep-going)
 				keep_going=yes
+				;;
+			-a|--all)
+				build_all=yes
 				;;
 			-*)
 				echo "error: unknown option: $arg" >&2
@@ -90,29 +94,28 @@ parse_args() {
 		esac
 	done
 
-	# Resolve the provider list (default to root, deduplicate, keep order)
-	[ -n "$providers" ] || providers="root"
+	# Resolve the provider list: -a builds the root Dockerfile and all
+	# standalone providers, otherwise the given providers (defaulting to
+	# root), deduplicated, order preserved
+	if [ "$build_all" = yes ]; then
+		providers="root $standalone_providers"
+	else
+		[ -n "$providers" ] || providers="root"
+	fi
 	resolved=
-	for p in $providers; do
-		case $p in
-			all)
-				p="root $standalone_providers"
+	for q in $providers; do
+		case " root $standalone_providers " in
+			*" $q "*) ;;
+			*)
+				echo "error: unknown provider: $q" >&2
+				usage >&2
+				exit 2
 				;;
 		esac
-		for q in $p; do
-			case " root $standalone_providers " in
-				*" $q "*) ;;
-				*)
-					echo "error: unknown provider: $q" >&2
-					usage >&2
-					exit 2
-					;;
-			esac
-			case " $resolved " in
-				*" $q "*) ;;
-				*) resolved="$resolved $q" ;;
-			esac
-		done
+		case " $resolved " in
+			*" $q "*) ;;
+			*) resolved="$resolved $q" ;;
+		esac
 	done
 
 	# Check that the standalone Dockerfiles exist
@@ -659,7 +662,7 @@ EOF
 	t_expect_lines P4 4
 
 	t_repo_init
-	t_run 0 "P5 all" all
+	t_run 0 "P5 -a flag" -a
 	t_expect_lines P5 40
 	t_logline P5 1 "build 1 ctx=. tag=agents:latest"
 	t_logline P5 2 "build 2 ctx=aider tag=aider:latest"
@@ -668,20 +671,20 @@ EOF
 	t_out_has P5 "openwiki:dev"
 
 	t_repo_init
-	t_run_fail 1 "P6 keep-going past failure" 5 -k all
+	t_run_fail 1 "P6 keep-going past failure" 5 -k -a
 	t_expect_lines P6 40
 	t_out_has P6 "Failed to build:"
 	t_out_has P6 "cline (production)"
 	t_out_has P6 "Successfully built:"
 
 	t_repo_init
-	t_run_fail 1 "P7 stop at first failure" 5 all
+	t_run_fail 1 "P7 stop at first failure" 5 -a
 	t_expect_lines P7 5
 	t_out_has P7 "Failed to build:"
 	t_out_has P7 "cline (production)"
 
 	t_repo_init
-	t_run_fail 1 "P8 keep-going long form" 5 --keep-going all
+	t_run_fail 1 "P8 keep-going long form" 5 --keep-going --all
 	t_expect_lines P8 40
 	t_out_has P8 "Failed to build:"
 
@@ -690,15 +693,20 @@ EOF
 	t_out_has P9 "unknown provider: bogus"
 
 	t_repo_init
-	t_run 2 "P10 unknown option" -x
-	t_out_has P10 "unknown option: -x"
+	t_run 2 "P10 all is not a provider" all
+	t_out_has P10 "unknown provider: all"
 
 	t_repo_init
-	t_run 0 "P11 help" -h
-	t_out_has P11 "Usage: build.sh"
-	t_out_has P11 "-k"
+	t_run 2 "P11 unknown option" -x
+	t_out_has P11 "unknown option: -x"
 
-	# P12: neither podman nor docker on PATH (and DOCKER unset)
+	t_repo_init
+	t_run 0 "P12 help" -h
+	t_out_has P12 "Usage: build.sh"
+	t_out_has P12 "-k"
+	t_out_has P12 "-a, --all"
+
+	# P13: neither podman nor docker on PATH (and DOCKER unset)
 	t_repo_init
 	t_reset
 	mkdir -p "$tdir/nobin"
@@ -712,11 +720,11 @@ EOF
 	) > "$t_out" 2>&1
 	got_rc=$?
 	if [ "$got_rc" = 1 ]; then
-		t_ok "P12 no engine"
+		t_ok "P13 no engine"
 	else
-		t_bad "P12 no engine" "rc=$got_rc want 1"
+		t_bad "P13 no engine" "rc=$got_rc want 1"
 	fi
-	t_out_has P12 "neither podman nor docker found"
+	t_out_has P13 "neither podman nor docker found"
 
 	echo
 	echo "PASS=$t_pass FAIL=$t_fail"
