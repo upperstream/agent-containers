@@ -14,9 +14,10 @@ Here is the list of standards for documentation text files:
   text body ("the purpose of this license") and in its file name
   ("LICENSE.txt") is allowed.
 * Lines should be wrapped at 72 characters: never exceed 72 characters
-  unless the line is preformatted, contains a long URL, or is a part of
-  a [GFM][] table.  Trailing punctuations may appear after the 72-
-  character limit when necessary.
+  unless the line is preformatted (including a code span longer than 72
+  characters), contains a long URL, or is a part of a [GFM][] table.
+  Trailing punctuations may appear after the 72-character limit when
+  necessary.
 * For Markdown files, human readability as a plain text file takes
   precedence over visual appearance as a rendered HTML.  Respect the
   "Philosophy" section in the _Markdown Syntax_ documentation on

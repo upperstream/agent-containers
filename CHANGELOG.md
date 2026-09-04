@@ -7,6 +7,8 @@
 * Changed:
   * Make apt-get update and apt-get install atomic
   * Update `.editorconfig` to set shell script indentation style.
+  * Update the document standard agent skill to add clarification for
+    code span length.
 
 ## [20260904][]
 
