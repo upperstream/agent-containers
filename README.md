@@ -219,6 +219,9 @@ available and docker otherwise.
 
 # Show help
 ./build.sh -h
+
+# Run the built-in self-test
+./build.sh --test
 ```
 
 Providers:
@@ -234,6 +237,7 @@ Options:
 - `-h`, `-H`, `--help` - show the help message and exit.
 - `-k`, `--keep-going` - keep building even when a build fails.
   Without it, the first failure stops the build.
+- `--test` - run the built-in self-test (no other arguments).
 
 Environment:
 

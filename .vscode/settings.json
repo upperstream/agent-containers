@@ -3,8 +3,10 @@
       "agentic",
       "applypatch",
       "binutils",
+      "BTEST",
       "bubblewrap",
       "charmbracelet",
+      "dedup",
       "doas",
       "Dockerfiles",
       "dpkg",
@@ -16,9 +18,13 @@
       "herdr",
       "KIRO",
       "langchain",
+      "logline",
+      "loglines",
       "manpages",
+      "mkdirs",
       "mountpoint",
       "nanorc",
+      "nobin",
       "nodo",
       "nopass",
       "OPENCLAW",
@@ -31,6 +37,7 @@
       "readlink",
       "subpaths",
       "tagset",
+      "tdir",
       "usermod"
     ]
 }

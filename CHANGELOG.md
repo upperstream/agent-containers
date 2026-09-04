@@ -4,6 +4,7 @@
 
 * Added:
   * Add a build script `build.sh` for image creation and tagging.
+  * Add a built-in self-test to `build.sh`, run with `build.sh --test`.
 * Changed:
   * Make apt-get update and apt-get install atomic
   * Update `.editorconfig` to set shell script indentation style.
