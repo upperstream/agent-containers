@@ -200,26 +200,40 @@ during the build; the runtime image keeps the UV tools tree under
 
 ## Build: build.sh helper
 
-[`build.sh`](build.sh) builds the production and development `agents`
-images from the top-level [`Dockerfile`](Dockerfile) (the `all`
-provider) and tags them automatically based on the current git branch,
-commit, and working tree state: a modified tree builds
-`wip`/`dev-wip` (prefixed with the branch name on non-master branches),
-while a clean tree builds `latest`/`dev` or a git tag such as
-`20260904`/`dev-20260904`.  It uses podman when available and docker
-otherwise.
+[`build.sh`](build.sh) builds and tags production and development
+images based on the current git branch, commit, and working tree state:
+a modified tree builds `wip`/`dev-wip` (prefixed with the branch name
+on non-master branches), while a clean tree builds `latest`/`dev` or a
+git tag such as `20260904`/`dev-20260904`.  It uses podman when
+available and docker otherwise.
 
 ```bash
-# Build and tag the production + development images
+# Build and tag the root images (default)
 ./build.sh
+
+# Build and tag standalone images
+./build.sh grok pi openwiki
+
+# Build everything, continuing past failures
+./build.sh -k all
 
 # Show help
 ./build.sh -h
 ```
 
+Providers:
+
+- (no argument) or `root` - the root Dockerfile only (image: `agents`)
+- `<directory name>` - standalone build for that provider (image:
+  `<directory name>`), e.g. `grok`.  OpenWiki is `openwiki` (directory
+  `openwiki-agent`).
+- `all` - the root Dockerfile and all standalone providers
+
 Options:
 
 - `-h`, `-H`, `--help` - show the help message and exit.
+- `-k`, `--keep-going` - keep building even when a build fails.
+  Without it, the first failure stops the build.
 
 Environment:
 

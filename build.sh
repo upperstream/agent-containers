@@ -18,41 +18,108 @@
 #   branch, clean, tip, no tag                    branch                 dev-branch
 #   branch, clean, not at tip, git tag T          branch-T               dev-branch-T
 #   branch, clean, not at tip, no tag             branch-wip             dev-branch-wip
+#
+# The same tag sets are applied to every image that is built.  Providers are
+# given as command line arguments: a provider name is the directory name of
+# its standalone build, except `openwiki` (directory openwiki-agent).
+# `root` builds the root Dockerfile only (image name agents), `all` builds
+# the root Dockerfile plus all standalone providers, and the default (no
+# provider given) is `root`.
 
 usage() {
 	cat <<-'EOF'
-	Usage: build.sh [options]
+	Usage: build.sh [options] [PROVIDER...]
 
-	Build the production and development "agents" container images from
-	the repository Dockerfile and tag them based on the current git
-	branch, commit, and working tree state.
+	Build and tag production and development container images based on the
+	current git branch, commit, and working tree state.
+
+	Providers:
+	  (none)            Root Dockerfile only (image: agents)
+	  root              Root Dockerfile (image: agents)
+	  openwiki          Standalone OpenWiki (directory: openwiki-agent)
+	  all               Root Dockerfile and all standalone providers
+	  <directory name>  Standalone build for the named provider; the image
+	                    name is the directory name
 
 	Options:
-	  -h, -H, --help    Show this help and exit
+	  -h, -H, --help        Show this help and exit
+	  -k, --keep-going      Keep building even when a build fails
 
 	Environment:
 	  DOCKER            Container engine to use (default: podman if
 	                    available, otherwise docker)
 
 	Examples:
-	  build.sh          Build and tag the images
-	  build.sh -h       Show this help
+	  build.sh            Build and tag the root images
+	  build.sh grok pi    Build and tag the standalone grok and pi images
+	  build.sh -k all     Build everything, continuing past failures
+	  build.sh -h         Show this help
 	EOF
 }
 
-# Parse options
+# Standalone providers: the provider name is the directory name, except
+# openwiki which lives in the openwiki-agent directory
+standalone_providers="aider antigravity claude cline codex copilot crush cursor droid gemini grok herdr hermes kilo kiro openclaw opencode openwiki pi"
+
+# Parse options and providers
+keep_going=no
+providers=
 for arg in "$@"; do
-	case "$arg" in
+	case $arg in
 		-h|-H|--help)
 			usage
 			exit 0
 			;;
-		*)
+		-k|--keep-going)
+			keep_going=yes
+			;;
+		-*)
 			echo "error: unknown option: $arg" >&2
 			usage >&2
 			exit 2
 			;;
+		*)
+			providers="$providers $arg"
+			;;
 	esac
+done
+
+# Resolve the provider list (default to root, deduplicate, keep order)
+[ -n "$providers" ] || providers="root"
+resolved=
+for p in $providers; do
+	case $p in
+		all)
+			p="root $standalone_providers"
+			;;
+	esac
+	for q in $p; do
+		case " root $standalone_providers " in
+			*" $q "*) ;;
+			*)
+				echo "error: unknown provider: $q" >&2
+				usage >&2
+				exit 2
+				;;
+		esac
+		case " $resolved " in
+			*" $q "*) ;;
+			*) resolved="$resolved $q" ;;
+		esac
+	done
+done
+
+# Check that the standalone Dockerfiles exist
+for name in $resolved; do
+	[ "$name" = root ] && continue
+	case $name in
+		openwiki) dir=openwiki-agent ;;
+		*)        dir=$name ;;
+	esac
+	if [ ! -f "$dir/Dockerfile" ]; then
+		echo "error: provider $name: $dir/Dockerfile not found" >&2
+		exit 2
+	fi
 done
 
 # Current branch; for detached HEAD fall back to the short commit hash
@@ -143,31 +210,80 @@ if [ -z "$docker" ]; then
 	exit 1
 fi
 
-# Create the production image (build with the first tag, re-tag the rest)
-# shellcheck disable=SC2086
-set -- $prod_tags
-first=$1
-shift
-$docker build --build-arg ENVIRONMENT=production --build-arg NANO_CLASSIC_KEYBINDINGS=yes -t "agents:$first" . || exit 1
-built="agents:$first"
-for t in "$@"; do
-	$docker tag "agents:$first" "agents:$t" && built="$built
-agents:$t"
-done
+# Images built so far, one per line (leading newline stripped when printing)
+built=
+failed=
+fail=0
 
-# Create the development image
-# shellcheck disable=SC2086
-set -- $dev_tags
-first=$1
-shift
-$docker build --build-arg ENVIRONMENT=development --build-arg NANO_CLASSIC_KEYBINDINGS=yes -t "agents:$first" . || exit 1
-built="$built
-agents:$first"
-for t in "$@"; do
-	$docker tag "agents:$first" "agents:$t" && built="$built
-agents:$t"
+# Build one image for a provider and environment, then apply the remaining
+# tags.  $1 = provider name, $2 = environment, $3 = space-separated tags
+build_image() {
+	name=$1
+	environment=$2
+	# shellcheck disable=SC2086
+	set -- $3
+	first=$1
+	shift
+	if [ "$name" = root ]; then
+		image=agents
+		context=.
+	else
+		case $name in
+			openwiki) context=openwiki-agent ;;
+			*)        context=$name ;;
+		esac
+		image=$name
+	fi
+	if ! $docker build --build-arg ENVIRONMENT="$environment" \
+			--build-arg NANO_CLASSIC_KEYBINDINGS=yes \
+			-t "$image:$first" "$context"; then
+		return 1
+	fi
+	tags="$image:$first"
+	for t in "$@"; do
+		if ! $docker tag "$image:$first" "$image:$t"; then
+			return 1
+		fi
+		tags="$tags
+$image:$t"
+	done
+	built="$built
+$tags"
+	return 0
+}
+
+# Build the production and development image of every resolved provider,
+# stopping at the first failure unless -k was given
+stop=no
+for environment in production development; do
+	if [ "$environment" = production ]; then
+		tagset=$prod_tags
+	else
+		tagset=$dev_tags
+	fi
+	for name in $resolved; do
+		if ! build_image "$name" "$environment" "$tagset"; then
+			failed="$failed
+$name ($environment)"
+			fail=1
+			[ "$keep_going" = no ] && stop=yes
+		fi
+		[ "$stop" = yes ] && break
+	done
+	[ "$stop" = yes ] && break
 done
 
 # Report
-echo "Successfully built:"
-echo "$built"
+if [ -n "$built" ]; then
+	echo "Successfully built:"
+	echo "${built#
+}"
+fi
+if [ -n "$failed" ]; then
+	echo "Failed to build:" >&2
+	echo "${failed#
+}" >&2
+fi
+if [ "$fail" = 1 ]; then
+	exit 1
+fi
