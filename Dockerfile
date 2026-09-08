@@ -14,6 +14,7 @@ ARG GEMINI_RELEASE=0.55.1           # 'latest', 'preview', 'nightly', or '0.55.1
 ARG GROK_CHANNEL
 ARG GROK_VERSION=1.0.5              # '1.0.5'
 ARG HERMES_VERSION=v2026.8.13       # branch (main) or tag (v2026.8.13)
+ARG HERDR_VERSION=0.8.2             # '0.8.2'
 ARG KILO_VERSION=7.4.23             # '7.4.23'
 ARG KIRO_CHANNEL
 ARG KIRO_FORCE                      # '--force', defaults to unset
@@ -254,11 +255,14 @@ RUN mkdir -p "/home/${CONTAINER_USER}/.grok/" && \
     ln -s "/home/${CONTAINER_USER}/.local/share/grok/bin/grok" /usr/local/bin/grok
 
 FROM bin_stripper AS herdr_builder
+ARG HERDR_VERSION # global default
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ca-certificates curl
+    apt-get install -y --no-install-recommends ca-certificates curl patch
+COPY herdr/herdr_installer.sh.diff herdr_installer.sh.diff
 RUN curl -fsSL https://herdr.dev/install.sh > herdr_installer.sh
-RUN sh herdr_installer.sh
+RUN patch -i herdr_installer.sh.diff herdr_installer.sh
+RUN sh herdr_installer.sh "${HERDR_VERSION}"
 RUN strip /root/.local/bin/herdr
 
 FROM container_base AS herdr

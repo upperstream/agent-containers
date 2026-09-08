@@ -29,6 +29,7 @@ docker build -t herdr -f herdr/Dockerfile herdr
 |----------------------------|--------------|----------------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
+| `HERDR_VERSION`            | `0.8.2`.     | Herdr version to install                                 |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 
 Examples:

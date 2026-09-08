@@ -1,6 +1,7 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
+ARG HERDR_VERSION=
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update && \
@@ -29,10 +30,14 @@ EOF
 EOT
 
 FROM bin_stripper AS herdr_builder
+ARG HERDR_VERSION # global default
+
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ca-certificates curl
+    apt-get install -y --no-install-recommends ca-certificates curl patch
+COPY herdr/herdr_installer.sh.diff herdr_installer.sh.diff
 RUN curl -fsSL https://herdr.dev/install.sh > herdr_installer.sh
-RUN sh herdr_installer.sh
+RUN patch -i herdr_installer.sh.diff herdr_installer.sh
+RUN sh herdr_installer.sh "${HERDR_VERSION}"
 RUN strip /root/.local/bin/herdr
 
 FROM container_base AS production

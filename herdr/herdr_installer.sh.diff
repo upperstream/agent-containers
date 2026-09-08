@@ -1,0 +1,49 @@
+--- herdr_installer.sh.orig	2026-09-07 17:28:10
++++ herdr_installer.sh	2026-09-07 17:57:29
+@@ -44,8 +44,12 @@
+     log "fetching latest release manifest..."
+     MANIFEST="$(curl -fsSL --retry 3 --connect-timeout 10 --max-time 20 "$MANIFEST_URL")" \
+         || err "can't reach ${MANIFEST_URL}. Please try again later; herdr.dev might be down. Who let the sheeps out? baaa."
+-    URL="$(printf '%s\n' "$MANIFEST" | awk -v target="\"${TARGET}\"" '
+-        /^[[:space:]]*"assets"[[:space:]]*:/ { in_assets = 1; next }
++    LATEST_VERSION="$(printf '%s\n' "$MANIFEST" | awk -F '"' '/^[[:space:]]*"version"[[:space:]]*:/ { print $4; exit }')"
++    REQUESTED_VERSION="${1:-$LATEST_VERSION}"
++    URL="$(printf '%s\n' "$MANIFEST" | awk -v target="\"${TARGET}\"" -v requested_version="\"${REQUESTED_VERSION}\"" '
++	    /^[[:space:]]*"releases"[[:space:]]*:/ { in_releases = 1; next }
++		in_releases && index($0, requested_version) { in_version = 1; next }
++        in_version && /^[[:space:]]*"assets"[[:space:]]*:/ { in_assets = 1; next }
+         in_assets && /^[[:space:]]*}/ { exit }
+         in_assets && index($0, target) {
+             sub(/^.*:[[:space:]]*"/, "")
+@@ -54,8 +58,10 @@
+             exit
+         }
+     ')"
+-    SHA256="$(printf '%s\n' "$MANIFEST" | awk -v target="\"${TARGET}\"" '
+-        /^[[:space:]]*"sha256"[[:space:]]*:/ { in_sha256 = 1; next }
++    SHA256="$(printf '%s\n' "$MANIFEST" | awk -v target="\"${TARGET}\"" -v requested_version="\"${REQUESTED_VERSION}\"" '
++	    /^[[:space:]]*"releases"[[:space:]]*:/ { in_releases = 1; next }
++		in_releases && index($0, requested_version) { in_version = 1; next }
++        in_version && /^[[:space:]]*"sha256"[[:space:]]*:/ { in_sha256 = 1; next }
+         in_sha256 && /^[[:space:]]*}/ { exit }
+         in_sha256 && index($0, target) {
+             sub(/^.*:[[:space:]]*"/, "")
+@@ -64,7 +70,6 @@
+             exit
+         }
+     ')"
+-    VERSION="$(printf '%s\n' "$MANIFEST" | awk -F '"' '/^[[:space:]]*"version"[[:space:]]*:/ { print $4; exit }')"
+ 
+     if [ -z "$URL" ]; then
+         err "release manifest does not include a binary for ${TARGET}"
+@@ -87,8 +92,8 @@
+         err "SHA-256 verification requires sha256sum, shasum, or openssl"
+     fi
+ 
+-    if [ -n "$VERSION" ]; then
+-        log "downloading v${VERSION}..."
++    if [ -n "$REQUESTED_VERSION" ]; then
++        log "downloading v${REQUESTED_VERSION}..."
+     else
+         log "downloading latest release..."
+     fi

@@ -6,6 +6,10 @@
   * Add a build script `build.sh` for image creation and tagging.
   * Add a built-in self-test to `build.sh`, run with `build.sh --test`.
 * Changed:
+  * [Herdr][]:
+    * Add a patch for installer script to accept Herdr version number to
+      install.
+    * Pin version to 0.8.2.
   * Make apt-get update and apt-get install atomic
   * Change `build.sh` to accept the `-a`/`--all` option for building
     the full provider set; the `all` argument is no longer a valid
@@ -191,6 +195,7 @@
 [GitHub Copilot CLI]: https://github.com/features/copilot/cli
   "GitHub Copilot CLI"
 [Grok Build]: https://x.ai/build "Grok Build | SpaceXAI"
+[Herdr]: https://herdr.dev/ "Herdr: the runtime coding agents run on"
 [Hermes Agent]: https://hermes-agent.nousresearch.com/
   "Hermes Agent | Nous Research"
 [Kilo CLI]: https://kilo.ai/cli
