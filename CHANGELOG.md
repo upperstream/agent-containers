@@ -17,6 +17,7 @@
   * Update `.editorconfig` to set shell script indentation style.
   * Update the document standard agent skill to add clarification for
     code span length.
+  * Update documentation standards for clarity and consistency.
 
 ## [20260904][]
 
