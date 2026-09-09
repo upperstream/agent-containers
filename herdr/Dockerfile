@@ -34,7 +34,7 @@ ARG HERDR_VERSION # global default
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ca-certificates curl patch
-COPY herdr/herdr_installer.sh.diff herdr_installer.sh.diff
+COPY herdr_installer.sh.diff herdr_installer.sh.diff
 RUN curl -fsSL https://herdr.dev/install.sh > herdr_installer.sh
 RUN patch -i herdr_installer.sh.diff herdr_installer.sh
 RUN sh herdr_installer.sh "${HERDR_VERSION}"
