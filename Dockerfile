@@ -177,7 +177,7 @@ FROM container_base AS crush
 ARG CONTAINER_USER  # global default
 
 RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}" && \
-RUN mkdir -p /usr/local/share/doc/crush /etc/bash_completion_d /usr/share/fish/vendor_completions.d /usr/share/zsh/site-functions /usr/local/share/man/man1
+    mkdir -p /usr/local/share/doc/crush /etc/bash_completion_d /usr/share/fish/vendor_completions.d /usr/share/zsh/site-functions /usr/local/share/man/man1
 
 COPY --from=crush_builder /root/*/LICENSE.md /usr/local/share/doc/crush/LICENSE.md
 COPY --from=crush_builder /root/*/README.md /usr/local/share/doc/crush/README.md

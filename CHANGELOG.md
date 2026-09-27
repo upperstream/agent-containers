@@ -6,6 +6,8 @@
   * Add a build script `build.sh` for image creation and tagging.
   * Add a built-in self-test to `build.sh`, run with `build.sh --test`.
 * Changed:
+  * [Crush][]: Fix syntax error in multi-stage Dockerfile where `RUN` was
+    duplicated after `&&`.
   * [Herdr][]:
     * Add a patch for installer script to accept Herdr version number to
       install.
@@ -83,7 +85,7 @@
       images.
     * Add the container user's `~/.local/bin` directory to the
       image-wide `PATH`, allowing `codex` to be run directly.
-  * [Crush][]:
+  * Crush:
     * Upgrade to v0.87.0.
     * Use precompiled package rather than compiling source code.
   * [Gemini CLI][]:
