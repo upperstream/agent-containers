@@ -15,6 +15,9 @@
   * [OpenClaw][]: Fix `useradd` error in multi-stage Dockerfile where
     `useradd` was redundantly called in the `openclaw` stage after
     already being performed in `container_base`.
+  * [Pi coding agent][]: Use `ln -sf` when linking `pi` CLI binary into
+    `/usr/local/bin` to overwrite the existing symlink created from Node
+    package bin.
   * Make apt-get update and apt-get install atomic
   * Change `build.sh` to accept the `-a`/`--all` option for building
     the full provider set; the `all` argument is no longer a valid
@@ -65,8 +68,8 @@
       in the root multi-stage image is built on the shared `NODE_VERSION`
       (v24.20.0) like the other agents.  The standalone `openwiki-agent/`
       build now also defaults `NODE_VERSION` to v24.20.0.
-  * [Pi coding agent][]: Pin version to 0.84.4.  The `PI_VERSION`
-    build argument now defaults to `0.84.4` (it was previously unset,
+  * Pi coding agent: Pin version to 0.84.4.  The `PI_VERSION` build
+    argument now defaults to `0.84.4` (it was previously unset,
     installing the latest release).  Applies to the root multi-stage
     image and the standalone `pi/` build.
   * Upgrade [Node.js][] to v24.20.0 in the root multi-stage image and

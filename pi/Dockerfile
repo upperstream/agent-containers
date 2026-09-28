@@ -65,7 +65,7 @@ COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earend
 RUN apt-get update && \
     apt-get install -y --no-install-recommends fd-find ripgrep && \
     apt-get clean && \
-    ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js" /usr/local/bin/pi && \
+    ln -sf "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js" /usr/local/bin/pi && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
