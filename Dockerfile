@@ -320,8 +320,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends git && \
     apt-get clean && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
-    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
-    useradd -m "${CONTAINER_USER}"
+    ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 
 COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
 

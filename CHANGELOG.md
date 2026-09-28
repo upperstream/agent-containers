@@ -12,6 +12,9 @@
     * Add a patch for installer script to accept Herdr version number to
       install.
     * Pin version to 0.8.2.
+  * [OpenClaw][]: Fix `useradd` error in multi-stage Dockerfile where
+    `useradd` was redundantly called in the `openclaw` stage after
+    already being performed in `container_base`.
   * Make apt-get update and apt-get install atomic
   * Change `build.sh` to accept the `-a`/`--all` option for building
     the full provider set; the `all` argument is no longer a valid
@@ -106,8 +109,7 @@
       application payload.
     * Document mounting a host `kilo` directory at `/mnt/kilo` to retain
       user data, sessions, and sandbox-policy state.
-  * [OpenClaw][]:
-    * Pin version to 2026.6.34.
+  * OpenClaw: Pin version to 2026.6.34.
   * [OpenCode][]:
     * Pin version to 1.18.21.
     * Do not strip the Bun-compiled executable, preserving its embedded
