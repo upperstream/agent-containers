@@ -6,8 +6,8 @@
   * Add a build script `build.sh` for image creation and tagging.
   * Add a built-in self-test to `build.sh`, run with `build.sh --test`.
 * Changed:
-  * [Crush][]: Fix syntax error in multi-stage Dockerfile where `RUN` was
-    duplicated after `&&`.
+  * [Crush][]: Fix syntax error in multi-stage Dockerfile where `RUN`
+    was duplicated after `&&`.
   * [Herdr][]:
     * Add a patch for installer script to accept Herdr version number to
       install.
@@ -18,7 +18,7 @@
   * [Pi coding agent][]: Use `ln -sf` when linking `pi` CLI binary into
     `/usr/local/bin` to overwrite the existing symlink created from Node
     package bin.
-  * Make apt-get update and apt-get install atomic
+  * Make apt-get update and apt-get install atomic.
   * Change `build.sh` to accept the `-a`/`--all` option for building
     the full provider set; the `all` argument is no longer a valid
     provider name.
@@ -26,11 +26,14 @@
   * Update the document standard agent skill to add clarification for
     code span length.
   * Update documentation standards for clarity and consistency.
+  * Ignore [Aider][] files matching `.aider.*`, and contents of
+    [Hermes Agent][] `.hermes/` and [Droid CLI][] `.factory/`
+    directories.
 
 ## [20260904][]
 
 * Changed:
-  * [Aider][]:
+  * Aider
     * Pin version to 0.86.2.  Use [uv][] (`uv tool install`) instead of
       the official `aider.chat/install.sh` script.  Default
       `AIDER_VERSION` is `0.86.2`.  Applies to the root multi-stage
@@ -65,20 +68,21 @@
       latest release).  Applies to the root multi-stage image and the
       standalone `openwiki-agent/` build.
     * Remove the `OPENWIKI_NODE_VERSION` build argument so that OpenWiki
-      in the root multi-stage image is built on the shared `NODE_VERSION`
-      (v24.20.0) like the other agents.  The standalone `openwiki-agent/`
-      build now also defaults `NODE_VERSION` to v24.20.0.
+      in the root multi-stage image is built on the shared
+      `NODE_VERSION` (v24.20.0) like the other agents.  The standalone
+      `openwiki-agent/` build now also defaults `NODE_VERSION` to
+      v24.20.0.
   * Pi coding agent: Pin version to 0.84.4.  The `PI_VERSION` build
     argument now defaults to `0.84.4` (it was previously unset,
     installing the latest release).  Applies to the root multi-stage
     image and the standalone `pi/` build.
   * Upgrade [Node.js][] to v24.20.0 in the root multi-stage image and
-    the standalone `cline/`, `droid/`, `gemini/`, `openclaw/`, `openwiki/`,
-    and `pi/` builds.
+    the standalone `cline/`, `droid/`, `gemini/`, `openclaw/`,
+    `openwiki/`, and `pi/` builds.
   * Remove specifying the npm version in the root multi-stage image and
-    the standalone `cline/`, `droid/`, `gemini/`, `openclaw/`, `openwiki/`,
-    and `pi/` builds.  Now npm bundled with Node.js is kept unless
-    `NPM_VERSION` is explicitly set.
+    the standalone `cline/`, `droid/`, `gemini/`, `openclaw/`,
+    `openwiki/`, and `pi/` builds.  Now npm bundled with Node.js is kept
+    unless `NPM_VERSION` is explicitly set.
 
 ## [20260823][]
 
@@ -105,7 +109,8 @@
     * Keep the install bundle under `~/.local/share/grok`.  Bind-mount
       a host directory onto `~/.grok` with dangling symlinks to `bin`,
       `completions`, `docs`, and `downloads`.
-    * By this change online update is discarded one the container exists.
+    * By this change online update is discarded one the container
+      exists.
   * [Kilo CLI][]:
     * Pin version to 7.4.23.
     * Do not strip the Bun-compiled executable, preserving its embedded

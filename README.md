@@ -192,6 +192,7 @@ It also appends `$HOME/.local/bin` to the container user's `.bashrc`.
 
 Aider is installed with [uv](https://docs.astral.sh/uv/)
 (`uv tool install --force --python python3.12 --with pip aider-chat@${AIDER_VERSION}`).
+
 Default `AIDER_VERSION` is `0.86.2` for both the root `aider` / `all`
 stages and the standalone `aider/` image.  The `uv` CLI is used only
 during the build; the runtime image keeps the UV tools tree under
@@ -281,6 +282,11 @@ on).  See each agent README for environment variables and login flows.
 Containers are ephemeral.  Config, credentials, and sessions under the
 container home (and some tool-specific trees) disappear unless you mount
 storage.
+
+The repository ignores Aider files matching `.aider.*` and contents of
+Hermes' `.hermes/` and Droid's `.factory/` directories.  These rules
+keep local agent state out of git; they do not persist container state
+or protect files already tracked by git.
 
 Common patterns:
 
