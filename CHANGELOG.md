@@ -29,6 +29,9 @@
   * Ignore [Aider][] files matching `.aider.*`, and contents of
     [Hermes Agent][] `.hermes/` and [Droid CLI][] `.factory/`
     directories.
+  * Clarify in `README.md` that `Dockerfile` defines the complete
+    Docker image configuration, while `docker-compose.yml` provides
+    an optional Docker Compose convenience wrapper around it.
 
 ## [20260904][]
 

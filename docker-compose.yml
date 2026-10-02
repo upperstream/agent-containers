@@ -1,0 +1,31 @@
+name: agent-containers
+
+services:
+  agents:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        CONTAINER_USER: user
+        ENVIRONMENT: ${CONTAINER_ENVIRONMENT:-production}
+        NANO_CLASSIC_KEYBINDINGS: yes
+    volumes:
+      - ${CLAUDE_HOME:-$HOME/.claude}:/home/user/.claude:cached
+      - ${CLINE_HOME:-$HOME/.cline}:/home/user/.cline:cached
+      - ${CODEX_HOME:-$HOME/.codex}:/home/user/.codex:cached
+      - ${COPILOT_HOME:-$HOME/.copilot}:/home/user/.copilot:cached
+      - ${CRUSH_HOME:-$HOME/.crush}:/home/user/.crush:cached
+      - ${CURSOR_HOME:-$HOME/.cursor}:/home/user/.cursor:cached
+      - ${FACTORY_HOME:-$HOME/.factory}:/home/user/.factory:cached
+      - ${GEMINI_HOME:-$HOME/.gemini}:/home/user/.gemini:cached
+      - ${GROK_HOME:-$HOME/grok_home}:/home/user/.grok:cached
+      - ${HERMES_HOME:-$HOME/.hermes}:/home/user/.hermes:cached
+      - ${KILO_HOME:-$HOME/kilo}:/mnt/kilo:cached
+      - ${KIRO_HOME:-$HOME/.kiro}:/home/user/.kiro:cached
+      - ${OPENCLAW_HOME:-$HOME/.openclaw}:/home/user/.openclaw:cached
+      - ${OPENWIKI_HOME:-$HOME/.openwiki}:/home/user/.openwiki:cached
+      - .:/workspaces/agent-containers:cached
+    entrypoint: /bin/sh -c
+    command: "/bin/bash"
+    tty: true
+    stdin_open: true

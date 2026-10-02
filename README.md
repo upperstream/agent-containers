@@ -16,6 +16,20 @@ Agent-specific install details, version pins, auth, and persistence
 notes live in each agent's README (linked below).  This document covers
 the shared layout and how to build.
 
+## Dockerfile and Docker Compose
+
+The root [`Dockerfile`](Dockerfile) is the complete Docker image
+configuration: it defines the build stages, installed tools, and default
+runtime settings.  You can build it with `docker build` and run the
+resulting image with `docker run`; Docker Compose is not required.
+
+The [`docker-compose.yml`](docker-compose.yml) file configures Docker
+Compose as an optional convenience wrapper around that Dockerfile.  It
+uses the repository root as the build context and supplies build
+arguments, host-directory mounts, and interactive shell settings for
+the `agents` service.  It reuses the Dockerfile rather than replacing
+or duplicating the image build configuration.
+
 ---
 
 ## Agents

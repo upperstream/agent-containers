@@ -496,6 +496,8 @@ ENV GIT_EDITOR="${GIT_EDITOR}"
 ENV PATH="/home/${CONTAINER_USER}/.local/bin:${PATH}"
 ENV TERM="${TERM}"
 
+WORKDIR /workspaces
 USER "${CONTAINER_USER}"
 
-WORKDIR /workspaces
+ENTRYPOINT ["/bin/sh", "-c"]
+CMD ["bash"]
