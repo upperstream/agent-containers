@@ -1,5 +1,27 @@
 # Changelog
 
+## [Unreleased][]
+
+* Added:
+  * Add a `docker_builder` service to the Dev Container Compose
+    overlay.  It is built from
+    `.devcontainer/docker_builder.Dockerfile` on `alpine:3.24.1`
+    and runs a Docker daemon that waits for requests from the
+    `agents` service.  The host Docker daemon is not mounted into
+    `agents`; clients there use only `DOCKER_HOST` on the Compose
+    network.  Engine data is stored on a named volume at
+    `/var/lib/docker`, and the Docker 29 containerd overlayfs
+    snapshotter is disabled so nested builds do not fail with
+    overlay `EINVAL`.
+  * Add `tests/docker_build_test.sh` to build the root Dockerfile from
+    inside the `agents` service against that daemon and report whether
+    the build succeeds.
+* Changed:
+  * Install the Docker client (`docker-cli`) and Docker Buildx
+    (`docker-buildx`) in the `development` stage of the root
+    Dockerfile so that Docker build tests can run inside the `agents`
+    service.
+
 ## [20261004][]
 
 * Added:
@@ -233,6 +255,7 @@
 
 * Initial release.
 
+[Unreleased]: https://github.com/upperstream/agent-containers/compare/20261004...HEAD
 [20261004]: https://github.com/upperstream/agent-containers/compare/20260823...20261004
 [20260904]: https://github.com/upperstream/agent-containers/compare/20260823...20260904
 [20260823]: https://github.com/upperstream/agent-containers/compare/20260817...20260823

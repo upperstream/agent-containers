@@ -33,3 +33,27 @@ services:
       - /dev/null:/home/user/.kiro
       - /dev/null:/home/user/.openclaw
       - /dev/null:/home/user/.openwiki
+    environment:
+      # Sibling builder only; the host Docker socket is not mounted.
+      DOCKER_HOST: tcp://docker_builder:2375
+    depends_on:
+      docker_builder:
+        condition: service_healthy
+
+  docker_builder:
+    build:
+      context: .
+      dockerfile: .devcontainer/docker_builder.Dockerfile
+    privileged: true
+    cgroup: host
+    volumes:
+      - docker_builder_data:/var/lib/docker
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2375/_ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+volumes:
+  docker_builder_data:

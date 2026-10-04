@@ -46,10 +46,25 @@ repository as a VS Code Dev Container:
   provides Docker Compose overrides for the dev container.  It sets
   build arguments to use `CONTAINER_USER=devcontainer`,
   `ENVIRONMENT=development`, and `NANO_CLASSIC_KEYBINDINGS=yes`.  It
-  mounts the host Claude and Hermes directories (with environment
-  variable fallbacks) to `/home/devcontainer/`, and mounts `/dev/null`
-  over the default `/home/user/.claude` and `/home/user/.hermes` to
-  prevent conflicts with the standard image layout.
+  mounts the host Claude, Grok, and Hermes directories (with
+  environment variable fallbacks) to `/home/devcontainer/`, and mounts
+  `/dev/null` over the default `/home/user/.claude` and
+  `/home/user/.hermes` to prevent conflicts with the standard image
+  layout.  It also starts a `docker_builder` service, built from
+  `.devcontainer/docker_builder.Dockerfile` on `alpine:3.24.1`, that
+  runs a Docker daemon.  The host Docker daemon is not mounted into
+  `agents` and cannot be reached from it, so processes inside
+  `agents` cannot control the host engine.  The `agents` service
+  sets `DOCKER_HOST` to `tcp://docker_builder:2375` and talks only
+  to that sibling daemon on the Compose network.  Port 2375 is not
+  published to the host.  Engine state in `docker_builder` is stored
+  on the `docker_builder_data` volume at `/var/lib/docker` so image
+  layers are not written on the container overlayfs.  The daemon
+  disables Docker 29's containerd overlayfs snapshotter, so the
+  legacy graph driver can use overlay2 or fall back to vfs.  Run
+  `tests/docker_build_test.sh` in `agents` to build the root
+  [`Dockerfile`](Dockerfile) against `docker_builder` and check
+  whether the build succeeds.
 
 ---
 
@@ -93,8 +108,9 @@ agent README says otherwise:
 | Final env passthrough     | `EDITOR`, `GIT_EDITOR`, `TERM` (empty unless set at build/run)                              |
 
 **Development** images (`ENVIRONMENT=development`) add `doas`
-(passwordless for group `sudo`), `binutils`, `file`, and `tree`, and add
-the container user to the `sudo` group.
+(passwordless for group `sudo`), `binutils`, `docker-buildx`,
+`docker-cli`, `file`, and `tree`, and add the container user to the
+`sudo` group.
 
 Optional build arg `NANO_CLASSIC_KEYBINDINGS=yes` writes classic nano
 keybindings into the container user's `~/.nanorc`.
@@ -359,12 +375,15 @@ Detailed mount recipes for tools that install into a home directory
 ├── .agents/                        # Instructions to the coding agents
 ├── .devcontainer/                  # VS Code Dev Container configuration
 │   ├── devcontainer.json
-│   └── docker-compose.devcontainer.yml
+│   ├── docker-compose.devcontainer.yml
+│   └── docker_builder.Dockerfile   # Docker daemon for build tests
 ├── .editorconfig
 ├── .gitattributes
 ├── .gitignore
 ├── .markdownlint.json
 ├── build.sh                        # Build + tag the agents images
+├── tests/
+│   └── docker_build_test.sh        # Build root Dockerfile via docker_builder
 ├── aider/                          # Standalone Dockerfile + README
 ├── antigravity/
 ├── claude/
