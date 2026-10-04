@@ -16,11 +16,27 @@
   * Add `tests/docker_build_test.sh` to build the root Dockerfile from
     inside the `agents` service against that daemon and report whether
     the build succeeds.
+  * Add a `podman_builder` service to the Dev Container Compose
+    overlay.  It is built from
+    `.devcontainer/podman_builder.Dockerfile` on `alpine:3.24.1`
+    and runs a Podman API service that waits for requests from the
+    `agents` service.  The host container engine is not mounted into
+    `agents`; clients there use only `CONTAINER_HOST` on the Compose
+    network.  Engine data is stored on a named volume at
+    `/var/lib/containers` so the kernel overlay driver can be used.
+    The image installs iptables so netavark can set up networks for
+    build containers.
+  * Add `tests/podman_build_test.sh` to build the root Dockerfile from
+    inside the `agents` service against that service and report
+    whether the build succeeds.
 * Changed:
   * Install the Docker client (`docker-cli`) and Docker Buildx
     (`docker-buildx`) in the `development` stage of the root
     Dockerfile so that Docker build tests can run inside the `agents`
     service.
+  * Install the Podman Remote CLI (`podman-remote`) in the
+    `development` stage of the root Dockerfile so that Podman build
+    tests can run inside the `agents` service.
 
 ## [20261004][]
 

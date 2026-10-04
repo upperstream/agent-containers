@@ -64,7 +64,19 @@ repository as a VS Code Dev Container:
   legacy graph driver can use overlay2 or fall back to vfs.  Run
   `tests/docker_build_test.sh` in `agents` to build the root
   [`Dockerfile`](Dockerfile) against `docker_builder` and check
-  whether the build succeeds.
+  whether the build succeeds.  A `podman_builder` service is built
+  from `.devcontainer/podman_builder.Dockerfile` on `alpine:3.24.1`
+  and runs a Podman API service.  The host container engine is not
+  mounted into `agents`.  The `agents` service sets `CONTAINER_HOST`
+  to `tcp://podman_builder:2375` and talks only to that sibling
+  service on the Compose network.  Port 2375 is not published to the
+  host.  Engine state in `podman_builder` is stored on the
+  `podman_builder_data` volume at `/var/lib/containers` so the
+  kernel overlay driver can be used.  The image installs iptables so
+  netavark can set up networks for build containers.  Run
+  `tests/podman_build_test.sh` in
+  `agents` to build the root [`Dockerfile`](Dockerfile) against
+  `podman_builder` and check whether the build succeeds.
 
 ---
 
@@ -109,8 +121,8 @@ agent README says otherwise:
 
 **Development** images (`ENVIRONMENT=development`) add `doas`
 (passwordless for group `sudo`), `binutils`, `docker-buildx`,
-`docker-cli`, `file`, and `tree`, and add the container user to the
-`sudo` group.
+`docker-cli`, `file`, `podman-remote`, and `tree`, and add the
+container user to the `sudo` group.
 
 Optional build arg `NANO_CLASSIC_KEYBINDINGS=yes` writes classic nano
 keybindings into the container user's `~/.nanorc`.
@@ -376,14 +388,16 @@ Detailed mount recipes for tools that install into a home directory
 ├── .devcontainer/                  # VS Code Dev Container configuration
 │   ├── devcontainer.json
 │   ├── docker-compose.devcontainer.yml
-│   └── docker_builder.Dockerfile   # Docker daemon for build tests
+│   ├── docker_builder.Dockerfile   # Docker daemon for build tests
+│   └── podman_builder.Dockerfile   # Podman service for build tests
 ├── .editorconfig
 ├── .gitattributes
 ├── .gitignore
 ├── .markdownlint.json
 ├── build.sh                        # Build + tag the agents images
 ├── tests/
-│   └── docker_build_test.sh        # Build root Dockerfile via docker_builder
+│   ├── docker_build_test.sh        # Build root Dockerfile via docker_builder
+│   └── podman_build_test.sh        # Build root Dockerfile via podman_builder
 ├── aider/                          # Standalone Dockerfile + README
 ├── antigravity/
 ├── claude/

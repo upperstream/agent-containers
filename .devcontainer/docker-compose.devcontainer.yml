@@ -34,10 +34,13 @@ services:
       - /dev/null:/home/user/.openclaw
       - /dev/null:/home/user/.openwiki
     environment:
-      # Sibling builder only; the host Docker socket is not mounted.
+      # Sibling builders only; host engine sockets are not mounted.
       DOCKER_HOST: tcp://docker_builder:2375
+      CONTAINER_HOST: tcp://podman_builder:2375
     depends_on:
       docker_builder:
+        condition: service_healthy
+      podman_builder:
         condition: service_healthy
 
   docker_builder:
@@ -55,5 +58,23 @@ services:
       retries: 12
       start_period: 10s
 
+  podman_builder:
+    build:
+      context: .
+      dockerfile: .devcontainer/podman_builder.Dockerfile
+    privileged: true
+    cgroup: host
+    devices:
+      - /dev/fuse
+    volumes:
+      - podman_builder_data:/var/lib/containers
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2375/libpod/_ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
 volumes:
   docker_builder_data:
+  podman_builder_data:
