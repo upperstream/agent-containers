@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased][]
+## [20261004][]
 
 * Added:
   * Add a build script `build.sh` for image creation and tagging.
@@ -233,7 +233,7 @@
 
 * Initial release.
 
-[Unreleased]: https://github.com/upperstream/agent-containers/compare/20260904...HEAD
+[20261004]: https://github.com/upperstream/agent-containers/compare/20260823...20261004
 [20260904]: https://github.com/upperstream/agent-containers/compare/20260823...20260904
 [20260823]: https://github.com/upperstream/agent-containers/compare/20260817...20260823
 [20260817]: https://github.com/upperstream/agent-containers/compare/20260815...20260817
