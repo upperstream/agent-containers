@@ -26,9 +26,30 @@ resulting image with `docker run`; Docker Compose is not required.
 The [`docker-compose.yml`](docker-compose.yml) file configures Docker
 Compose as an optional convenience wrapper around that Dockerfile.  It
 uses the repository root as the build context and supplies build
-arguments, host-directory mounts, and interactive shell settings for
-the `agents` service.  It reuses the Dockerfile rather than replacing
-or duplicating the image build configuration.
+arguments, host-directory mounts, and interactive shell settings for the
+`agents` service.  It reuses the Dockerfile rather than replacing or
+duplicating the image build configuration.
+
+The `.devcontainer/` directory contains configuration for using this
+repository as a VS Code Dev Container:
+
+- The `.devcontainer/devcontainer.json` configuration file sets up the
+  dev container by loading both the root `docker-compose.yml` and the
+  `docker-compose.devcontainer.yml` override.  It targets the `agents`
+  service, sets the workspace folder to `/workspaces/agent-containers`,
+  mounts the host's Claude and Hermes directories to the `devcontainer`
+  user's home, passes through the `TERM` environment variable, runs
+  `git config --global --add safe.directory` as a post-create command,
+  and configures the terminal to use bash.  The container runs as the
+  non-root `devcontainer` user.
+- The `.devcontainer/docker-compose.devcontainer.yml` configuration file
+  provides Docker Compose overrides for the dev container.  It sets
+  build arguments to use `CONTAINER_USER=devcontainer`,
+  `ENVIRONMENT=development`, and `NANO_CLASSIC_KEYBINDINGS=yes`.  It
+  mounts the host Claude and Hermes directories (with environment
+  variable fallbacks) to `/home/devcontainer/`, and mounts `/dev/null`
+  over the default `/home/user/.claude` and `/home/user/.hermes` to
+  prevent conflicts with the standard image layout.
 
 ---
 
@@ -336,6 +357,9 @@ Detailed mount recipes for tools that install into a home directory
 ├── LICENSE.txt                     # 2-Clause BSD
 ├── README.md                       # This file
 ├── .agents/                        # Instructions to the coding agents
+├── .devcontainer/                  # VS Code Dev Container configuration
+│   ├── devcontainer.json
+│   └── docker-compose.devcontainer.yml
 ├── .editorconfig
 ├── .gitattributes
 ├── .gitignore

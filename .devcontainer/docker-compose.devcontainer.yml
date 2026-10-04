@@ -1,0 +1,35 @@
+services:
+  agents:
+    build:
+      args:
+        CONTAINER_USER: devcontainer
+        ENVIRONMENT: development
+        NANO_CLASSIC_KEYBINDINGS: yes
+    volumes:
+      - ${CLAUDE_HOME:-$HOME/.claude}:/home/devcontainer/.claude:cached
+      - ${CLINE_HOME:-$HOME/.cline}:/home/devcontainer/.cline:cached
+      - ${CODEX_HOME:-$HOME/.codex}:/home/devcontainer/.codex:cached
+      - ${COPILOT_HOME:-$HOME/.copilot}:/home/devcontainer/.copilot:cached
+      - ${CRUSH_HOME:-$HOME/.crush}:/home/devcontainer/.crush:cached
+      - ${CURSOR_HOME:-$HOME/.cursor}:/home/devcontainer/.cursor:cached
+      - ${FACTORY_HOME:-$HOME/.factory}:/home/devcontainer/.factory:cached
+      - ${GEMINI_HOME:-$HOME/.gemini}:/home/devcontainer/.gemini:cached
+      - ${GROK_HOME:-$HOME/grok_home}:/home/devcontainer/.grok:cached
+      - ${HERMES_HOME:-$HOME/.hermes}:/home/devcontainer/.hermes:cached
+      - ${KILO_HOME:-$HOME/kilo}:/mnt/kilo:cached
+      - ${KIRO_HOME:-$HOME/.kiro}:/home/devcontainer/.kiro:cached
+      - ${OPENCLAW_HOME:-$HOME/.openclaw}:/home/devcontainer/.openclaw:cached
+      - ${OPENWIKI_HOME:-$HOME/.openwiki}:/home/devcontainer/.openwiki:cached
+      - /dev/null:/home/user/.claude
+      - /dev/null:/home/user/.cline
+      - /dev/null:/home/user/.codex
+      - /dev/null:/home/user/.copilot
+      - /dev/null:/home/user/.crush
+      - /dev/null:/home/user/.cursor
+      - /dev/null:/home/user/.factory
+      - /dev/null:/home/user/.gemini
+      - /dev/null:/home/user/.grok
+      - /dev/null:/home/user/.hermes
+      - /dev/null:/home/user/.kiro
+      - /dev/null:/home/user/.openclaw
+      - /dev/null:/home/user/.openwiki

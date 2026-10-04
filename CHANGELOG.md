@@ -32,6 +32,9 @@
   * Clarify in `README.md` that `Dockerfile` defines the complete
     Docker image configuration, while `docker-compose.yml` provides
     an optional Docker Compose convenience wrapper around it.
+  * Update `README.md` to explain the roles of `.devcontainer/devcontainer.json`
+    and `.devcontainer/docker-compose.devcontainer.yml` for VS Code Dev
+    Container support.
 
 ## [20260904][]
 
