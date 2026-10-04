@@ -1,14 +1,23 @@
 #!/bin/sh
 
-# Build the root Dockerfile from the agents service, using the Docker
+# Build a Dockerfile from the agents service, using the Docker
 # daemon in the docker_builder service, and report whether the build
 # succeeds.  The host Docker daemon is not used.
+#
+# Usage:
+#   docker_build_test.sh [DOCKERFILE [CONTEXT]]
+# Default:
+#   DOCKERFILE: Dockerfile
+#   CONTEXT:    .
 
 set -eu
 
 # shellcheck disable=SC1007
 repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$repo_root"
+
+dockerfile=${1:-Dockerfile}
+context=${2:-.}
 
 if [ -z "${DOCKER_HOST:-}" ]; then
 	DOCKER_HOST=tcp://docker_builder:2375
@@ -43,8 +52,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo "Building $repo_root/Dockerfile ..."
-if docker build -t "$image" -f Dockerfile .; then
+echo "Building $repo_root/$dockerfile from $context ..."
+if docker build -t "$image" -f "$dockerfile" "$context"; then
 	echo "ok: docker build succeeded"
 	exit 0
 fi

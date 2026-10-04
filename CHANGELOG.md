@@ -37,6 +37,10 @@
   * Install the Podman Remote CLI (`podman-remote`) in the
     `development` stage of the root Dockerfile so that Podman build
     tests can run inside the `agents` service.
+  * Allow `tests/docker_build_test.sh` and
+    `tests/podman_build_test.sh` to accept optional Dockerfile and
+    build-context arguments.  They default to the root `Dockerfile`
+    and repository context.
 
 ## [20261004][]
 
