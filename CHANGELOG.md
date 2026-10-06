@@ -47,6 +47,8 @@
     `tests/podman_build_test.sh` to accept optional Dockerfile and
     build-context arguments.  They default to the root `Dockerfile`
     and repository context.
+  * [Hermes Agent][]: Use `scripts/install.sh` from the cloned
+    repository instead of fetching the bootstrap script from the web.
 
 ## [20261004][]
 
@@ -192,7 +194,7 @@
     * Move `codex` executable into `$HOME/.local/bin` directory, which
       is now included in `PATH` environment variable.
     * Update document.
-  * [Hermes Agent][]: Suppress verbose output during installation.
+  * Hermes Agent: Suppress verbose output during installation.
 * Fixed:
   * Codex CLI: The following bundled executables were not installed:
     * `codex-code-mode-host`
