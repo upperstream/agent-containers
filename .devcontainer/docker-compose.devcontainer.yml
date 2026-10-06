@@ -33,10 +33,15 @@ services:
       - /dev/null:/home/user/.kiro
       - /dev/null:/home/user/.openclaw
       - /dev/null:/home/user/.openwiki
+      - docker_builder_socket:/run/docker-builder:ro
+      - podman_builder_socket:/run/podman-builder:ro
+    group_add:
+      # Socket access survives Dev Container UID/GID remapping.
+      - "2375"
     environment:
       # Sibling builders only; host engine sockets are not mounted.
-      DOCKER_HOST: tcp://docker_builder:2375
-      CONTAINER_HOST: tcp://podman_builder:2375
+      DOCKER_HOST: unix:///run/docker-builder/docker.sock
+      CONTAINER_HOST: unix:///run/podman-builder/podman.sock
     depends_on:
       docker_builder:
         condition: service_healthy
@@ -51,8 +56,15 @@ services:
     cgroup: host
     volumes:
       - docker_builder_data:/var/lib/docker
+      - docker_builder_socket:/run/docker-builder
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2375/_ping"]
+      test:
+        - CMD-SHELL
+        - >-
+          test "$$(stat -c '%a:%g' /run/docker-builder/docker.sock)"
+          = '660:2375' &&
+          curl -fsS --unix-socket /run/docker-builder/docker.sock
+          http://localhost/_ping
       interval: 5s
       timeout: 3s
       retries: 12
@@ -68,8 +80,15 @@ services:
       - /dev/fuse
     volumes:
       - podman_builder_data:/var/lib/containers
+      - podman_builder_socket:/run/podman-builder
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2375/libpod/_ping"]
+      test:
+        - CMD-SHELL
+        - >-
+          test "$$(stat -c '%a:%g' /run/podman-builder/podman.sock)"
+          = '660:2375' &&
+          curl -fsS --unix-socket /run/podman-builder/podman.sock
+          http://localhost/libpod/_ping
       interval: 5s
       timeout: 3s
       retries: 12
@@ -78,3 +97,5 @@ services:
 volumes:
   docker_builder_data:
   podman_builder_data:
+  docker_builder_socket:
+  podman_builder_socket:

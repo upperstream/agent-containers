@@ -20,7 +20,7 @@ dockerfile=${1:-Dockerfile}
 context=${2:-.}
 
 if [ -z "${CONTAINER_HOST:-}" ]; then
-	CONTAINER_HOST=tcp://podman_builder:2375
+	CONTAINER_HOST=unix:///run/podman-builder/podman.sock
 	export CONTAINER_HOST
 fi
 

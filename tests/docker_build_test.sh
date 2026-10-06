@@ -20,7 +20,7 @@ dockerfile=${1:-Dockerfile}
 context=${2:-.}
 
 if [ -z "${DOCKER_HOST:-}" ]; then
-	DOCKER_HOST=tcp://docker_builder:2375
+	DOCKER_HOST=unix:///run/docker-builder/docker.sock
 	export DOCKER_HOST
 fi
 

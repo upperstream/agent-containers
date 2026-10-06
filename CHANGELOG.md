@@ -8,8 +8,8 @@
     `.devcontainer/docker_builder.Dockerfile` on `alpine:3.24.1`
     and runs a Docker daemon that waits for requests from the
     `agents` service.  The host Docker daemon is not mounted into
-    `agents`; clients there use only `DOCKER_HOST` on the Compose
-    network.  Engine data is stored on a named volume at
+    `agents`; clients there use `DOCKER_HOST` through a shared Unix
+    socket.  Engine data is stored on a named volume at
     `/var/lib/docker`, and the Docker 29 containerd overlayfs
     snapshotter is disabled so nested builds do not fail with
     overlay `EINVAL`.
@@ -21,8 +21,8 @@
     `.devcontainer/podman_builder.Dockerfile` on `alpine:3.24.1`
     and runs a Podman API service that waits for requests from the
     `agents` service.  The host container engine is not mounted into
-    `agents`; clients there use only `CONTAINER_HOST` on the Compose
-    network.  Engine data is stored on a named volume at
+    `agents`; clients there use `CONTAINER_HOST` through a shared Unix
+    socket.  Engine data is stored on a named volume at
     `/var/lib/containers` so the kernel overlay driver can be used.
     The image installs iptables so netavark can set up networks for
     build containers.
@@ -30,6 +30,12 @@
     inside the `agents` service against that service and report
     whether the build succeeds.
 * Changed:
+  * Replace the Dev Container builders' TCP API listeners with Unix
+    sockets on separate named volumes shared only with `agents`.
+    Grant non-root access through supplemental GID 2375, mount socket
+    directories read-only into `agents`, and use socket-based health
+    checks and build-test defaults.  Add
+    `tests/builder_socket_test.sh` to check access and TCP isolation.
   * Install the Docker client (`docker-cli`) and Docker Buildx
     (`docker-buildx`) in the `development` stage of the root
     Dockerfile so that Docker build tests can run inside the `agents`

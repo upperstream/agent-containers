@@ -52,12 +52,12 @@ repository as a VS Code Dev Container:
   `/home/user/.hermes` to prevent conflicts with the standard image
   layout.  It also starts a `docker_builder` service, built from
   `.devcontainer/docker_builder.Dockerfile` on `alpine:3.24.1`, that
-  runs a Docker daemon.  The host Docker daemon is not mounted into
-  `agents` and cannot be reached from it, so processes inside
-  `agents` cannot control the host engine.  The `agents` service
-  sets `DOCKER_HOST` to `tcp://docker_builder:2375` and talks only
-  to that sibling daemon on the Compose network.  Port 2375 is not
-  published to the host.  Engine state in `docker_builder` is stored
+  runs a Docker daemon.  The host Docker socket is not mounted into
+  `agents`; clients use the sibling engine instead.  The service
+  sets `DOCKER_HOST` to `unix:///run/docker-builder/docker.sock`.
+  The socket directory is shared through the `docker_builder_socket`
+  volume, mounted only into that builder and `agents`.  There is no
+  TCP API listener.  Engine state in `docker_builder` is stored
   on the `docker_builder_data` volume at `/var/lib/docker` so image
   layers are not written on the container overlayfs.  The daemon
   disables Docker 29's containerd overlayfs snapshotter, so the
@@ -68,15 +68,30 @@ repository as a VS Code Dev Container:
   from `.devcontainer/podman_builder.Dockerfile` on `alpine:3.24.1`
   and runs a Podman API service.  The host container engine is not
   mounted into `agents`.  The `agents` service sets `CONTAINER_HOST`
-  to `tcp://podman_builder:2375` and talks only to that sibling
-  service on the Compose network.  Port 2375 is not published to the
-  host.  Engine state in `podman_builder` is stored on the
+  to `unix:///run/podman-builder/podman.sock`.  The socket directory
+  is shared through the `podman_builder_socket` volume, mounted only
+  into that builder and `agents`.  There is no TCP API listener.
+  Engine state in `podman_builder` is stored on the
   `podman_builder_data` volume at `/var/lib/containers` so the
   kernel overlay driver can be used.  The image installs iptables so
   netavark can set up networks for build containers.  Run
   `tests/podman_build_test.sh` in
   `agents` to build the root [`Dockerfile`](Dockerfile) against
   `podman_builder` and check whether the build succeeds.
+  Both socket volumes are mounted read-only into `agents`; this
+  prevents changing socket files but does not restrict API commands.
+  The builders set socket permissions to `0660` with group `builders`
+  (GID 2375), and `agents` receives that supplemental group so access
+  does not depend on its user's UID or primary GID.  Socket-based
+  health checks gate startup of `agents`.  Run
+  `tests/builder_socket_test.sh` inside `agents` to check API access
+  and confirm that the former TCP endpoints are unavailable.
+  The builders retain internet access for image pulls and builds.
+  This isolates API access from ordinary peer containers, not from
+  the host administrator.  Both builders remain privileged, and API
+  access grants full control of their engines.  Rebuild the Dev
+  Container to apply socket mounts, group membership, and listeners;
+  existing engine data volumes can be retained.
 
 ---
 
