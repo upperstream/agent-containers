@@ -47,8 +47,10 @@
     `tests/podman_build_test.sh` to accept optional Dockerfile and
     build-context arguments.  They default to the root `Dockerfile`
     and repository context.
-  * [Hermes Agent][]: Use `scripts/install.sh` from the cloned
-    repository instead of fetching the bootstrap script from the web.
+  * [Hermes Agent][]:
+    * Upgrade to v2026.9.24.
+    * Use `scripts/install.sh` from the cloned repository instead of
+      fetching the bootstrap script from the web.
 
 ## [20261004][]
 

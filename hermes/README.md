@@ -32,8 +32,8 @@ docker build -t hermes -f hermes/Dockerfile hermes
 |----------------------------|--------------|----------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                 |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas` tools)  |
-| `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings          |
-| `HERMES_VERSION`           | `v2026.8.13` | Hermes version tag (or Git branch name) to install |
+| `NANO_CLASSIC_KEYBINDINGS` | *(unset)*    | Set to `yes` for classic nano keybindings          |
+| `HERMES_VERSION`           | `v2026.9.24` | Hermes version tag (or Git branch name) to install |
 
 Examples:
 

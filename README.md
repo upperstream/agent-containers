@@ -237,8 +237,8 @@ defaults/comments):
 | `GEMINI_RELEASE`           | `0.55.1` (`latest`, `preview`, or `nightly`)                    |
 | `GROK_CHANNEL`             | unset                                                           |
 | `GROK_VERSION`             | `1.0.5`                                                         |
+| `HERMES_VERSION`           | `v2026.9.24` (Specific Hermes git tag to install)               |
 | `HERDR_VERSION`            | `0.8.2`                                                         |
-| `HERMES_VERSION`           | `v2026.8.13` (Specific Hermes git tag to install)               |
 | `KILO_VERSION`             | `7.4.23`                                                        |
 | `KIRO_CHANNEL`             | unset                                                           |
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                               |

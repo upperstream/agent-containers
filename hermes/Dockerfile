@@ -1,6 +1,6 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
-ARG HERMES_VERSION=v2026.8.13   # branch (main) or tag (v2026.8.13)
+ARG HERMES_VERSION=v2026.9.24   # branch (main) or tag (v2026.9.24)
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 
 FROM debian:trixie-slim AS builder_base

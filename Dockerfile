@@ -13,7 +13,7 @@ ARG DROID_VERSION=0.209.0           # 'latest' or '0.209.0'
 ARG GEMINI_RELEASE=0.55.1           # 'latest', 'preview', 'nightly', or '0.55.1'
 ARG GROK_CHANNEL
 ARG GROK_VERSION=1.0.5              # '1.0.5'
-ARG HERMES_VERSION=v2026.8.13       # branch (main) or tag (v2026.8.13)
+ARG HERMES_VERSION=v2026.9.24       # branch (main) or tag (v2026.9.24)
 ARG HERDR_VERSION=0.8.2             # '0.8.2'
 ARG KILO_VERSION=7.4.23             # '7.4.23'
 ARG KIRO_CHANNEL
