@@ -41,9 +41,8 @@ docker build -t codex:0.142.5 --build-arg CODEX_RELEASE=0.142.5 .
 
 The installer is run with `CODEX_NON_INTERACTIVE=1`.
 
-The `development` image additionally includes `binutils`, `file`,
-`opendoas`, and `tree`.  Its container user joins the `sudo` group and
-can run `doas` without a password.
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
 
 ---
 

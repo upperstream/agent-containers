@@ -44,6 +44,9 @@ to `/usr/local/bin/opencode`.  The builder does not strip the
 executable, so the Bun-compiled payload at the tail of the binary is
 preserved.
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

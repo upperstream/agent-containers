@@ -44,8 +44,8 @@ docker build -t copilot:prerelease \
     --build-arg COPILOT_VERSION=prerelease .
 ```
 
-The development image adds `binutils`, `file`, `opendoas`, and `tree`.
-It permits members of the `sudo` group to run `doas` without a password.
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
 
 ---
 

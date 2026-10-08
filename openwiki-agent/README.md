@@ -46,6 +46,9 @@ docker build -t openwiki:dev --build-arg ENVIRONMENT=development .
 docker build -t openwiki:pinned --build-arg OPENWIKI_VERSION=0.4.3 .
 ```
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

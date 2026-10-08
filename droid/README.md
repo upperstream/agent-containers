@@ -47,6 +47,9 @@ docker build -t droid:pinned --build-arg DROID_VERSION=0.200.0 .
 
 The package is installed with `npm install -g --ignore-scripts`.
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

@@ -487,7 +487,7 @@ RUN rm -f /etc/dpkg/dpkg.cfg.d/docker && \
 RUN apt-get update && \
     apt-get install -y --no-install-recommends binutils docker-buildx \
         docker-cli file opendoas podman-remote tree
-RUN echo "permit nopass :sudo" > /etc/doas.conf
+RUN echo "permit :sudo" > /etc/doas.conf
 RUN doas -C /etc/doas.conf
 
 FROM "${ENVIRONMENT}"

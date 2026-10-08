@@ -38,7 +38,7 @@ docker build -t hermes -f hermes/Dockerfile hermes
 Examples:
 
 ```bash
-# Development image (extra packages, passwordless doas for the user)
+# Development image (extra packages and authenticated doas)
 docker build -t hermes:dev --build-arg ENVIRONMENT=development .
 
 # Use a different container username
@@ -49,6 +49,9 @@ The Dockerfile downloads the official Hermes installer and runs it with
 `--skip-setup --skip-browser --non-interactive`.  Provider configuration
 and authentication are therefore completed when the container is run,
 rather than during the image build.
+
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
 
 ---
 

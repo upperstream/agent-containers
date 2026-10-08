@@ -45,6 +45,9 @@ release tarball (`crush_<version>_Linux_<arch>.tar.gz`) for the current
 architecture (`amd64`/`arm64`); for `nightly` it resolves the file name
 from the nightly `checksums.txt`.
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

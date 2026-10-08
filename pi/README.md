@@ -48,6 +48,9 @@ docker build -t pi:pinned --build-arg PI_VERSION=1.0.0 .
 
 The package is installed with `npm install -g --ignore-scripts`.
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

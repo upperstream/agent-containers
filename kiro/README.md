@@ -41,6 +41,9 @@ docker build -t kiro:channel --build-arg KIRO_CHANNEL=stable .
 docker build -t kiro:force --build-arg KIRO_FORCE=1 .
 ```
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

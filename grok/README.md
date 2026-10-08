@@ -37,12 +37,15 @@ docker build -t grok -f grok/Dockerfile grok
 Examples:
 
 ```bash
-# Development image (extra packages, passwordless doas for the user)
+# Development image (extra packages and authenticated doas)
 docker build -t grok:dev --build-arg ENVIRONMENT=development .
 
 # Pin a specific Grok version
 docker build -t grok:1.0.5 --build-arg GROK_VERSION=1.0.5 .
 ```
+
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
 
 ---
 

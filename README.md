@@ -134,10 +134,12 @@ agent README says otherwise:
 | Production vs development | `ENVIRONMENT=production` or `development`                                                   |
 | Final env passthrough     | `EDITOR`, `GIT_EDITOR`, `TERM` (empty unless set at build/run)                              |
 
-**Development** images (`ENVIRONMENT=development`) add `doas`
-(passwordless for group `sudo`), `binutils`, `docker-buildx`,
-`docker-cli`, `file`, `podman-remote`, and `tree`, and add the
-container user to the `sudo` group.
+**Development** images (`ENVIRONMENT=development`) add `doas`,
+`binutils`, `file`, and `tree`, and add the container user to the
+`sudo` group.  The root multi-stage image also adds `docker-buildx`,
+`docker-cli`, and `podman-remote`.  Their `doas` configuration
+requires the container user's password; the account initially has no
+usable password.
 
 Optional build arg `NANO_CLASSIC_KEYBINDINGS=yes` writes classic nano
 keybindings into the container user's `~/.nanorc`.
@@ -352,6 +354,34 @@ docker run --rm -it -v "$PWD:/workspaces/project" \
 
 Auth is tool-specific (API keys, device login, GitHub tokens, and so
 on).  See each agent README for environment variables and login flows.
+
+### Development image privileges
+
+Development images require the container user's password for `doas`.
+Set or replace that password interactively after the container starts.
+For the Dev Container Compose configuration, run this command from the
+host:
+
+```bash
+docker compose \
+  -f docker-compose.yml \
+  -f .devcontainer/docker-compose.devcontainer.yml \
+  exec --user root agents passwd devcontainer
+```
+
+For a container started directly from the root development image, use
+`docker exec` instead.  The default container user is `user`:
+
+```bash
+docker run -d --name agents-dev agents:all-dev "sleep infinity"
+docker exec -it --user root agents-dev passwd user
+```
+
+The `passwd` command reads the new password from the terminal without
+placing it in the image, container environment, or shell command line.
+The password remains across container restarts, but it is lost when the
+container is removed and recreated.  Test authenticated escalation from
+inside the container with `doas id`.
 
 ---
 

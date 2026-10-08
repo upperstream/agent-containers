@@ -38,6 +38,9 @@ Examples:
 docker build -t herdr:dev --build-arg ENVIRONMENT=development .
 ```
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

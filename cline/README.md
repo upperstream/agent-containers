@@ -45,6 +45,9 @@ docker build -t cline:dev --build-arg ENVIRONMENT=development .
 docker build -t cline:3.0.60 --build-arg CLINE_RELEASE=3.0.60 .
 ```
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

@@ -44,6 +44,9 @@ runs `uv tool install --force --python python3.12 --with pip
 aider-chat@${AIDER_VERSION}`.  The final image copies that UV tools tree
 and symlinks `aider` to `/usr/local/bin/aider`.
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

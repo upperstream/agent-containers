@@ -45,6 +45,9 @@ docker build -t claude:dev --build-arg ENVIRONMENT=development .
 docker build -t claude:latest .
 ```
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

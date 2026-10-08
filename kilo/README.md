@@ -39,6 +39,9 @@ docker build -t kilo:dev --build-arg ENVIRONMENT=development .
 docker build -t kilo:7.4.23 --build-arg KILO_VERSION=7.4.23 .
 ```
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

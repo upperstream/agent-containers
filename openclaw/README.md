@@ -47,6 +47,9 @@ docker build -t openclaw:2026.6.34 \
     --build-arg OPENCLAW_VERSION=2026.6.34 .
 ```
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

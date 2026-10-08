@@ -37,6 +37,9 @@ Examples:
 docker build -t cursor:dev --build-arg ENVIRONMENT=development .
 ```
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

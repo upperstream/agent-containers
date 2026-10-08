@@ -46,6 +46,9 @@ docker build -t gemini:dev --build-arg ENVIRONMENT=development .
 docker build -t gemini:preview --build-arg GEMINI_RELEASE=preview .
 ```
 
+See the root [README](../README.md#development-image-privileges) for
+development-image privilege setup.
+
 ---
 
 ## Run

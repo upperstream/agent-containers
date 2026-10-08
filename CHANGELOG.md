@@ -36,6 +36,10 @@
     directories read-only into `agents`, and use socket-based health
     checks and build-test defaults.  Add
     `tests/builder_socket_test.sh` to check access and TCP isolation.
+  * Require password authentication for `doas` in the `development`
+    stages of the root and standalone Dockerfiles.  Document setting or
+    replacing the container user's password interactively with
+    `docker compose exec` or `docker exec` after the container starts.
   * Install the Docker client (`docker-cli`) and Docker Buildx
     (`docker-buildx`) in the `development` stage of the root
     Dockerfile so that Docker build tests can run inside the `agents`
