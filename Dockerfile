@@ -4,7 +4,7 @@ ARG AIDER_VERSION=0.86.2
 ARG NANO_CLASSIC_KEYBINDINGS        # 'yes', default to 'no'
 ARG NODE_VERSION=v24.20.0
 ARG NPM_VERSION=
-ARG CLAUDE_VERSION=2.1.236          # 'latest', 'stable', or a version
+ARG CLAUDE_VERSION=2.1.283          # 'latest', 'stable', or a version
 ARG CLINE_RELEASE=3.0.60            # 'nightly' or '3.0.60'
 ARG CODEX_RELEASE=0.148.0           # 'latest' or '0.142.5'
 ARG COPILOT_VERSION=1.0.80          # 'latest', 'prerelease', or 'v0.0.369'

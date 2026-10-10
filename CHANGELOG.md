@@ -51,6 +51,8 @@
     `tests/podman_build_test.sh` to accept optional Dockerfile and
     build-context arguments.  They default to the root `Dockerfile`
     and repository context.
+  * [Claude Code][]: Upgrade to version 2.1.283.  Applies to the root
+    multi-stage image and the standalone `claude/` build.
   * [Hermes Agent][]:
     * Upgrade to v2026.9.24.
     * Use `scripts/install.sh` from the cloned repository instead of

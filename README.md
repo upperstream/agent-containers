@@ -230,7 +230,7 @@ defaults/comments):
 | `NODE_VERSION`             | `v24.20.0`; Node.js for all agents, including OpenWiki          |
 | `NPM_VERSION`              | unset; npm version to upgrade/downgrade to                      |
 | `AIDER_VERSION`            | `0.86.2`; `aider-chat` version installed with uv                |
-| `CLAUDE_VERSION`           | `2.1.236`; Claude Code version installed (or `latest`/`stable`) |
+| `CLAUDE_VERSION`           | `2.1.283`; Claude Code version installed (or `latest`/`stable`) |
 | `CLINE_RELEASE`            | `3.0.60` (`nightly` or a version)                               |
 | `CODEX_RELEASE`            | `0.148.0` (`latest` or a version)                               |
 | `COPILOT_VERSION`          | `1.0.80` (`latest` or a version)                                |

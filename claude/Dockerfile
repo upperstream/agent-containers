@@ -1,4 +1,4 @@
-ARG CLAUDE_VERSION=2.1.236      # 'latest', 'stable', or a version
+ARG CLAUDE_VERSION=2.1.283      # 'latest', 'stable', or a version
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
