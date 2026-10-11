@@ -27,7 +27,7 @@ docker build -t cline -f cline/Dockerfile cline
 
 | Argument                   | Default      | Description                                              |
 |----------------------------|--------------|----------------------------------------------------------|
-| `CLINE_RELEASE`            | `3.0.60`     | Pin Cline: e.g. `nightly` or `3.0.60`                    |
+| `CLINE_RELEASE`            | `3.0.65`     | Pin Cline: e.g. `nightly` or `3.0.65`                    |
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
@@ -42,7 +42,7 @@ Examples:
 
 ```bash
 docker build -t cline:dev --build-arg ENVIRONMENT=development .
-docker build -t cline:3.0.60 --build-arg CLINE_RELEASE=3.0.60 .
+docker build -t cline:3.0.65 --build-arg CLINE_RELEASE=3.0.65 .
 ```
 
 See the root [README](../README.md#development-image-privileges) for

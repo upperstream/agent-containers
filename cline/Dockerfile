@@ -3,7 +3,7 @@ ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 ARG NODE_VERSION=v24.20.0
 ARG NPM_VERSION=
-ARG CLINE_RELEASE=3.0.60        # 'nightly' or '3.0.60'
+ARG CLINE_RELEASE=3.0.65        # 'nightly' or '3.0.65'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update && \

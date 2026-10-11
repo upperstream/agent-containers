@@ -53,6 +53,8 @@
     and repository context.
   * [Claude Code][]: Upgrade to version 2.1.283.  Applies to the root
     multi-stage image and the standalone `claude/` build.
+  * [Cline][]: Upgrade to version 3.0.65.  Applies to the root
+    multi-stage image and the standalone `cline/` build.
   * [Hermes Agent][]:
     * Upgrade to v2026.9.24.
     * Use `scripts/install.sh` from the cloned repository instead of
