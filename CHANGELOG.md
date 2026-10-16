@@ -59,6 +59,11 @@
     * Upgrade to v2026.9.24.
     * Use `scripts/install.sh` from the cloned repository instead of
       fetching the bootstrap script from the web.
+  * [Kiro CLI][]: Strip and copy all `kiro-cli*` binaries from the
+    installer output rather than only `kiro-cli`, so that any
+    additional binaries placed alongside `kiro-cli` are included.
+    Applies to the root multi-stage image and the standalone `kiro/`
+    build.
 
 ## [20261004][]
 
@@ -279,6 +284,7 @@
   "Hermes Agent | Nous Research"
 [Kilo CLI]: https://kilo.ai/cli
   "Kilo CLI – Open Source CLI Coding Agent"
+[Kiro CLI]: https://cli.kiro.dev/ "Kiro CLI"
 [OpenClaw]: https://openclaw.ai/ "OpenClaw — Personal AI Assistant"
 [OpenCode]: https://opencode.ai/
   "OpenCode | The open source AI coding agent"

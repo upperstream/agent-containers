@@ -37,12 +37,12 @@ ARG KIRO_FORCE                  # global default
 RUN apt-get install -y unzip
 RUN curl -fsSL https://cli.kiro.dev/install > kiro_installer.sh
 RUN bash kiro_installer.sh ${KIRO_FORCE:+--force} ${KIRO_CHANNEL:+--channel "$KIRO_CHANNEL"}
-RUN strip /root/.local/bin/kiro-cli
+RUN strip /root/.local/bin/kiro-cli*
 
 FROM container_base AS production
 ARG CONTAINER_USER              # global default
 
-COPY --from=kiro_builder /root/.local/bin/kiro-cli /usr/local/bin/kiro-cli
+COPY --from=kiro_builder /root/.local/bin/kiro-cli* /usr/local/bin/
 
 RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 

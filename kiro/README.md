@@ -61,10 +61,10 @@ Authenticate according to Kiro CLI documentation for your environment.
 
 ## Image layout
 
-| Path                      | Description                |
-|---------------------------|----------------------------|
-| `/usr/local/bin/kiro-cli` | Kiro CLI binary (stripped) |
-| `/workspaces`             | Default working directory  |
+| Path                       | Description                                               |
+|----------------------------|-----------------------------------------------------------|
+| `/usr/local/bin/kiro-cli*` | Kiro CLI binary and any companion binaries (all stripped) |
+| `/workspaces`              | Default working directory                                 |
 
 ### Persistence
 

@@ -300,11 +300,11 @@ ARG KIRO_FORCE      # global default
 RUN apt-get install -y unzip
 RUN curl -fsSL https://cli.kiro.dev/install > kiro_installer.sh
 RUN bash kiro_installer.sh ${KIRO_FORCE:+--force} ${KIRO_CHANNEL:+--channel "$KIRO_CHANNEL"}
-RUN strip /root/.local/bin/kiro-cli
+RUN strip /root/.local/bin/kiro-cli*
 
 FROM container_base AS kiro
 
-COPY --from=kiro_builder /root/.local/bin/kiro-cli /usr/local/bin/kiro-cli
+COPY --from=kiro_builder /root/.local/bin/kiro-cli* /usr/local/bin/
 
 FROM node_base AS openclaw_builder
 ARG NODE_VERSION                # global default
@@ -430,7 +430,7 @@ COPY --from=hermes_builder /root/.local "/home/${CONTAINER_USER}/.local"
 
 COPY --from=kilo_builder /root/.kilo "/home/${CONTAINER_USER}/.kilo"
 
-COPY --from=kiro_builder /root/.local/bin/kiro-cli /usr/local/bin/kiro-cli
+COPY --from=kiro_builder /root/.local/bin/kiro-cli* /usr/local/bin/
 
 COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
 
