@@ -55,6 +55,8 @@
     multi-stage image and the standalone `claude/` build.
   * [Cline][]: Upgrade to version 3.0.65.  Applies to the root
     multi-stage image and the standalone `cline/` build.
+  * [Codex CLI][]: Upgrade to version 0.157.1.  Applies to the root
+    multi-stage image and the standalone `codex/` build.
   * [Hermes Agent][]:
     * Upgrade to v2026.9.24.
     * Use `scripts/install.sh` from the cloned repository instead of

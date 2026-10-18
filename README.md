@@ -232,7 +232,7 @@ defaults/comments):
 | `AIDER_VERSION`            | `0.86.2`; `aider-chat` version installed with uv                |
 | `CLAUDE_VERSION`           | `2.1.283`; Claude Code version installed (or `latest`/`stable`) |
 | `CLINE_RELEASE`            | `3.0.65` (`nightly` or a version)                               |
-| `CODEX_RELEASE`            | `0.148.0` (`latest` or a version)                               |
+| `CODEX_RELEASE`            | `0.157.1` (`latest` or a version)                               |
 | `COPILOT_VERSION`          | `1.0.80` (`latest` or a version)                                |
 | `CRUSH_VERSION`            | `v0.87.0` (release tag or `nightly`)                            |
 | `DROID_VERSION`            | `0.209.0` (version of the `droid` npm package, or `latest`)     |

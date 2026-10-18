@@ -30,7 +30,7 @@ docker build -t codex -f codex/Dockerfile codex
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                     |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds development tools) |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings              |
-| `CODEX_RELEASE`            | `0.148.0`    | Pin release, e.g. `0.142.5` or `latest`                |
+| `CODEX_RELEASE`            | `0.157.1`    | Pin release, e.g. `0.142.5` or `latest`                |
 
 Examples:
 
