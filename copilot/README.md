@@ -33,7 +33,7 @@ docker build -t copilot -f copilot/Dockerfile copilot
   `production` or `development` final image.
 - `NANO_CLASSIC_KEYBINDINGS` defaults to `no`.  Set it to `yes` for
   classic nano keybindings.
-- `COPILOT_VERSION` defaults to `1.0.80`.  It is passed to the Copilot
+- `COPILOT_VERSION` defaults to `1.0.91`.  It is passed to the Copilot
   installer.
 
 Examples:

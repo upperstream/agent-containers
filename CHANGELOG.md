@@ -57,6 +57,8 @@
     multi-stage image and the standalone `cline/` build.
   * [Codex CLI][]: Upgrade to version 0.157.1.  Applies to the root
     multi-stage image and the standalone `codex/` build.
+  * [GitHub Copilot CLI][]: Upgrade to version 1.0.91.  Applies to the
+    root multi-stage image and the standalone `copilot/` build.
   * [Hermes Agent][]:
     * Upgrade to v2026.9.24.
     * Use `scripts/install.sh` from the cloned repository instead of
@@ -175,8 +177,7 @@
     * Pin release to version 0.55.1.
     * Document preparing and mounting a `.gemini` state directory to
       persist user data and session information.
-  * [GitHub Copilot CLI][]:
-    * Upgrade to version 1.0.80
+  * GitHub Copilot CLI: Upgrade to version 1.0.80
   * [Grok Build][]:
     * Pin version to 1.0.5.
     * Keep the install bundle under `~/.local/share/grok`.  Bind-mount
