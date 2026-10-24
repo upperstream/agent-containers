@@ -8,7 +8,7 @@ ARG CLAUDE_VERSION=2.1.283          # 'latest', 'stable', or a version
 ARG CLINE_RELEASE=3.0.65            # 'nightly' or '3.0.65'
 ARG CODEX_RELEASE=0.157.1           # 'latest' or '0.142.5'
 ARG COPILOT_VERSION=1.0.91          # 'latest', 'prerelease', or 'v0.0.369'
-ARG CRUSH_VERSION=v0.87.0           # 'nightly' or 'v0.89.0'
+ARG CRUSH_VERSION=v0.96.1           # 'nightly' or 'v0.89.0'
 ARG DROID_VERSION=0.209.0           # 'latest' or '0.209.0'
 ARG GEMINI_RELEASE=0.55.1           # 'latest', 'preview', 'nightly', or '0.55.1'
 ARG GROK_CHANNEL

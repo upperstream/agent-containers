@@ -234,7 +234,7 @@ defaults/comments):
 | `CLINE_RELEASE`            | `3.0.65` (`nightly` or a version)                               |
 | `CODEX_RELEASE`            | `0.157.1` (`latest` or a version)                               |
 | `COPILOT_VERSION`          | `1.0.91` (`latest` or a version)                                |
-| `CRUSH_VERSION`            | `v0.87.0` (release tag or `nightly`)                            |
+| `CRUSH_VERSION`            | `v0.96.1` (release tag or `nightly`)                            |
 | `DROID_VERSION`            | `0.209.0` (version of the `droid` npm package, or `latest`)     |
 | `GEMINI_RELEASE`           | `0.55.1` (`latest`, `preview`, or `nightly`)                    |
 | `GROK_CHANNEL`             | unset                                                           |

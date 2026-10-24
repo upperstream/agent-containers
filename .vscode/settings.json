@@ -2,6 +2,7 @@
     "cSpell.words": [
       "agentic",
       "applypatch",
+      "autosquash",
       "binutils",
       "BTEST",
       "bubblewrap",
@@ -19,6 +20,7 @@
       "execve",
       "GFM",
       "glamourous",
+      "gotchas",
       "graphroot",
       "healthcheck",
       "herdr",
@@ -45,6 +47,7 @@
       "podman",
       "readlink",
       "runroot",
+      "shellcheck",
       "subpaths",
       "tagset",
       "tdir",

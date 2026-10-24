@@ -67,6 +67,9 @@ numbers too.
 tests/docker_build_test.sh [DOCKERFILE [CONTEXT]]
 tests/podman_build_test.sh [DOCKERFILE [CONTEXT]]
 # e.g. tests/docker_build_test.sh cline/Dockerfile cline
+
+# Check builder socket access and TCP isolation, from inside `agents`
+tests/builder_socket_test.sh
 ```
 
 Plain `docker build` works too; see `README.md` for examples.  Note
@@ -75,13 +78,23 @@ each provider twice (production then development).
 
 The build tests do not use the host engine.  They talk to sibling
 Compose services defined in
-`.devcontainer/docker-compose.devcontainer.yml`: `docker_builder`
-(via `DOCKER_HOST=tcp://docker_builder:2375`) and
-`podman_builder` (via `CONTAINER_HOST=tcp://podman_builder:2375`,
-client `podman-remote`).  Outside that Dev Container these hostnames do
-not resolve, so the scripts will time out after 30 seconds waiting for
-the daemon.  The `docker` and `podman-remote` clients exist only in the
-root image's `development` stage.
+`.devcontainer/docker-compose.devcontainer.yml` through Unix sockets,
+not TCP:
+
+- The `docker_builder` service runs `dockerd`, and clients use
+  `DOCKER_HOST=unix:///run/docker-builder/docker.sock`.
+- The `podman_builder` service runs `podman system service`, and the
+  `podman-remote` client uses
+  `CONTAINER_HOST=unix:///run/podman-builder/podman.sock`.
+
+The Compose overlay sets both variables for `agents`, and the scripts
+fall back to the same paths when they are unset.  Outside that Dev
+Container the sockets do not exist, so the scripts time out after 30
+seconds waiting for the daemon.  The `docker` and `podman-remote`
+clients exist only in the root image's `development` stage.
+`tests/builder_socket_test.sh` also requires `curl`, and fails if
+either builder still answers on its former `http://<builder>:2375`
+endpoint.
 
 Upgrade commits have been verified by running both build test scripts
 against both the root and the standalone Dockerfile.  Full builds
@@ -137,7 +150,8 @@ so keep scripts ShellCheck-clean and Markdown markdownlint-clean.
 - The `development` stage removes Debian's `dpkg.cfg.d` exclusion
   files, installs extra tools (`opendoas`, `binutils`, `file`, `tree`,
   and in the root image `docker-cli`, `docker-buildx`,
-  `podman-remote`), and grants passwordless `doas` to group `sudo`.
+  `podman-remote`), and grants `doas` to group `sudo` with password
+  authentication (`permit :sudo`).
 - The final stage is `FROM "${ENVIRONMENT}"` and sets `EDITOR`,
   `GIT_EDITOR`, `TERM` from build-time values, `WORKDIR /workspaces`,
   and `USER ${CONTAINER_USER}`.  Only the root image sets
@@ -171,6 +185,33 @@ lines and output.  Add new cases in the same style (`t_repo_init`,
   `CONTAINER_USER=devcontainer` and `ENVIRONMENT=development`, and
   mounting `/dev/null` over the `/home/user/...` paths inherited from
   the base Compose file.
+- The same overlay defines the `docker_builder` and `podman_builder`
+  sidecars.  Both are built on `alpine:3.24.1` from
+  `.devcontainer/<builder>.Dockerfile`, run `privileged` with
+  `cgroup: host` (Podman also gets `/dev/fuse`), and use
+  `.devcontainer/builder_entrypoint.sh` as their entrypoint.  The
+  entrypoint starts the engine, waits up to 60 seconds for its
+  socket, and then sets the socket to mode 0660 with group
+  `builders` (GID 2375).  The socket directory is mode 0750.
+- Each sidecar's socket lives on its own named volume
+  (`docker_builder_socket`, `podman_builder_socket`), which is
+  mounted read-only into `agents` at `/run/docker-builder` and
+  `/run/podman-builder`.  The `agents` service gets access through
+  `group_add: "2375"`, which still works after Dev Container UID/GID
+  remapping.  Keep the GID consistent across the Compose file, both
+  builder Dockerfiles, and the health checks.
+- Engine data lives on the named volumes `docker_builder_data`
+  (`/var/lib/docker`) and `podman_builder_data`
+  (`/var/lib/containers`), not on the container overlay.  Nested
+  overlay mounts fail with `EINVAL` otherwise.  Docker has the
+  containerd snapshotter disabled in `/etc/docker/daemon.json`.
+  Podman uses the `overlay` driver, `runc`, and `cgroupfs`, and
+  needs `iptables` for netavark.
+- The health checks verify the socket mode and group (`660:2375`)
+  and ping the API with `curl --unix-socket`.  The `agents` service
+  waits for both builders through `depends_on` with
+  `condition: service_healthy`.
+- The host engine socket is never mounted into any service.
 - `docker-compose.tagged.yml` (untracked at the time of writing) runs
   a prebuilt image,
   `${AGENT_CONTAINERS_IMAGE:-agents}:${AGENT_CONTAINERS_TAG:-dev}`,

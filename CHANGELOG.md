@@ -61,6 +61,8 @@
     multi-stage image and the standalone `codex/` build.
   * [GitHub Copilot CLI][]: Upgrade to version 1.0.91.  Applies to the
     root multi-stage image and the standalone `copilot/` build.
+  * [Crush][]: Upgrade to version v0.96.1.  Applies to the root multi-
+    stage image and the standalone `crush/` build.
   * [Hermes Agent][]:
     * Upgrade to v2026.9.24.
     * Use `scripts/install.sh` from the cloned repository instead of
@@ -77,8 +79,8 @@
   * Add a build script `build.sh` for image creation and tagging.
   * Add a built-in self-test to `build.sh`, run with `build.sh --test`.
 * Changed:
-  * [Crush][]: Fix syntax error in multi-stage Dockerfile where `RUN`
-    was duplicated after `&&`.
+  * Crush: Fix syntax error in multi-stage Dockerfile where `RUN` was
+    duplicated after `&&`.
   * [Herdr][]:
     * Add a patch for installer script to accept Herdr version number to
       install.

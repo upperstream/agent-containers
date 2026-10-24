@@ -1,7 +1,7 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG CRUSH_VERSION=v0.87.0       # 'nightly' or 'v0.89.0'
+ARG CRUSH_VERSION=v0.96.1       # 'nightly' or 'v0.89.0'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update && \
