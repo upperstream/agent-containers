@@ -29,6 +29,8 @@
   * Add `tests/podman_build_test.sh` to build the root Dockerfile from
     inside the `agents` service against that service and report
     whether the build succeeds.
+  * Add `AGENTS.md` with guidance for coding agents working in this
+    repository.
 * Changed:
   * Replace the Dev Container builders' TCP API listeners with Unix
     sockets on separate named volumes shared only with `agents`.
