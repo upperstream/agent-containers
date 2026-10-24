@@ -29,14 +29,14 @@ docker build -t kilo -f kilo/Dockerfile kilo
 |----------------------------|--------------|----------------------------------------------------------|
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
-| `KILO_VERSION`             | `7.4.23`     | Kilo version to install                                  |
+| `KILO_VERSION`             | `7.8.1`      | Kilo version to install                                  |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 
 Examples:
 
 ```bash
 docker build -t kilo:dev --build-arg ENVIRONMENT=development .
-docker build -t kilo:7.4.23 --build-arg KILO_VERSION=7.4.23 .
+docker build -t kilo:7.8.1 --build-arg KILO_VERSION=7.8.1 .
 ```
 
 See the root [README](../README.md#development-image-privileges) for

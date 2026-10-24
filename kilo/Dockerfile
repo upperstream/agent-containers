@@ -1,7 +1,7 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG KILO_VERSION=7.4.23         # '7.4.23'
+ARG KILO_VERSION=7.8.1          # '7.8.1'
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update && \

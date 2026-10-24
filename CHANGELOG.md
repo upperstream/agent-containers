@@ -67,6 +67,8 @@
     * Upgrade to v2026.9.24.
     * Use `scripts/install.sh` from the cloned repository instead of
       fetching the bootstrap script from the web.
+  * [Kilo CLI][]: Upgrade to version 7.8.1.  Applies to the root
+    multi-stage image and the standalone `kilo/` build.
   * [Kiro CLI][]: Strip and copy all `kiro-cli*` binaries from the
     installer output rather than only `kiro-cli`, so that any
     additional binaries placed alongside `kiro-cli` are included.
@@ -105,8 +107,9 @@
   * Clarify in `README.md` that `Dockerfile` defines the complete
     Docker image configuration, while `docker-compose.yml` provides
     an optional Docker Compose convenience wrapper around it.
-  * Update `README.md` to explain the roles of `.devcontainer/devcontainer.json`
-    and `.devcontainer/docker-compose.devcontainer.yml` for VS Code Dev
+  * Update `README.md` to explain the roles of
+    `.devcontainer/devcontainer.json` and
+    `.devcontainer/docker-compose.devcontainer.yml` for VS Code Dev
     Container support.
 
 ## [20260904][]

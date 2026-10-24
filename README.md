@@ -241,7 +241,7 @@ defaults/comments):
 | `GROK_VERSION`             | `1.0.5`                                                         |
 | `HERMES_VERSION`           | `v2026.9.24` (Specific Hermes git tag to install)               |
 | `HERDR_VERSION`            | `0.8.2`                                                         |
-| `KILO_VERSION`             | `7.4.23`                                                        |
+| `KILO_VERSION`             | `7.8.1`                                                         |
 | `KIRO_CHANNEL`             | unset                                                           |
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                               |
 | `OPENCLAW_VERSION`         | `2026.6.34` (`latest` or a version)                             |

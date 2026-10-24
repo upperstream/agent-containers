@@ -15,7 +15,7 @@ ARG GROK_CHANNEL
 ARG GROK_VERSION=1.0.5              # '1.0.5'
 ARG HERMES_VERSION=v2026.9.24       # branch (main) or tag (v2026.9.24)
 ARG HERDR_VERSION=0.8.2             # '0.8.2'
-ARG KILO_VERSION=7.4.23             # '7.4.23'
+ARG KILO_VERSION=7.8.1              # '7.8.1'
 ARG KIRO_CHANNEL
 ARG KIRO_FORCE                      # '--force', defaults to unset
 ARG OPENCLAW_VERSION=2026.6.34      # 'latest' or '2026.6.34'
