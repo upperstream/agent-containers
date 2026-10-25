@@ -39,6 +39,9 @@
     documentation and the existing changelog before every commit, and
     keep unrelated changes out of the commit.  Document this workflow
     and link the attribution skill in `README.md`.
+  * Upgrade [Node.js][] to v24.22.1 in the root multi-stage image and
+    the standalone `cline/`, `droid/`, `gemini/`, `openclaw/`,
+    `openwiki-agent/`, and `pi/` builds.
   * Replace the Dev Container builders' TCP API listeners with Unix
     sockets on separate named volumes shared only with `agents`.
     Grant non-root access through supplemental GID 2375, mount socket

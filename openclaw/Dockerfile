@@ -1,7 +1,7 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG NODE_VERSION=v24.20.0
+ARG NODE_VERSION=v24.22.1
 ARG NPM_VERSION=
 ARG OPENCLAW_VERSION=2026.6.34    # 'latest' or '2026.6.34'
 

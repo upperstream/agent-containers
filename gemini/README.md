@@ -32,7 +32,7 @@ docker build -t gemini -f gemini/Dockerfile gemini
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling)      |
 | `GEMINI_RELEASE`           | `0.55.1`     | npm tag/version: `latest`, `preview`, `nightly`, or a version |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                     |
-| `NODE_VERSION`             | `v24.20.0`   | Node.js version to install                                    |
+| `NODE_VERSION`             | `v24.22.1`   | Node.js version to install                                    |
 | `NPM_VERSION`              | (unset)      | npm version to upgrade/downgrade to                           |
 
 Note for npm: When `NPM_VERSION` is set, the npm will be upgraded or

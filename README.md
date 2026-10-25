@@ -227,7 +227,7 @@ defaults/comments):
 | `ENVIRONMENT`              | `production` (`development` adds doas tooling)                  |
 | `NANO_CLASSIC_KEYBINDINGS` | unset; set to `yes` for classic nano bindings                   |
 | `PROVIDER`                 | `all`                                                           |
-| `NODE_VERSION`             | `v24.20.0`; Node.js for all agents, including OpenWiki          |
+| `NODE_VERSION`             | `v24.22.1`; Node.js for all agents, including OpenWiki          |
 | `NPM_VERSION`              | unset; npm version to upgrade/downgrade to                      |
 | `AIDER_VERSION`            | `0.86.2`; `aider-chat` version installed with uv                |
 | `CLAUDE_VERSION`           | `2.1.283`; Claude Code version installed (or `latest`/`stable`) |

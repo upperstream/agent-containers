@@ -31,7 +31,7 @@ docker build -t openclaw -f openclaw/Dockerfile openclaw
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
-| `NODE_VERSION`             | `v24.20.0`   | Node.js version to install                               |
+| `NODE_VERSION`             | `v24.22.1`   | Node.js version to install                               |
 | `NPM_VERSION`              | (unset)      | npm version to upgrade/downgrade to                      |
 | `OPENCLAW_VERSION`         | `2026.6.34`  | npm version tag, e.g. `latest` or `2026.6.34`            |
 
