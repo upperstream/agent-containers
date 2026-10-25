@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased][]
+## [20261026][]
 
 * Added:
   * Add a `docker_builder` service to the Dev Container Compose
@@ -319,7 +319,7 @@
 
 * Initial release.
 
-[Unreleased]: https://github.com/upperstream/agent-containers/compare/20261004...HEAD
+[20261026]: https://github.com/upperstream/agent-containers/compare/20261004...20261026
 [20261004]: https://github.com/upperstream/agent-containers/compare/20260823...20261004
 [20260904]: https://github.com/upperstream/agent-containers/compare/20260823...20260904
 [20260823]: https://github.com/upperstream/agent-containers/compare/20260817...20260823
