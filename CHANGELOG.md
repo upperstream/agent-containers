@@ -31,7 +31,14 @@
     whether the build succeeds.
   * Add `AGENTS.md` with guidance for coding agents working in this
     repository.
+  * Add a `vcs-commit-message-attribution` agent skill defining
+    attribution trailers, including `Assisted-By` for Antigravity and
+    Hermes Agent and an exception for Aider's automatic attribution.
 * Changed:
+  * Require coding agents to review intended changes, update relevant
+    documentation and the existing changelog before every commit, and
+    keep unrelated changes out of the commit.  Document this workflow
+    and link the attribution skill in `README.md`.
   * Replace the Dev Container builders' TCP API listeners with Unix
     sockets on separate named volumes shared only with `agents`.
     Grant non-root access through supplemental GID 2375, mount socket

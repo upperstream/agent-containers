@@ -429,6 +429,7 @@ Detailed mount recipes for tools that install into a home directory
 ├── Dockerfile                      # Multi-stage: all agents + PROVIDER
 ├── LICENSE.txt                     # 2-Clause BSD
 ├── README.md                       # This file
+├── AGENTS.md                       # Coding-agent guidance
 ├── .agents/                        # Instructions to the coding agents
 ├── .devcontainer/                  # VS Code Dev Container configuration
 │   ├── devcontainer.json
@@ -468,6 +469,25 @@ Each standalone directory contains:
 
 - `Dockerfile` - self-contained build for that agent
 - `README.md` - build args, run examples, image layout, persistence
+
+---
+
+## Contributing with coding agents
+
+Read [AGENTS.md](AGENTS.md) for repository-specific guidance and follow
+the documentation standards in `.agents/skills/document-standards/`.
+
+Before every commit, review the intended changes and update relevant
+documentation and the existing changelog.  Include those updates in the
+commit, leave unaffected documentation unchanged, and exclude unrelated
+changes.
+
+Follow the [commit attribution skill][attribution] for attribution
+trailers, separately from documentation updates.  Antigravity and Hermes
+Agent use `Assisted-By` rather than `Co-Authored-By`; Aider is exempt
+because it adds attribution automatically.
+
+[attribution]: .agents/skills/vcs-commit-message-attribution/SKILL.md
 
 ---
 

@@ -250,3 +250,17 @@ line endings, and trailing whitespace preserved in Markdown.
   Some history uses `fixup!` commits intended for later autosquash.
 - `.vscode/settings.json` holds a cSpell word list; add new technical
   terms there if they are flagged.
+
+## Before committing
+
+Before making any commit, review the intended changes and update
+relevant documentation so that it is in line with those changes.  Leave
+unaffected documentation unchanged.
+
+If the project has a changelog, update it automatically for every commit
+to describe the changes, following its existing format and conventions.
+If no changelog exists, do not create one unless explicitly instructed.
+
+Verify that relevant documentation updates and the update to any
+existing changelog are included in the commit, and that unrelated
+changes are not.  Keep commit-message attribution separate.
