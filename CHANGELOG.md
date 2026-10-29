@@ -84,6 +84,8 @@
     additional binaries placed alongside `kiro-cli` are included.
     Applies to the root multi-stage image and the standalone `kiro/`
     build.
+  * [OpenClaw][]: Upgrade to version 2026.7.35.  Applies to the root
+    multi-stage image and the standalone `openclaw/` build.
 
 ## [20261004][]
 
@@ -97,7 +99,7 @@
     * Add a patch for installer script to accept Herdr version number to
       install.
     * Pin version to 0.8.2.
-  * [OpenClaw][]: Fix `useradd` error in multi-stage Dockerfile where
+  * OpenClaw: Fix `useradd` error in multi-stage Dockerfile where
     `useradd` was redundantly called in the `openclaw` stage after
     already being performed in `container_base`.
   * [Pi coding agent][]: Use `ln -sf` when linking `pi` CLI binary into

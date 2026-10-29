@@ -244,7 +244,7 @@ defaults/comments):
 | `KILO_VERSION`             | `7.8.1`                                                         |
 | `KIRO_CHANNEL`             | unset                                                           |
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                               |
-| `OPENCLAW_VERSION`         | `2026.6.34` (`latest` or a version)                             |
+| `OPENCLAW_VERSION`         | `2026.7.35` (`latest` or a version)                             |
 | `OPENCODE_VERSION`         | `1.18.21`                                                       |
 | `OPENWIKI_VERSION`         | `0.5.0` (`latest` or a version)                                 |
 | `PI_VERSION`               | `0.84.4` (`latest` or a version)                                |

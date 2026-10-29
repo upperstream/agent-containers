@@ -33,7 +33,7 @@ docker build -t openclaw -f openclaw/Dockerfile openclaw
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 | `NODE_VERSION`             | `v24.22.1`   | Node.js version to install                               |
 | `NPM_VERSION`              | (unset)      | npm version to upgrade/downgrade to                      |
-| `OPENCLAW_VERSION`         | `2026.6.34`  | npm version tag, e.g. `latest` or `2026.6.34`            |
+| `OPENCLAW_VERSION`         | `2026.7.35`  | npm version tag, e.g. `latest` or `2026.7.35`            |
 
 Note for npm: When `NPM_VERSION` is set, the npm will be upgraded or
 downgraded to the specified version.  Otherwise the npm bundled with
@@ -43,8 +43,8 @@ Examples:
 
 ```bash
 docker build -t openclaw:dev --build-arg ENVIRONMENT=development .
-docker build -t openclaw:2026.6.34 \
-    --build-arg OPENCLAW_VERSION=2026.6.34 .
+docker build -t openclaw:2026.7.35 \
+    --build-arg OPENCLAW_VERSION=2026.7.35 .
 ```
 
 See the root [README](../README.md#development-image-privileges) for

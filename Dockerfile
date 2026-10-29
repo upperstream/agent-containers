@@ -18,7 +18,7 @@ ARG HERDR_VERSION=0.8.2             # '0.8.2'
 ARG KILO_VERSION=7.8.1              # '7.8.1'
 ARG KIRO_CHANNEL
 ARG KIRO_FORCE                      # '--force', defaults to unset
-ARG OPENCLAW_VERSION=2026.6.34      # 'latest' or '2026.6.34'
+ARG OPENCLAW_VERSION=2026.7.35      # 'latest' or '2026.7.35'
 ARG OPENCODE_VERSION=1.18.21        # '1.18.21'
 ARG OPENWIKI_VERSION=0.5.0          # 'latest' or '0.5.0'
 ARG PI_VERSION=0.84.4               # 'latest' or '0.84.4'
@@ -307,8 +307,8 @@ FROM container_base AS kiro
 COPY --from=kiro_builder /root/.local/bin/kiro-cli* /usr/local/bin/
 
 FROM node_base AS openclaw_builder
-ARG NODE_VERSION                # global default
-ARG OPENCLAW_VERSION=2026.6.34  # 'latest' or '2026.6.34'
+ARG NODE_VERSION      # global default
+ARG OPENCLAW_VERSION  # global default
 
 RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g "openclaw@${OPENCLAW_VERSION:-latest}"
 
