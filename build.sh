@@ -49,6 +49,9 @@ usage() {
 	                        providers
 	  --test                Run the built-in self-test (no other arguments)
 
+	Place options before provider names.  Short options may be grouped
+	(e.g. -ka).  Use -- to end option parsing.
+
 	Environment:
 	  DOCKER            Container engine to use (default: podman if
 	                    available, otherwise docker)
@@ -70,29 +73,49 @@ standalone_providers="aider antigravity claude cline codex copilot crush cursor 
 parse_args() {
 	keep_going=no
 	build_all=no
-	providers=
-	for arg in "$@"; do
-		case $arg in
-			-h|-H|--help)
+	OPTIND=1
+	# Treat '-' as an option with an argument to handle long options.
+	while getopts ':hHka-:' opt; do
+		case $opt in
+			h|H)
 				usage
 				exit 0
 				;;
-			-k|--keep-going)
+			k)
 				keep_going=yes
 				;;
-			-a|--all)
+			a)
 				build_all=yes
 				;;
-			-*)
-				echo "error: unknown option: $arg" >&2
+			-)
+				case $OPTARG in
+					help) usage; exit 0 ;;
+					keep-going) keep_going=yes ;;
+					all) build_all=yes ;;
+					test)
+						if [ "$#" -ne 1 ]; then
+							echo "error: --test takes no other arguments" >&2
+							exit 2
+						fi
+						run_tests
+						exit $?
+						;;
+					*)
+						echo "error: unknown option: --$OPTARG" >&2
+						usage >&2
+						exit 2
+						;;
+				esac
+				;;
+			\?)
+				echo "error: unknown option: -$OPTARG" >&2
 				usage >&2
 				exit 2
 				;;
-			*)
-				providers="$providers $arg"
-				;;
 		esac
 	done
+	shift "$((OPTIND - 1))"
+	providers="$*"
 
 	# Resolve the provider list: -a builds the root Dockerfile and all
 	# standalone providers, otherwise the given providers (defaulting to
@@ -726,20 +749,55 @@ EOF
 	fi
 	t_out_has P13 "neither podman nor docker found"
 
+	t_repo_init
+	t_run_fail 1 "P14 grouped short options" 5 -ka
+	t_expect_lines P14 40
+	t_out_has P14 "Failed to build:"
+
+	t_run 0 "P15 end of options before providers" -- grok pi
+	t_logline P15 1 "build 1 ctx=grok tag=grok:latest"
+	t_logline P15 2 "build 2 ctx=pi tag=pi:latest"
+	t_expect_lines P15 4
+
+	t_run 0 "P16 end of options with no providers" --
+	t_logline P16 1 "build 1 ctx=. tag=agents:latest"
+	t_expect_lines P16 2
+
+	t_run 2 "P17 option after -- is a provider" -- -k
+	t_out_has P17 "unknown provider: -k"
+	t_expect_lines P17 0
+
+	t_run 2 "P18 options stop at first provider" grok -k
+	t_out_has P18 "unknown provider: -k"
+	t_expect_lines P18 0
+
+	t_run 0 "P19 uppercase help" -H
+	t_out_has P19 "Usage: build.sh"
+	t_expect_lines P19 0
+
+	t_run 0 "P20 long help" --help
+	t_out_has P20 "Usage: build.sh"
+	t_expect_lines P20 0
+
+	t_run 2 "P21 unknown long option" --bogus
+	t_out_has P21 "unknown option: --bogus"
+	t_expect_lines P21 0
+
+	t_run 2 "P22 flag rejects a value" --all=yes
+	t_out_has P22 "unknown option: --all=yes"
+	t_expect_lines P22 0
+
+	t_run 2 "P23 test rejects a provider" --test grok
+	t_out_has P23 "--test takes no other arguments"
+	t_expect_lines P23 0
+
+	t_run 2 "P24 test rejects another option" -k --test
+	t_out_has P24 "--test takes no other arguments"
+	t_expect_lines P24 0
+
 	echo
 	echo "PASS=$t_pass FAIL=$t_fail"
 	[ "$t_fail" = 0 ]
 }
-
-# Dispatch: --test (the only argument) runs the self-test, otherwise a
-# normal build
-if [ "$#" -ge 1 ] && [ "$1" = "--test" ]; then
-	if [ "$#" -ne 1 ]; then
-		echo "error: --test takes no other arguments" >&2
-		exit 2
-	fi
-	run_tests
-	exit $?
-fi
 
 main "$@"

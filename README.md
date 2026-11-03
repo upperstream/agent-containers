@@ -322,6 +322,10 @@ Options:
   providers.
 - `--test` - run the built-in self-test (no other arguments).
 
+Options are parsed with POSIX `getopts` and must precede provider
+names.  Short options may be grouped, e.g. `-ka` is equivalent to
+`-k -a`.  Use `--` to end option parsing explicitly.
+
 Environment:
 
 - `DOCKER` - container engine to use (default: podman if available,

@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased][]
+
+* Changed:
+  * Parse `build.sh` options with POSIX `getopts`, including long
+    options.  Support grouped short options and `--` to end option
+    parsing; require options to precede provider names.
+
 ## [20261026][]
 
 * Added:
@@ -321,6 +328,7 @@
 
 * Initial release.
 
+[Unreleased]: https://github.com/upperstream/agent-containers/compare/20261026...HEAD
 [20261026]: https://github.com/upperstream/agent-containers/compare/20261004...20261026
 [20261004]: https://github.com/upperstream/agent-containers/compare/20260823...20261004
 [20260904]: https://github.com/upperstream/agent-containers/compare/20260823...20260904
