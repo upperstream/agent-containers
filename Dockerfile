@@ -440,7 +440,8 @@ COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/o
 
 COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
 
-RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
+RUN mkdir -p "/home/${CONTAINER_USER}/.config" \
+      "/home/${CONTAINER_USER}/.local/bin" && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     ln -s "/home/${CONTAINER_USER}/.local/share/uv/tools/aider-chat/bin/aider" /usr/local/bin/aider && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline/bin/cline" /usr/local/bin/cline && \

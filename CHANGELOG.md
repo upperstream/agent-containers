@@ -93,8 +93,11 @@
     build.
   * [OpenClaw][]: Upgrade to version 2026.7.35.  Applies to the root
     multi-stage image and the standalone `openclaw/` build.
-  * [OpenCode][]: Upgrade to version 1.18.34.  Applies to the root
-    multi-stage image and the standalone `opencode/` build.
+  * [OpenCode][]:
+    * Upgrade to version 1.18.34.  Applies to the root multi-stage image
+      and the standalone `opencode/` build.
+    * Document retaining share, state, and configuration directories
+      beyond the container lifespan.
 
 ## [20261004][]
 
@@ -220,7 +223,7 @@
     * Document mounting a host `kilo` directory at `/mnt/kilo` to retain
       user data, sessions, and sandbox-policy state.
   * OpenClaw: Pin version to 2026.6.34.
-  * [OpenCode][]:
+  * OpenCode:
     * Pin version to 1.18.21.
     * Do not strip the Bun-compiled executable, preserving its embedded
       application payload.

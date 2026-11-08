@@ -23,6 +23,9 @@ services:
       - ${KILO_HOME:-$HOME/kilo}:/mnt/kilo:cached
       - ${KIRO_HOME:-$HOME/.kiro}:/home/user/.kiro:cached
       - ${OPENCLAW_HOME:-$HOME/.openclaw}:/home/user/.openclaw:cached
+      - ${OPENCODE_CONFIG:-$HOME/.config/opencode}:/home/user/.config/opencode:cached
+      - ${OPENCODE_HOME:-$HOME/opencode_home}/share/opencode:/home/user/.local/share/opencode:cached
+      - ${OPENCODE_HOME:-$HOME/opencode_home}/state/opencode:/home/user/.local/state/opencode:cached
       - ${OPENWIKI_HOME:-$HOME/.openwiki}:/home/user/.openwiki:cached
       - .:/workspaces/agent-containers:cached
     entrypoint: /bin/sh -c

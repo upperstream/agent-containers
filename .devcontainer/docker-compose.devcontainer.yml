@@ -19,6 +19,9 @@ services:
       - ${KILO_HOME:-$HOME/kilo}:/mnt/kilo:cached
       - ${KIRO_HOME:-$HOME/.kiro}:/home/devcontainer/.kiro:cached
       - ${OPENCLAW_HOME:-$HOME/.openclaw}:/home/devcontainer/.openclaw:cached
+      - ${OPENCODE_CONFIG:-$HOME/.config/opencode}:/home/devcontainer/.config/opencode:cached
+      - ${OPENCODE_HOME:-$HOME/opencode_home}/share/opencode:/home/devcontainer/.local/share/opencode:cached
+      - ${OPENCODE_HOME:-$HOME/opencode_home}/state/opencode:/home/devcontainer/.local/state/opencode:cached
       - ${OPENWIKI_HOME:-$HOME/.openwiki}:/home/devcontainer/.openwiki:cached
       - /dev/null:/home/user/.claude
       - /dev/null:/home/user/.cline
@@ -32,6 +35,9 @@ services:
       - /dev/null:/home/user/.hermes
       - /dev/null:/home/user/.kiro
       - /dev/null:/home/user/.openclaw
+      - /dev/null:/home/user/.config/opencode
+      - /dev/null:/home/user/.local/share/opencode
+      - /dev/null:/home/user/.local/state/opencode
       - /dev/null:/home/user/.openwiki
       - docker_builder_socket:/run/docker-builder:ro
       - podman_builder_socket:/run/podman-builder:ro

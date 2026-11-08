@@ -37,7 +37,8 @@ ARG CONTAINER_USER              # global default
 
 COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
 
-RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
+RUN mkdir "/home/${CONTAINER_USER}/.config" && \
+    chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 
 FROM production AS development
 ARG CONTAINER_USER              # global default

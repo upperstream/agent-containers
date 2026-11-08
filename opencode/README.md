@@ -71,14 +71,18 @@ Authenticate according to OpenCode’s documentation for your environment.
 
 ### Persistence
 
-The image only copies the binary into `/usr/local/bin`.  Runtime config
-and sessions may still be written under the container user’s home (for
-example `~/.opencode` or paths documented by your version).  Mount those
-paths if you need state across runs:
+The image only copies the binary into `/usr/local/bin`.  Retain the
+OpenCode share and state directories, plus its configuration directory,
+if you need them beyond the container lifespan.  The provided Docker
+Compose configuration expects `$HOME/opencode_home` to contain
+`share/opencode` and `state/opencode`, and retains configuration in
+`$HOME/.config/opencode`:
 
 ```bash
 docker run --rm -it \
-  -v "$HOME/.opencode:/home/user/.opencode" \
+  -v "$HOME/.config/opencode:/home/user/.config/opencode" \
+  -v "$HOME/opencode_home/share/opencode:/home/user/.local/share/opencode" \
+  -v "$HOME/opencode_home/state/opencode:/home/user/.local/state/opencode" \
   -v "$PWD:/workspaces/project" \
   -w /workspaces/project \
   opencode opencode
