@@ -30,13 +30,13 @@ docker build -t opencode -f opencode/Dockerfile opencode
 | `CONTAINER_USER`           | `user`       | Non-root user created in the image                       |
 | `ENVIRONMENT`              | `production` | `production` or `development` (adds `doas`/sudo tooling) |
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
-| `OPENCODE_VERSION`         | `1.18.21`    | OpenCode version to install                              |
+| `OPENCODE_VERSION`         | `1.18.34`    | OpenCode version to install                              |
 
 Examples:
 
 ```bash
 docker build -t opencode:dev --build-arg ENVIRONMENT=development .
-docker build -t opencode:1.18.21 --build-arg OPENCODE_VERSION=1.18.21 .
+docker build -t opencode:1.18.34 --build-arg OPENCODE_VERSION=1.18.34 .
 ```
 
 The installer is invoked with `--no-modify-path`; the binary is copied

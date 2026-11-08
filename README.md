@@ -245,7 +245,7 @@ defaults/comments):
 | `KIRO_CHANNEL`             | unset                                                           |
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                               |
 | `OPENCLAW_VERSION`         | `2026.7.35` (`latest` or a version)                             |
-| `OPENCODE_VERSION`         | `1.18.21`                                                       |
+| `OPENCODE_VERSION`         | `1.18.34`                                                       |
 | `OPENWIKI_VERSION`         | `0.5.0` (`latest` or a version)                                 |
 | `PI_VERSION`               | `0.84.4` (`latest` or a version)                                |
 

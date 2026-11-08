@@ -93,6 +93,8 @@
     build.
   * [OpenClaw][]: Upgrade to version 2026.7.35.  Applies to the root
     multi-stage image and the standalone `openclaw/` build.
+  * [OpenCode][]: Upgrade to version 1.18.34.  Applies to the root
+    multi-stage image and the standalone `opencode/` build.
 
 ## [20261004][]
 
