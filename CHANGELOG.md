@@ -10,6 +10,8 @@
 ## [20261026][]
 
 * Added:
+  * Add a `--cloud ORG/BUILDER` option to `build.sh` for Docker Build
+    Cloud; reject the option when Podman is selected.
   * Add a `docker_builder` service to the Dev Container Compose
     overlay.  It is built from
     `.devcontainer/docker_builder.Dockerfile` on `alpine:3.24.1`

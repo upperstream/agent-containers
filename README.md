@@ -299,6 +299,9 @@ available and docker otherwise.
 # Build everything, continuing past failures
 ./build.sh -k -a
 
+# Build using Docker Build Cloud
+./build.sh --cloud acme/default
+
 # Show help
 ./build.sh -h
 
@@ -321,6 +324,10 @@ Options:
 - `-a`, `--all` - build the root Dockerfile and all standalone
   providers.
 - `--test` - run the built-in self-test (no other arguments).
+- `--cloud ORG/BUILDER` - build with the named Docker Build Cloud
+  builder.  The option also accepts `--cloud=ORG/BUILDER` and cannot be
+  used with Podman.  Buildx loads each image locally so additional tags
+  can be applied.
 
 Options are parsed with POSIX `getopts` and must precede provider
 names.  Short options may be grouped, e.g. `-ka` is equivalent to

@@ -25,6 +25,8 @@
 # `root` builds the root Dockerfile only (image name agents), and the
 # default (no provider given) is `root`.  The -a/--all option builds the
 # root Dockerfile plus all standalone providers.
+# `--cloud ORG/BUILDER` selects a Docker Build Cloud builder and is
+# incompatible with Podman.
 #
 # Pass `--test` as the only argument to run the built-in self-test.
 
@@ -47,6 +49,7 @@ usage() {
 	  -k, --keep-going      Keep building even when a build fails
 	  -a, --all             Build the root Dockerfile and all standalone
 	                        providers
+	  --cloud ORG/BUILDER   Use the named Docker Build Cloud builder
 	  --test                Run the built-in self-test (no other arguments)
 
 	Place options before provider names.  Short options may be grouped
@@ -73,6 +76,8 @@ standalone_providers="aider antigravity claude cline codex copilot crush cursor 
 parse_args() {
 	keep_going=no
 	build_all=no
+	cloud_builder=
+	providers=
 	OPTIND=1
 	# Treat '-' as an option with an argument to handle long options.
 	while getopts ':hHka-:' opt; do
@@ -100,6 +105,23 @@ parse_args() {
 						run_tests
 						exit $?
 						;;
+					cloud)
+						if [ "$#" -eq 0 ] || [ -z "$1" ]; then
+							echo "error: --cloud requires ORG/BUILDER" >&2
+							usage >&2
+							exit 2
+						fi
+						cloud_builder=$1
+						shift
+						;;
+					cloud=*)
+						cloud_builder=${arg#--cloud=}
+						if [ -z "$cloud_builder" ]; then
+							echo "error: --cloud requires ORG/BUILDER" >&2
+							usage >&2
+							exit 2
+						fi
+						;;
 					*)
 						echo "error: unknown option: --$OPTARG" >&2
 						usage >&2
@@ -107,8 +129,8 @@ parse_args() {
 						;;
 				esac
 				;;
-			\?)
-				echo "error: unknown option: -$OPTARG" >&2
+			-*)
+				echo "error: unknown option: $arg" >&2
 				usage >&2
 				exit 2
 				;;
@@ -116,6 +138,26 @@ parse_args() {
 	done
 	shift "$((OPTIND - 1))"
 	providers="$*"
+
+	if [ -n "$cloud_builder" ]; then
+		case $cloud_builder in
+			*/*)
+				cloud_org=${cloud_builder%%/*}
+				cloud_name=${cloud_builder#*/}
+				case $cloud_name in
+					*/*) cloud_org= ;;
+					*) ;;
+				esac
+				;;
+			*) cloud_org= ;;
+		esac
+		if [ -z "$cloud_org" ] || [ -z "$cloud_name" ]; then
+			echo "error: --cloud requires ORG/BUILDER" >&2
+			usage >&2
+			exit 2
+		fi
+		buildx_cloud_builder="cloud-$cloud_org-$cloud_name"
+	fi
 
 	# Resolve the provider list: -a builds the root Dockerfile and all
 	# standalone providers, otherwise the given providers (defaulting to
@@ -251,6 +293,15 @@ select_engine() {
 		echo "error: neither podman nor docker found" >&2
 		exit 1
 	fi
+	if [ -n "$cloud_builder" ]; then
+		engine_version=$("$docker" --version 2>/dev/null)
+		case $docker:$engine_version in
+			*podman*|*Podman*)
+				echo "error: --cloud is not supported with Podman" >&2
+				exit 2
+				;;
+			esac
+	fi
 }
 
 # Build one image for a provider and environment, then apply the remaining
@@ -272,7 +323,14 @@ build_image() {
 		esac
 		image=$name
 	fi
-	if ! $docker build --build-arg ENVIRONMENT="$environment" \
+	if [ -n "$cloud_builder" ]; then
+		if ! $docker buildx build --builder "$buildx_cloud_builder" \
+				--load --build-arg ENVIRONMENT="$environment" \
+				--build-arg NANO_CLASSIC_KEYBINDINGS=yes \
+				-t "$image:$first" "$context"; then
+			return 1
+		fi
+	elif ! $docker build --build-arg ENVIRONMENT="$environment" \
 			--build-arg NANO_CLASSIC_KEYBINDINGS=yes \
 			-t "$image:$first" "$context"; then
 		return 1
@@ -523,36 +581,64 @@ dir=${BTEST_DIR:-.}
 cmd=$1
 shift
 case $cmd in
-build)
-	n=$(cat "$dir/count" 2>/dev/null || echo 0)
-	n=$((n + 1))
-	echo "$n" > "$dir/count"
-	tag=
-	prev=
-	for a in "$@"; do
-		[ "$prev" = "-t" ] && tag=$a
-		prev=$a
-	done
-	ctx=
-	for a in "$@"; do
-		ctx=$a
-	done
-	echo "build $n ctx=$ctx tag=$tag" >> "$dir/log"
-	fail_at=$(cat "$dir/fail_at" 2>/dev/null)
-	if [ -n "$fail_at" ] && [ "$n" = "$fail_at" ]; then
-		echo "stub: simulated failure on build #$n" >&2
-		exit 1
+--version)
+	if [ "${0##*/}" = podman ]; then
+		echo "podman version 5"
+	else
+		echo "Docker version 29"
 	fi
+	exit 0
+	;;
+buildx)
+	[ "$1" = build ] || exit 1
+	shift
+	builder=
+	;;
+build)
 	;;
 tag)
 	echo "tag src=$1 dst=$2" >> "$dir/log"
+	exit 0
 	;;
 *)
 	echo "stub: unexpected command: $cmd" >&2
 	exit 1
 	;;
 esac
-exit 0
+n=$(cat "$dir/count" 2>/dev/null || echo 0)
+n=$((n + 1))
+echo "$n" > "$dir/count"
+tag=
+load=no
+prev=
+for a in "$@"; do
+	case $a in
+		--builder) prev=builder ;;
+		-t) prev=tag ;;
+		--load) load=yes ;;
+		*)
+			case $prev in
+				builder) builder=$a ;;
+				tag) tag=$a ;;
+		esac
+			prev=
+			;;
+	esac
+done
+ctx=
+for a in "$@"; do
+	ctx=$a
+done
+if [ "$cmd" = buildx ]; then
+	echo "buildx $n builder=$builder load=$load ctx=$ctx tag=$tag" >> "$dir/log"
+else
+	echo "build $n ctx=$ctx tag=$tag" >> "$dir/log"
+fi
+fail_at=$(cat "$dir/fail_at" 2>/dev/null)
+if [ -n "$fail_at" ] && [ "$n" = "$fail_at" ]; then
+	echo "stub: simulated failure on build #$n" >&2
+	exit 1
+fi
 EOF
 	chmod +x "$tdir/bin/docker"
 
@@ -728,8 +814,54 @@ EOF
 	t_out_has P12 "Usage: build.sh"
 	t_out_has P12 "-k"
 	t_out_has P12 "-a, --all"
+	t_out_has P12 "--cloud ORG/BUILDER"
 
-	# P13: neither podman nor docker on PATH (and DOCKER unset)
+	t_repo_init
+	t_run 0 "P13 Docker Build Cloud builder argument" \
+		--cloud acme/default root
+	t_logline P13 1 \
+		"buildx 1 builder=cloud-acme-default load=yes ctx=. tag=agents:latest"
+	t_logline P13 2 \
+		"buildx 2 builder=cloud-acme-default load=yes ctx=. tag=agents:dev"
+	t_expect_lines P13 2
+
+	t_repo_init
+	t_run 0 "P14 Docker Build Cloud equals form" \
+		--cloud=acme/default root
+	t_logline P14 1 \
+		"buildx 1 builder=cloud-acme-default load=yes ctx=. tag=agents:latest"
+	t_expect_lines P14 2
+
+	t_repo_init
+	t_run 2 "P15 missing cloud builder" --cloud
+	t_out_has P15 "--cloud requires ORG/BUILDER"
+	t_expect_lines P15 0
+
+	t_repo_init
+	t_run 2 "P16 malformed cloud builder" --cloud=acme
+	t_out_has P16 "--cloud requires ORG/BUILDER"
+	t_expect_lines P16 0
+
+	# P17: Docker Build Cloud must be rejected for Podman
+	t_repo_init
+	t_reset
+	ln -s docker "$tdir/bin/podman"
+	# shellcheck disable=SC2030,SC2164
+	( cd "$t_scratch"
+	  export BTEST_DIR="$tdir" DOCKER="$tdir/bin/podman"
+	  main --cloud acme/default root
+	) > "$t_out" 2>&1
+	got_rc=$?
+	if [ "$got_rc" = 2 ]; then
+		t_ok "P17 Docker Build Cloud rejected for Podman"
+	else
+		t_bad "P17 Docker Build Cloud rejected for Podman" \
+			"rc=$got_rc want 2"
+	fi
+	t_out_has P17 "--cloud is not supported with Podman"
+	t_expect_lines P17 0
+
+	# P18: neither podman nor docker on PATH (and DOCKER unset)
 	t_repo_init
 	t_reset
 	mkdir -p "$tdir/nobin"
@@ -743,11 +875,11 @@ EOF
 	) > "$t_out" 2>&1
 	got_rc=$?
 	if [ "$got_rc" = 1 ]; then
-		t_ok "P13 no engine"
+		t_ok "P18 no engine"
 	else
-		t_bad "P13 no engine" "rc=$got_rc want 1"
+		t_bad "P18 no engine" "rc=$got_rc want 1"
 	fi
-	t_out_has P13 "neither podman nor docker found"
+	t_out_has P18 "neither podman nor docker found"
 
 	t_repo_init
 	t_run_fail 1 "P14 grouped short options" 5 -ka
