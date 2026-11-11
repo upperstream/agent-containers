@@ -25,6 +25,8 @@
   * Add `tests/docker_build_test.sh` to build the root Dockerfile from
     inside the `agents` service against that daemon and report whether
     the build succeeds.
+  * Add Docker Build Cloud support to
+    `tests/docker_build_test.sh` with `--cloud ORG/BUILDER`.
   * Add a `podman_builder` service to the Dev Container Compose
     overlay.  It is built from
     `.devcontainer/podman_builder.Dockerfile` on `alpine:3.24.1`

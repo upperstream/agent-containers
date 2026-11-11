@@ -64,8 +64,14 @@ repository as a VS Code Dev Container:
   legacy graph driver can use overlay2 or fall back to vfs.  Run
   `tests/docker_build_test.sh` in `agents` to build the root
   [`Dockerfile`](Dockerfile) against `docker_builder` and check
-  whether the build succeeds.  A `podman_builder` service is built
-  from `.devcontainer/podman_builder.Dockerfile` on `alpine:3.24.1`
+  whether the build succeeds.  To use Docker Build Cloud, first sign
+  in to Docker and register a cloud builder with
+  `docker buildx create --driver cloud ORG/BUILDER`.  Pass
+  `--cloud ORG/BUILDER` (or `--cloud=ORG/BUILDER`) to the helper.  It
+  selects the corresponding `cloud-ORG-BUILDER` builder with Docker
+  Buildx and loads the result into `docker_builder`.  The
+  `podman_builder` service is built from
+  `.devcontainer/podman_builder.Dockerfile` on `alpine:3.24.1`
   and runs a Podman API service.  The host container engine is not
   mounted into `agents`.  The `agents` service sets `CONTAINER_HOST`
   to `unix:///run/podman-builder/podman.sock`.  The socket directory
