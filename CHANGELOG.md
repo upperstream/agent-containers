@@ -102,6 +102,8 @@
       and the standalone `opencode/` build.
     * Document retaining share, state, and configuration directories
       beyond the container lifespan.
+  * [OpenWiki][]: Upgrade to version 0.6.1.  Applies to the root
+    multi-stage image and the standalone `openwiki-agent/` build.
 
 ## [20261004][]
 
@@ -172,7 +174,7 @@
       the standalone `droid/` build.
     * Do not strip the Bun-compiled executable, preserving its
       embedded application payload.
-  * [OpenWiki][]:
+  * OpenWiki:
     * Pin version to 0.5.0.  The `OPENWIKI_VERSION` build argument now
       defaults to `0.5.0` (it was previously unset, installing the
       latest release).  Applies to the root multi-stage image and the

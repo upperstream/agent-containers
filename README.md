@@ -252,7 +252,7 @@ defaults/comments):
 | `KIRO_FORCE`               | unset; non-empty passes `--force`                               |
 | `OPENCLAW_VERSION`         | `2026.7.35` (`latest` or a version)                             |
 | `OPENCODE_VERSION`         | `1.18.34`                                                       |
-| `OPENWIKI_VERSION`         | `0.5.0` (`latest` or a version)                                 |
+| `OPENWIKI_VERSION`         | `0.6.1` (`latest` or a version)                                 |
 | `PI_VERSION`               | `0.84.4` (`latest` or a version)                                |
 
 Note for npm: When `NPM_VERSION` is set, the npm will be upgraded or
