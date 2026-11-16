@@ -33,7 +33,7 @@ docker build -t pi -f pi/Dockerfile pi
 | `NANO_CLASSIC_KEYBINDINGS` | (unset)      | Set to `yes` for classic nano keybindings                |
 | `NODE_VERSION`             | `v24.22.1`   | Node.js version to install                               |
 | `NPM_VERSION`              | (unset)      | npm version to upgrade/downgrade to                      |
-| `PI_VERSION`               | `0.84.4`     | npm version of `@earendil-works/pi-coding-agent`         |
+| `PI_VERSION`               | `1.0.0`      | npm version of `@earendil-works/pi-coding-agent`         |
 
 Note for npm: When `NPM_VERSION` is set, the npm will be upgraded or
 downgraded to the specified version.  Otherwise the npm bundled with

@@ -27,6 +27,7 @@ services:
       - ${OPENCODE_HOME:-$HOME/opencode_home}/share/opencode:/home/user/.local/share/opencode:cached
       - ${OPENCODE_HOME:-$HOME/opencode_home}/state/opencode:/home/user/.local/state/opencode:cached
       - ${OPENWIKI_HOME:-$HOME/.openwiki}:/home/user/.openwiki:cached
+      - ${PI_HOME:-$HOME/.pi}:/home/user/.pi:cached
       - .:/workspaces/agent-containers:cached
     entrypoint: /bin/sh -c
     command: "/bin/bash"

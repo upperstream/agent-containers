@@ -104,6 +104,8 @@
       beyond the container lifespan.
   * [OpenWiki][]: Upgrade to version 0.6.1.  Applies to the root
     multi-stage image and the standalone `openwiki-agent/` build.
+  * [Pi coding agent][]: Upgrade to version 1.0.0.  Applies to the root
+    multi-stage image and the standalone `pi/` build.
 
 ## [20261004][]
 
@@ -120,7 +122,7 @@
   * OpenClaw: Fix `useradd` error in multi-stage Dockerfile where
     `useradd` was redundantly called in the `openclaw` stage after
     already being performed in `container_base`.
-  * [Pi coding agent][]: Use `ln -sf` when linking `pi` CLI binary into
+  * Pi coding agent: Use `ln -sf` when linking `pi` CLI binary into
     `/usr/local/bin` to overwrite the existing symlink created from Node
     package bin.
   * Make apt-get update and apt-get install atomic.

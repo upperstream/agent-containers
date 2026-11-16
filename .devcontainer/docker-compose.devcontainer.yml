@@ -23,6 +23,7 @@ services:
       - ${OPENCODE_HOME:-$HOME/opencode_home}/share/opencode:/home/devcontainer/.local/share/opencode:cached
       - ${OPENCODE_HOME:-$HOME/opencode_home}/state/opencode:/home/devcontainer/.local/state/opencode:cached
       - ${OPENWIKI_HOME:-$HOME/.openwiki}:/home/devcontainer/.openwiki:cached
+      - ${PI_HOME:-$HOME/.pi}:/home/devcontainer/.pi:cached
       - /dev/null:/home/user/.claude
       - /dev/null:/home/user/.cline
       - /dev/null:/home/user/.codex
@@ -39,6 +40,7 @@ services:
       - /dev/null:/home/user/.local/share/opencode
       - /dev/null:/home/user/.local/state/opencode
       - /dev/null:/home/user/.openwiki
+      - /dev/null:/home/user/.pi
       - docker_builder_socket:/run/docker-builder:ro
       - podman_builder_socket:/run/podman-builder:ro
     group_add:

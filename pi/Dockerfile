@@ -3,7 +3,7 @@ ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
 ARG NODE_VERSION=v24.22.1
 ARG NPM_VERSION=
-ARG PI_VERSION=0.84.4
+ARG PI_VERSION=1.0.0
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update && \
