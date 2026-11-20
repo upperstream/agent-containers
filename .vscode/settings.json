@@ -9,6 +9,7 @@
       "Buildx",
       "cgroupfs",
       "charmbracelet",
+      "color",
       "crun",
       "dedup",
       "doas",
@@ -19,6 +20,7 @@
       "esac",
       "execve",
       "GFM",
+      "ghostty",
       "glamourous",
       "gotchas",
       "graphroot",
@@ -51,6 +53,7 @@
       "subpaths",
       "tagset",
       "tdir",
-      "usermod"
+      "usermod",
+      "xterm"
     ]
 }

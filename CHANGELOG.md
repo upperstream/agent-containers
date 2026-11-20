@@ -53,6 +53,10 @@
   * Upgrade [Node.js][] to v24.22.1 in the root multi-stage image and
     the standalone `cline/`, `droid/`, `gemini/`, `openclaw/`,
     `openwiki-agent/`, and `pi/` builds.
+  * Enable Bash colour prompts for Ghostty by accepting `*-ghostty`
+    in the container user's `.bashrc`.  Applies to every provider in
+    the root multi-stage image and all standalone builds, in both
+    `production` and `development` environments.
   * Replace the Dev Container builders' TCP API listeners with Unix
     sockets on separate named volumes shared only with `agents`.
     Grant non-root access through supplemental GID 2375, mount socket

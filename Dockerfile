@@ -59,7 +59,8 @@ ARG NANO_CLASSIC_KEYBINDINGS    # global default
 RUN apt-get update && \
     apt-get install -y --no-install-recommends emacs-nox fd-find git mg micro nano ripgrep vim-nox && \
     apt-get clean && \
-    useradd -m "${CONTAINER_USER}"
+    useradd -m "${CONTAINER_USER}" && \
+    sed -i 's/^\(    xterm-color|\*-256color\))/\1|\*-ghostty)/' "/home/${CONTAINER_USER}/.bashrc"
 RUN <<EOT /bin/sh
     if [ "${NANO_CLASSIC_KEYBINDINGS:-no}" = "yes" ]; then \
         cat <<EOF >"/home/${CONTAINER_USER}/.nanorc"
