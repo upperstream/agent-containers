@@ -46,7 +46,7 @@ RUN bash kilo_installer.sh ${KILO_VERSION:+--version "$KILO_VERSION"}
 FROM container_base AS production
 ARG CONTAINER_USER              # global default
 
-COPY --from=kilo_builder /root/.kilo "/home/${CONTAINER_USER}/.kilo"
+COPY --link --from=kilo_builder /root/.kilo "/home/${CONTAINER_USER}/.kilo"
 
 RUN ln -s "/home/${CONTAINER_USER}/.kilo/bin/kilo" /usr/local/bin/kilo && \
     mkdir -p "/home/${CONTAINER_USER}/.local/share" && \

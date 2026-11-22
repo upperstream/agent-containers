@@ -59,8 +59,8 @@ FROM container_base AS production
 ARG CONTAINER_USER              # global default
 ARG NODE_VERSION                # global default
 
-COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
-COPY --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
+COPY --link --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --link --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google/gemini-cli/bundle/gemini.js" /usr/local/bin/gemini && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \

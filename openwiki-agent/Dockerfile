@@ -60,7 +60,7 @@ FROM container_base AS production
 ARG CONTAINER_USER  # global default
 ARG NODE_VERSION    # global default
 
-COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --link --from=openwiki_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
 
 RUN ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"

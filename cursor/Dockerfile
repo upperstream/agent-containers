@@ -33,7 +33,7 @@ RUN bash cursor_installer.sh
 FROM container_base AS production
 ARG CONTAINER_USER              # global default
 
-COPY --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CONTAINER_USER}/.local/share/cursor-agent/versions"
+COPY --link --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CONTAINER_USER}/.local/share/cursor-agent/versions"
 
 RUN ln -s "$(echo /home/${CONTAINER_USER}/.local/share/cursor-agent/versions/*-*/cursor-agent)" /usr/local/bin/cursor-agent && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"

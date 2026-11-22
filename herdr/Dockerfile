@@ -35,7 +35,7 @@ ARG HERDR_VERSION # global default
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ca-certificates curl patch
-COPY herdr_installer.sh.diff herdr_installer.sh.diff
+COPY --link herdr_installer.sh.diff herdr_installer.sh.diff
 RUN curl -fsSL https://herdr.dev/install.sh > herdr_installer.sh
 RUN patch -i herdr_installer.sh.diff herdr_installer.sh
 RUN sh herdr_installer.sh "${HERDR_VERSION}"
@@ -44,7 +44,7 @@ RUN strip /root/.local/bin/herdr
 FROM container_base AS production
 ARG CONTAINER_USER  # global default
 
-COPY --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
+COPY --link --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
 
 RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 

@@ -35,7 +35,7 @@ RUN install -Dm0755 "$(readlink -f /root/.local/bin/claude)" /usr/local/bin/clau
 
 FROM container_base AS production
 
-COPY --from=claude_builder /usr/local/bin/claude /usr/local/bin/claude
+COPY --link --from=claude_builder /usr/local/bin/claude /usr/local/bin/claude
 
 FROM production AS development
 ARG CONTAINER_USER              # global default

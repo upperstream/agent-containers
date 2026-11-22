@@ -59,8 +59,8 @@ FROM container_base AS production
 ARG CONTAINER_USER              # global default
 ARG NODE_VERSION                # global default
 
-COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
-COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
+COPY --link --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --link --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \

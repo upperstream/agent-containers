@@ -11,7 +11,7 @@ FROM alpine:3.24.1
 # state on a volume that is not the container overlay.
 RUN apk add --no-cache curl docker-engine && \
     addgroup -g 2375 builders
-COPY .devcontainer/builder_entrypoint.sh /usr/local/bin/builder-entrypoint
+COPY --link .devcontainer/builder_entrypoint.sh /usr/local/bin/builder-entrypoint
 RUN chmod 0755 /usr/local/bin/builder-entrypoint
 RUN mkdir -p /etc/docker && cat >/etc/docker/daemon.json <<'EOF'
 {

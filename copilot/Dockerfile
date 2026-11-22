@@ -36,7 +36,7 @@ RUN VERSION="${COPILOT_VERSION:-latest}" bash copilot_installer.sh
 FROM container_base AS production
 ARG CONTAINER_USER              # global default
 
-COPY --from=copilot_builder /usr/local/bin/copilot /usr/local/bin/copilot
+COPY --link --from=copilot_builder /usr/local/bin/copilot /usr/local/bin/copilot
 
 RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 

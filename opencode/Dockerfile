@@ -36,7 +36,7 @@ RUN bash opencode_installer.sh --no-modify-path ${OPENCODE_VERSION:+--version "$
 FROM container_base AS production
 ARG CONTAINER_USER              # global default
 
-COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
+COPY --link --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
 
 RUN mkdir "/home/${CONTAINER_USER}/.config" && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"

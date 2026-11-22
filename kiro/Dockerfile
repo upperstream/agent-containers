@@ -43,7 +43,7 @@ RUN strip /root/.local/bin/kiro-cli*
 FROM container_base AS production
 ARG CONTAINER_USER              # global default
 
-COPY --from=kiro_builder /root/.local/bin/kiro-cli* /usr/local/bin/
+COPY --link --from=kiro_builder /root/.local/bin/kiro-cli* /usr/local/bin/
 
 RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 

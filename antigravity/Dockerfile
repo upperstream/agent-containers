@@ -33,7 +33,7 @@ RUN bash antigravity_installer.sh
 FROM container_base AS production
 ARG CONTAINER_USER  # global default
 
-COPY --from=agy_builder /root/.local/bin/agy /usr/local/bin/agy
+COPY --link --from=agy_builder /root/.local/bin/agy /usr/local/bin/agy
 
 RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 

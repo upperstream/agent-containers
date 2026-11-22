@@ -37,7 +37,7 @@ RUN CODEX_NON_INTERACTIVE=1 sh codex_installer.sh
 FROM container_base AS production
 ARG CONTAINER_USER  # global default
 
-COPY --from=codex_builder /root/.codex "/home/${CONTAINER_USER}/.codex"
+COPY --link --from=codex_builder /root/.codex "/home/${CONTAINER_USER}/.codex"
 
 RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
     (cd "/home/${CONTAINER_USER}/.codex/packages/standalone" && \

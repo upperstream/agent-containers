@@ -49,13 +49,13 @@ ARG CONTAINER_USER  # global default
 RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"
 RUN mkdir -p /usr/local/share/doc/crush /etc/bash_completion_d /usr/share/fish/vendor_completions.d /usr/share/zsh/site-functions /usr/local/share/man/man1
 
-COPY --from=crush_builder /root/*/LICENSE.md /usr/local/share/doc/crush/LICENSE.md
-COPY --from=crush_builder /root/*/README.md /usr/local/share/doc/crush/README.md
-COPY --from=crush_builder /root/*/completions/crush.bash /etc/bash_completion_d/crush
-COPY --from=crush_builder /root/*/completions/crush.fish /usr/share/fish/vendor_completions.d/crush.fish
-COPY --from=crush_builder /root/*/completions/crush.zsh /usr/share/zsh/site-functions/_crush
-COPY --from=crush_builder /root/*/manpages/crush.1.gz /usr/local/share/man/man1/crush.1.gz
-COPY --from=crush_builder /root/*/crush /usr/local/bin/crush
+COPY --link --from=crush_builder /root/*/LICENSE.md /usr/local/share/doc/crush/LICENSE.md
+COPY --link --from=crush_builder /root/*/README.md /usr/local/share/doc/crush/README.md
+COPY --link --from=crush_builder /root/*/completions/crush.bash /etc/bash_completion_d/crush
+COPY --link --from=crush_builder /root/*/completions/crush.fish /usr/share/fish/vendor_completions.d/crush.fish
+COPY --link --from=crush_builder /root/*/completions/crush.zsh /usr/share/zsh/site-functions/_crush
+COPY --link --from=crush_builder /root/*/manpages/crush.1.gz /usr/local/share/man/man1/crush.1.gz
+COPY --link --from=crush_builder /root/*/crush /usr/local/bin/crush
 
 FROM production AS development
 ARG CONTAINER_USER              # global default

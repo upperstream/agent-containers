@@ -60,8 +60,8 @@ FROM container_base AS production
 ARG CONTAINER_USER  # global default
 ARG NODE_VERSION    # global default
 
-COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
-COPY --from=droid_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid" "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid"
+COPY --link --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --link --from=droid_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid" "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid"
 #COPY --from=droid_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@factory" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@factory"
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid/bin/droid" /usr/local/bin/droid && \

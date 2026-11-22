@@ -41,12 +41,12 @@ RUN bash hermes_installer.sh --skip-setup --skip-browser --non-interactive ${HER
 FROM container_base AS production
 ARG CONTAINER_USER  # global default
 
-COPY --from=hermes_builder /usr/local/lib/hermes-agent /usr/local/lib/hermes-agent
-COPY --from=hermes_builder /usr/local/bin/hermes* /usr/local/bin/
-COPY --from=hermes_builder /usr/local/share/uv /usr/local/share/uv
-COPY --from=hermes_builder /root/.cua-driver "/home/${CONTAINER_USER}/.cua-driver"
-COPY --from=hermes_builder /root/.hermes "/home/${CONTAINER_USER}/.hermes"
-COPY --from=hermes_builder /root/.local "/home/${CONTAINER_USER}/.local"
+COPY --link --from=hermes_builder /usr/local/lib/hermes-agent /usr/local/lib/hermes-agent
+COPY --link --from=hermes_builder /usr/local/bin/hermes* /usr/local/bin/
+COPY --link --from=hermes_builder /usr/local/share/uv /usr/local/share/uv
+COPY --link --from=hermes_builder /root/.cua-driver "/home/${CONTAINER_USER}/.cua-driver"
+COPY --link --from=hermes_builder /root/.hermes "/home/${CONTAINER_USER}/.hermes"
+COPY --link --from=hermes_builder /root/.local "/home/${CONTAINER_USER}/.local"
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ca-certificates curl ffmpeg git ripgrep && \
     apt-get clean && \

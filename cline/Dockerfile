@@ -59,8 +59,8 @@ FROM container_base AS production
 ARG CONTAINER_USER  # global default
 ARG NODE_VERSION    # global default
 
-COPY --from=node_base /usr/local/node-${NODE_VERSION} /usr/local/node-${NODE_VERSION}
-COPY --from=cline_builder /usr/local/node-${NODE_VERSION}/lib/node_modules/cline /usr/local/node-${NODE_VERSION}/lib/node_modules/cline
+COPY --link --from=node_base /usr/local/node-${NODE_VERSION} /usr/local/node-${NODE_VERSION}
+COPY --link --from=cline_builder /usr/local/node-${NODE_VERSION}/lib/node_modules/cline /usr/local/node-${NODE_VERSION}/lib/node_modules/cline
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline/bin/cline" /usr/local/bin/cline && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/ && \

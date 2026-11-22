@@ -41,7 +41,7 @@ RUN mkdir -p "/home/${CONTAINER_USER}" && \
 FROM container_base AS production
 ARG CONTAINER_USER  # global default
 
-COPY --from=aider_builder "/home/${CONTAINER_USER}/.local/share/uv" "/home/${CONTAINER_USER}/.local/share/uv"
+COPY --link --from=aider_builder "/home/${CONTAINER_USER}/.local/share/uv" "/home/${CONTAINER_USER}/.local/share/uv"
 
 RUN ln -s "/home/${CONTAINER_USER}/.local/share/uv/tools/aider-chat/bin/aider" /usr/local/bin/aider && \
     chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}"

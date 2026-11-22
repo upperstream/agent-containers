@@ -159,6 +159,11 @@ directly as `codex` (substitute `user` if you set `CONTAINER_USER`).
 
 ## Build: standalone image
 
+Use Docker with BuildKit or a Podman version that accepts `COPY --link`.
+The Dockerfiles use linked copy layers so unchanged agent files can be
+reused from the build cache when earlier layers change.  This applies to
+the root, standalone, and Dev Container builder images.
+
 Build a single agent from its directory (recommended when you only need
 one tool):
 

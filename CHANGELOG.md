@@ -3,6 +3,9 @@
 ## [Unreleased][]
 
 * Changed:
+  * Use `COPY --link` for independent copy layers and better build-cache
+    reuse in the root, standalone, and Dev Container builder
+    Dockerfiles.
   * Parse `build.sh` options with POSIX `getopts`, including long
     options.  Support grouped short options and `--` to end option
     parsing; require options to precede provider names.

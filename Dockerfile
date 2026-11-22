@@ -86,7 +86,7 @@ RUN mkdir -p "/home/${CONTAINER_USER}" && \
 FROM container_base AS aider
 ARG CONTAINER_USER  # global default
 
-COPY --from=aider_builder "/home/${CONTAINER_USER}/.local/share/uv" "/home/${CONTAINER_USER}/.local/share/uv"
+COPY --link --from=aider_builder "/home/${CONTAINER_USER}/.local/share/uv" "/home/${CONTAINER_USER}/.local/share/uv"
 
 RUN ln -s "/home/${CONTAINER_USER}/.local/share/uv/tools/aider-chat/bin/aider" /usr/local/bin/aider
 
@@ -97,7 +97,7 @@ RUN bash antigravity_installer.sh
 FROM container_base AS antigravity
 ARG CONTAINER_USER  # global default
 
-COPY --from=agy_builder /root/.local/bin/agy /usr/local/bin/agy
+COPY --link --from=agy_builder /root/.local/bin/agy /usr/local/bin/agy
 
 FROM builder_base AS claude_builder
 ARG CLAUDE_VERSION   # global default
@@ -107,7 +107,7 @@ RUN install -Dm0755 "$(readlink -f /root/.local/bin/claude)" /usr/local/bin/clau
 
 FROM container_base AS claude
 
-COPY --from=claude_builder /usr/local/bin/claude /usr/local/bin/claude
+COPY --link --from=claude_builder /usr/local/bin/claude /usr/local/bin/claude
 
 FROM node_base AS cline_builder
 ARG CLINE_RELEASE   # global default
@@ -119,8 +119,8 @@ FROM container_base AS cline
 ARG CONTAINER_USER  # global default
 ARG NODE_VERSION    # global default
 
-COPY --from=node_base /usr/local/node-${NODE_VERSION} /usr/local/node-${NODE_VERSION}
-COPY --from=cline_builder /usr/local/node-${NODE_VERSION}/lib/node_modules/cline /usr/local/node-${NODE_VERSION}/lib/node_modules/cline
+COPY --link --from=node_base /usr/local/node-${NODE_VERSION} /usr/local/node-${NODE_VERSION}
+COPY --link --from=cline_builder /usr/local/node-${NODE_VERSION}/lib/node_modules/cline /usr/local/node-${NODE_VERSION}/lib/node_modules/cline
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline/bin/cline" /usr/local/bin/cline && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
@@ -135,7 +135,7 @@ RUN CODEX_NON_INTERACTIVE=1 sh codex_installer.sh
 FROM container_base AS codex
 ARG CONTAINER_USER  # global default
 
-COPY --from=codex_builder /root/.codex "/home/${CONTAINER_USER}/.codex"
+COPY --link --from=codex_builder /root/.codex "/home/${CONTAINER_USER}/.codex"
 
 RUN mkdir -p "/home/${CONTAINER_USER}/.local/bin" && \
     (cd "/home/${CONTAINER_USER}/.codex/packages/standalone" && \
@@ -157,7 +157,7 @@ RUN VERSION="${COPILOT_VERSION:-latest}" bash copilot_installer.sh
 FROM container_base AS copilot
 ARG CONTAINER_USER  # global default
 
-COPY --from=copilot_builder /usr/local/bin/copilot /usr/local/bin/copilot
+COPY --link --from=copilot_builder /usr/local/bin/copilot /usr/local/bin/copilot
 
 FROM builder_base AS crush_builder
 ARG CRUSH_VERSION   # global default
@@ -180,13 +180,13 @@ ARG CONTAINER_USER  # global default
 RUN chown -R "${CONTAINER_USER}:$(id -g ${CONTAINER_USER})" "/home/${CONTAINER_USER}" && \
     mkdir -p /usr/local/share/doc/crush /etc/bash_completion_d /usr/share/fish/vendor_completions.d /usr/share/zsh/site-functions /usr/local/share/man/man1
 
-COPY --from=crush_builder /root/*/LICENSE.md /usr/local/share/doc/crush/LICENSE.md
-COPY --from=crush_builder /root/*/README.md /usr/local/share/doc/crush/README.md
-COPY --from=crush_builder /root/*/completions/crush.bash /etc/bash_completion_d/crush
-COPY --from=crush_builder /root/*/completions/crush.fish /usr/share/fish/vendor_completions.d/crush.fish
-COPY --from=crush_builder /root/*/completions/crush.zsh /usr/share/zsh/site-functions/_crush
-COPY --from=crush_builder /root/*/manpages/crush.1.gz /usr/local/share/man/man1/crush.1.gz
-COPY --from=crush_builder /root/*/crush /usr/local/bin/crush
+COPY --link --from=crush_builder /root/*/LICENSE.md /usr/local/share/doc/crush/LICENSE.md
+COPY --link --from=crush_builder /root/*/README.md /usr/local/share/doc/crush/README.md
+COPY --link --from=crush_builder /root/*/completions/crush.bash /etc/bash_completion_d/crush
+COPY --link --from=crush_builder /root/*/completions/crush.fish /usr/share/fish/vendor_completions.d/crush.fish
+COPY --link --from=crush_builder /root/*/completions/crush.zsh /usr/share/zsh/site-functions/_crush
+COPY --link --from=crush_builder /root/*/manpages/crush.1.gz /usr/local/share/man/man1/crush.1.gz
+COPY --link --from=crush_builder /root/*/crush /usr/local/bin/crush
 
 FROM builder_base AS cursor_builder
 RUN curl https://cursor.com/install -fsS > cursor_installer.sh
@@ -195,7 +195,7 @@ RUN bash cursor_installer.sh
 FROM container_base AS cursor
 ARG CONTAINER_USER  # global default
 
-COPY --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CONTAINER_USER}/.local/share/cursor-agent/versions"
+COPY --link --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CONTAINER_USER}/.local/share/cursor-agent/versions"
 
 RUN ln -s "$(echo /home/${CONTAINER_USER}/.local/share/cursor-agent/versions/*-*/cursor-agent)" /usr/local/bin/cursor-agent
 
@@ -209,8 +209,8 @@ FROM container_base AS droid
 ARG CONTAINER_USER  # global default
 ARG NODE_VERSION    # global default
 
-COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
-COPY --from=droid_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid" "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid"
+COPY --link --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --link --from=droid_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid" "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid"
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid/bin/droid" /usr/local/bin/droid && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
@@ -225,8 +225,8 @@ FROM container_base AS gemini
 ARG CONTAINER_USER  # global default
 ARG NODE_VERSION    # global default
 
-COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
-COPY --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
+COPY --link --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --link --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
 
 RUN ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google/gemini-cli/bundle/gemini.js" /usr/local/bin/gemini && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
@@ -247,7 +247,7 @@ RUN case "$(uname -s)" in \
 FROM container_base AS grok
 ARG CONTAINER_USER  # global default
 
-COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.local/share/grok"
+COPY --link --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.local/share/grok"
 RUN mkdir -p "/home/${CONTAINER_USER}/.grok/" && \
     for f in active_sessions.json active_sessions.lock config.toml; do \
       mv "/home/${CONTAINER_USER}/.local/share/grok/$f" "/home/${CONTAINER_USER}/.grok/"; done && \
@@ -260,7 +260,7 @@ ARG HERDR_VERSION # global default
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ca-certificates curl patch
-COPY herdr/herdr_installer.sh.diff herdr_installer.sh.diff
+COPY --link herdr/herdr_installer.sh.diff herdr_installer.sh.diff
 RUN curl -fsSL https://herdr.dev/install.sh > herdr_installer.sh
 RUN patch -i herdr_installer.sh.diff herdr_installer.sh
 RUN sh herdr_installer.sh "${HERDR_VERSION}"
@@ -269,7 +269,7 @@ RUN strip /root/.local/bin/herdr
 FROM container_base AS herdr
 ARG CONTAINER_USER  # global default
 
-COPY --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
+COPY --link --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
 
 FROM builder_base AS hermes_builder
 ARG HERMES_VERSION	# global default
@@ -291,7 +291,7 @@ RUN bash kilo_installer.sh ${KILO_VERSION:+--version "$KILO_VERSION"}
 FROM container_base AS kilo
 ARG CONTAINER_USER  # global default
 
-COPY --from=kilo_builder /root/.kilo "/home/${CONTAINER_USER}/.kilo"
+COPY --link --from=kilo_builder /root/.kilo "/home/${CONTAINER_USER}/.kilo"
 RUN ln -s "/home/${CONTAINER_USER}/.kilo/bin/kilo" /usr/local/bin/kilo
 
 FROM bin_stripper AS kiro_builder
@@ -305,7 +305,7 @@ RUN strip /root/.local/bin/kiro-cli*
 
 FROM container_base AS kiro
 
-COPY --from=kiro_builder /root/.local/bin/kiro-cli* /usr/local/bin/
+COPY --link --from=kiro_builder /root/.local/bin/kiro-cli* /usr/local/bin/
 
 FROM node_base AS openclaw_builder
 ARG NODE_VERSION      # global default
@@ -323,7 +323,7 @@ RUN apt-get update && \
     ln -s "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw/openclaw.mjs" /usr/local/bin/openclaw && \
     ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 
-COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
+COPY --link --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
 
 FROM builder_base AS opencode_builder
 ARG OPENCODE_VERSION    # global default
@@ -333,7 +333,7 @@ RUN bash opencode_installer.sh --no-modify-path ${OPENCODE_VERSION:+--version "$
 
 FROM container_base AS opencode
 
-COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
+COPY --link --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
 
 FROM builder_base AS openwiki_builder
 ARG NODE_VERSION      # global default
@@ -360,7 +360,7 @@ RUN PATH="$PATH:/usr/local/node-${NODE_VERSION}/bin" npm install -g openwiki@${O
 FROM container_base AS openwiki
 ARG NODE_VERSION    # global default
 
-COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --link --from=openwiki_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
 
 RUN ln -s /usr/local/"node-${NODE_VERSION}"/bin/* /usr/local/bin/
 
@@ -375,8 +375,8 @@ FROM container_base AS pi
 ARG CONTAINER_USER  # global default
 ARG NODE_VERSION    # global default
 
-COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
-COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
+COPY --link --from=pi_builder "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --link --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends fd-find ripgrep && \
@@ -390,56 +390,56 @@ ARG NODE_VERSION    # global default
 
 RUN mkdir -p /usr/local/share/doc/crush /etc/bash_completion_d /usr/share/fish/vendor_completions.d /usr/share/zsh/site-functions /usr/local/share/man/man1
 
-COPY --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
+COPY --link --from=node_base "/usr/local/node-${NODE_VERSION}" "/usr/local/node-${NODE_VERSION}"
 
-COPY --from=aider_builder "/home/${CONTAINER_USER}/.local/share/uv" "/home/${CONTAINER_USER}/.local/share/uv"
+COPY --link --from=aider_builder "/home/${CONTAINER_USER}/.local/share/uv" "/home/${CONTAINER_USER}/.local/share/uv"
 
-COPY --from=agy_builder /root/.local/bin/agy /usr/local/bin/agy
+COPY --link --from=agy_builder /root/.local/bin/agy /usr/local/bin/agy
 
-COPY --from=claude_builder /usr/local/bin/claude /usr/local/bin/claude
+COPY --link --from=claude_builder /usr/local/bin/claude /usr/local/bin/claude
 
-COPY --from=cline_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline" "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline"
+COPY --link --from=cline_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline" "/usr/local/node-${NODE_VERSION}/lib/node_modules/cline"
 
-COPY --from=codex_builder /root/.codex "/home/${CONTAINER_USER}/.codex"
+COPY --link --from=codex_builder /root/.codex "/home/${CONTAINER_USER}/.codex"
 
-COPY --from=copilot_builder /usr/local/bin/copilot /usr/local/bin/copilot
+COPY --link --from=copilot_builder /usr/local/bin/copilot /usr/local/bin/copilot
 
-COPY --from=crush_builder /root/*/LICENSE.md /usr/local/share/doc/crush/LICENSE.md
-COPY --from=crush_builder /root/*/README.md /usr/local/share/doc/crush/README.md
-COPY --from=crush_builder /root/*/completions/crush.bash /etc/bash_completion_d/crush
-COPY --from=crush_builder /root/*/completions/crush.fish /usr/share/fish/vendor_completions.d/crush.fish
-COPY --from=crush_builder /root/*/completions/crush.zsh /usr/share/zsh/site-functions/_crush
-COPY --from=crush_builder /root/*/manpages/crush.1.gz /usr/local/share/man/man1/crush.1.gz
-COPY --from=crush_builder /root/*/crush /usr/local/bin/crush
+COPY --link --from=crush_builder /root/*/LICENSE.md /usr/local/share/doc/crush/LICENSE.md
+COPY --link --from=crush_builder /root/*/README.md /usr/local/share/doc/crush/README.md
+COPY --link --from=crush_builder /root/*/completions/crush.bash /etc/bash_completion_d/crush
+COPY --link --from=crush_builder /root/*/completions/crush.fish /usr/share/fish/vendor_completions.d/crush.fish
+COPY --link --from=crush_builder /root/*/completions/crush.zsh /usr/share/zsh/site-functions/_crush
+COPY --link --from=crush_builder /root/*/manpages/crush.1.gz /usr/local/share/man/man1/crush.1.gz
+COPY --link --from=crush_builder /root/*/crush /usr/local/bin/crush
 
-COPY --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CONTAINER_USER}/.local/share/cursor-agent/versions"
+COPY --link --from=cursor_builder /root/.local/share/cursor-agent/versions "/home/${CONTAINER_USER}/.local/share/cursor-agent/versions"
 
-COPY --from=droid_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid" "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid"
+COPY --link --from=droid_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid" "/usr/local/node-${NODE_VERSION}/lib/node_modules/droid"
 
-COPY --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
+COPY --link --from=gemini_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@google"
 
-COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.local/share/grok"
+COPY --link --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.local/share/grok"
 
-COPY --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
+COPY --link --from=herdr_builder /root/.local/bin/herdr /usr/local/bin/herdr
 
-COPY --from=hermes_builder /usr/local/lib/hermes-agent /usr/local/lib/hermes-agent
-COPY --from=hermes_builder /usr/local/bin/hermes* /usr/local/bin/
-COPY --from=hermes_builder /usr/local/share/uv /usr/local/share/uv
-COPY --from=hermes_builder /root/.cua-driver "/home/${CONTAINER_USER}/.cua-driver"
-COPY --from=hermes_builder /root/.hermes "/home/${CONTAINER_USER}/.hermes"
-COPY --from=hermes_builder /root/.local "/home/${CONTAINER_USER}/.local"
+COPY --link --from=hermes_builder /usr/local/lib/hermes-agent /usr/local/lib/hermes-agent
+COPY --link --from=hermes_builder /usr/local/bin/hermes* /usr/local/bin/
+COPY --link --from=hermes_builder /usr/local/share/uv /usr/local/share/uv
+COPY --link --from=hermes_builder /root/.cua-driver "/home/${CONTAINER_USER}/.cua-driver"
+COPY --link --from=hermes_builder /root/.hermes "/home/${CONTAINER_USER}/.hermes"
+COPY --link --from=hermes_builder /root/.local "/home/${CONTAINER_USER}/.local"
 
-COPY --from=kilo_builder /root/.kilo "/home/${CONTAINER_USER}/.kilo"
+COPY --link --from=kilo_builder /root/.kilo "/home/${CONTAINER_USER}/.kilo"
 
-COPY --from=kiro_builder /root/.local/bin/kiro-cli* /usr/local/bin/
+COPY --link --from=kiro_builder /root/.local/bin/kiro-cli* /usr/local/bin/
 
-COPY --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
+COPY --link --from=openclaw_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openclaw"
 
-COPY --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
+COPY --link --from=opencode_builder /root/.opencode/bin/opencode /usr/local/bin/opencode
 
-COPY --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki"
+COPY --link --from=openwiki_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki" "/usr/local/node-${NODE_VERSION}/lib/node_modules/openwiki"
 
-COPY --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
+COPY --link --from=pi_builder "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent" "/usr/local/node-${NODE_VERSION}/lib/node_modules/@earendil-works/pi-coding-agent"
 
 RUN mkdir -p "/home/${CONTAINER_USER}/.config" \
       "/home/${CONTAINER_USER}/.local/bin" && \

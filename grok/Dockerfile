@@ -43,7 +43,7 @@ RUN case "$(uname -s)" in \
 FROM container_base AS production
 ARG CONTAINER_USER              # global default
 
-COPY --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.local/share/grok"
+COPY --link --from=grok_builder /root/.grok "/home/${CONTAINER_USER}/.local/share/grok"
 RUN mkdir -p "/home/${CONTAINER_USER}/.grok/" && \
     for f in active_sessions.json active_sessions.lock config.toml; do \
       mv "/home/${CONTAINER_USER}/.local/share/grok/$f" "/home/${CONTAINER_USER}/.grok/"; done && \

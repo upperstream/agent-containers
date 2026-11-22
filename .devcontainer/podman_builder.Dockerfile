@@ -13,7 +13,7 @@ FROM alpine:3.24.1
 # set up networks for build containers.
 RUN apk add --no-cache curl iptables iptables-legacy podman runc && \
     addgroup -g 2375 builders
-COPY .devcontainer/builder_entrypoint.sh /usr/local/bin/builder-entrypoint
+COPY --link .devcontainer/builder_entrypoint.sh /usr/local/bin/builder-entrypoint
 RUN chmod 0755 /usr/local/bin/builder-entrypoint
 RUN mkdir -p /etc/containers
 RUN cat >/etc/containers/storage.conf <<'EOF'
