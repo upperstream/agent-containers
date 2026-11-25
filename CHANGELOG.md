@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased][]
+## [20261125][]
 
 * Changed:
   * Upgrade [Node.js][] to v26.13.1 in the root multi-stage image and
@@ -352,7 +352,7 @@
 
 * Initial release.
 
-[Unreleased]: https://github.com/upperstream/agent-containers/compare/20261026...HEAD
+[20261125]: https://github.com/upperstream/agent-containers/compare/20261026...20261125
 [20261026]: https://github.com/upperstream/agent-containers/compare/20261004...20261026
 [20261004]: https://github.com/upperstream/agent-containers/compare/20260823...20261004
 [20260904]: https://github.com/upperstream/agent-containers/compare/20260823...20260904
