@@ -3,6 +3,10 @@
 ## [Unreleased][]
 
 * Changed:
+  * Upgrade [Node.js][] to v26.13.1 in the root multi-stage image and
+    the standalone `cline/`, `droid/`, `gemini/`, `openclaw/`,
+    `openwiki-agent/`, and `pi/` builds.  Install `libatomic1` in builder
+    and runtime stages for Node.js 26 on ARM64.
   * Use `COPY --link` for independent copy layers and better build-cache
     reuse in the root, standalone, and Dev Container builder
     Dockerfiles.

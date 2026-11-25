@@ -1,13 +1,13 @@
 ARG CONTAINER_USER=user         # 'user'
 ARG ENVIRONMENT=production      # 'development' or 'production'
 ARG NANO_CLASSIC_KEYBINDINGS    # 'yes', default to 'no'
-ARG NODE_VERSION=v24.22.1
+ARG NODE_VERSION=v26.13.1
 ARG NPM_VERSION=                # npm version with node distribution
 ARG OPENWIKI_VERSION=0.6.1
 
 FROM debian:trixie-slim AS builder_base
 RUN apt-get update && \
-    apt-get install -y ca-certificates curl
+    apt-get install -y ca-certificates curl libatomic1
 
 FROM builder_base AS node_base
 ARG NODE_VERSION    # global default
@@ -35,7 +35,7 @@ ARG CONTAINER_USER              # global default
 ARG NANO_CLASSIC_KEYBINDINGS    # global default
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends emacs-nox fd-find git mg micro nano ripgrep vim-nox && \
+    apt-get install -y --no-install-recommends emacs-nox fd-find git libatomic1 mg micro nano ripgrep vim-nox && \
     apt-get clean && \
     useradd -m "${CONTAINER_USER}" && \
     sed -i 's/^\(    xterm-color|\*-256color\))/\1|\*-ghostty)/' "/home/${CONTAINER_USER}/.bashrc"
