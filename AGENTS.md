@@ -178,8 +178,10 @@ lines and output.  Add new cases in the same style (`t_repo_init`,
 
 - `docker-compose.yml` builds the root image as service `agents` with
   user `user` and bind-mounts agent state directories from the host
-  (`CLAUDE_HOME`, `CODEX_HOME`, and so on).  `CLINE_HOME` falls back to
-  `$HOME/.claude`, not `$HOME/.cline`.
+  (`CLAUDE_HOME`, `CODEX_HOME`, and so on).  Most fall back to
+  `$HOME/.<agent>` (for example `CLINE_HOME` to `$HOME/.cline`), but
+  `GROK_HOME` falls back to `$HOME/grok_home`, and `KILO_HOME` to
+  `$HOME/kilo`, which is mounted at `/mnt/kilo`.
 - `.devcontainer/devcontainer.json` layers
   `docker-compose.devcontainer.yml` on top, switching to
   `CONTAINER_USER=devcontainer` and `ENVIRONMENT=development`, and

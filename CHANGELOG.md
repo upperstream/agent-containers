@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased][]
+
+* Fixed:
+  * Correct the `CLINE_HOME` fallback described in `AGENTS.md`: it is
+    `$HOME/.cline`, not `$HOME/.claude`.  Note the `GROK_HOME` and
+    `KILO_HOME` fallbacks, which do not follow the `$HOME/.<agent>`
+    pattern.
+
 ## [20261125][]
 
 * Changed:
@@ -352,6 +360,7 @@
 
 * Initial release.
 
+[Unreleased]: https://github.com/upperstream/agent-containers/compare/20261125...HEAD
 [20261125]: https://github.com/upperstream/agent-containers/compare/20261026...20261125
 [20261026]: https://github.com/upperstream/agent-containers/compare/20261004...20261026
 [20261004]: https://github.com/upperstream/agent-containers/compare/20260823...20261004
